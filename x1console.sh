@@ -181,7 +181,7 @@ update_x1_console() {
     pause
 }
 
-# Function for health check
+# Function for health check and start validator
 health_check() {
     echo -e "\nRunning setwithdrawer.js..."
     node "$HOME/x1console/setwithdrawer.js"
@@ -350,6 +350,76 @@ delete_logs() {
     pause
 }
 
+# New Ledger function to manage Ledger commands
+ledger() {
+    echo -e "\nChoose a subcommand:"
+    echo -e "1. Ledger Monitor"
+    echo -e "2. Remove Ledger"
+    read -p "Enter your choice [1-2]: " ledger_choice
+
+    case $ledger_choice in
+        1)
+            ledger_monitor
+            ;;
+        2)
+            remove_ledger
+            ;;
+        *)
+            echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+            ;;
+    esac
+}
+
+# New function to monitor the ledger
+ledger_monitor() {
+    echo -e "\nStarting ledger monitoring. Press any key to stop...\n"
+    
+    # Navigate to the agave-xolana directory and run the command
+    cd "$HOME/x1/agave-xolana/" || exit
+    solana-validator --ledger ledger monitor & # Run in the background
+    
+    # Get the PID of the last command run in the background
+    PID=$!
+    
+    # Wait for user input to stop the command
+    read -n 1 -s -r -p "Press any key to stop the ledger monitoring..."
+    
+    # Kill the running process
+    kill "$PID"
+    echo -e "\nLedger monitoring stopped.\n"
+
+    pause
+}
+
+# New function to remove the ledger
+remove_ledger() {
+    # Check if the validator is running using port 8899
+    if lsof -i :8899; then
+        echo -e "\nValidator is running. Ledger can only be removed when the validator has stopped."
+        pause
+        return
+    fi
+
+    # If validator is not running, ask for confirmation to remove ledger
+    echo -e "\nAre you sure you wish to remove the ledger? (y/n)"
+    read -r confirmation
+    case $confirmation in
+        y|Y)
+            echo -e "\nRemoving the ledger..."
+            rm -rf "$HOME/x1/agave-xolana/ledger"
+            echo -e "Ledger removed successfully.\n"
+            ;;
+        n|N)
+            echo -e "\nOperation canceled. Returning to menu.\n"
+            ;;
+        *)
+            echo -e "\nInvalid option. Returning to menu.\n"
+            ;;
+    esac
+    
+    pause
+}
+
 # Function to exit the script
 exit_script() {
     echo -e "\nExiting the script.\n"
@@ -400,14 +470,15 @@ while true; do
     echo -e "\nChoose an option:"
     echo -e "1. Install, Start X1 and Pinger"
     echo -e "2. Update"
-    echo -e "3. Health check"
+    echo -e "3. Health Check and Start Validator"
     echo -e "4. Check Balances"
     echo -e "5. Publish Validator"
     echo -e "6. Pinger"
     echo -e "7. Validator Logs"
-    echo -e "8. Exit"
+    echo -e "8. Ledger"
+    echo -e "9. Exit"
 
-    read -p "Enter your choice [1-8]: " choice
+    read -p "Enter your choice [1-9]: " choice
 
     case $choice in
         1)
@@ -458,33 +529,21 @@ while true; do
             ;;
         
         7)
-            echo -e "\nChoose a subcommand:"
-            echo -e "1. Show Logs"
-            echo -e "2. Delete Logs"
-            read -p "Enter your choice [1-2]: " logs_choice
-
-            case $logs_choice in
-                1)
-                    show_logs
-                    continue
-                    ;;
-                2)
-                    delete_logs
-                    continue
-                    ;;
-                *)
-                    echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
-                    continue
-                    ;;
-            esac
+            show_logs
+            continue
             ;;
         
         8)
+            ledger
+            continue
+            ;;
+        
+        9)
             exit_script
             ;;
         
         *)
-            echo -e "\nInvalid choice. Please choose 1, 2, 3, 4, 5, 6, 7, or 8.\n"
+            echo -e "\nInvalid choice. Please choose 1, 2, 3, 4, 5, 6, 7, 8, or 9.\n"
             ;;
     esac
 done
