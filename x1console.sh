@@ -112,6 +112,8 @@ install() {
     else
         echo -e "\ninstall_run.sh does not exist. Please create it.\n"
     fi
+    
+    pause
 }
 
 # Function to update Solana CLI and the application
@@ -162,6 +164,8 @@ update_x1() {
     else
         echo -e "\nrestart.js does not exist in $HOME/x1console.\n"
     fi
+    
+    pause
 }
 
 # Function to update the X1 console
@@ -173,6 +177,8 @@ update_x1_console() {
     git pull
 
     echo -e "\nX1 console updated successfully.\n"
+    
+    pause
 }
 
 # Function for health check
@@ -210,6 +216,8 @@ health_check() {
     else
         echo -e "\nNo WARNING found in health check. Exiting.\n"
     fi
+    
+    pause
 }
 
 # New function to check balances
@@ -228,6 +236,8 @@ balances() {
     else
         echo -e "\ngetbalances.js does not exist. Please create it.\n"
     fi
+    
+    pause
 }
 
 # Updated function to publish validator info
@@ -246,17 +256,23 @@ publish_validator() {
     else
         echo -e "\npublish.js does not exist. Please create it.\n"
     fi
+    
+    pause
 }
 
 # New function to manage pinger
 pinger() {
     echo -e "\nChoose a subcommand:"
     echo -e "1. Restart Pinger"
-    read -p "Enter your choice [1]: " pinger_choice
+    echo -e "2. Ping Times"
+    read -p "Enter your choice [1-2]: " pinger_choice
 
     case $pinger_choice in
         1)
             restart_pinger
+            ;;
+        2)
+            ping_times
             ;;
         *)
             echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
@@ -277,6 +293,17 @@ restart_pinger() {
     else
         echo -e "\nsetpinger.js does not exist. Please create it.\n"
     fi
+    
+    pause
+}
+
+# New function to check ping times
+ping_times() {
+    echo -e "\nFetching ping times...\n"
+    curl http://localhost:3334/ping_times | jq
+    echo -e "\nFinished fetching ping times. Returning to menu.\n"
+    
+    pause
 }
 
 # New function to display validator logs
@@ -292,6 +319,8 @@ show_logs() {
     else
         echo -e "\nvalidatorlogs.js does not exist. Please create it.\n"
     fi
+    
+    pause
 }
 
 # New function to delete validator logs
@@ -317,12 +346,20 @@ delete_logs() {
         rm -rf "$HOME/x1/log.txt"
         echo -e "\nValidator logs have been deleted. Please start your validator through the health check (option 3) which will start your validator.\n"
     fi
+    
+    pause
 }
 
 # Function to exit the script
 exit_script() {
     echo -e "\nExiting the script.\n"
     exit 0
+}
+
+# Function to pause and wait for user input
+pause() {
+    read -n 1 -s -r -p "Press any button to return to the menu..."
+    echo -e "\n"
 }
 
 # Check if NVM is installed
@@ -375,25 +412,6 @@ while true; do
     case $choice in
         1)
             install
-
-            # Display wallet addresses after installation
-            echo -e "\n"
-
-            # Read wallet addresses from wallets.json
-            if [ -f "$HOME/x1/agave-xolana/wallets.json" ]; then
-                echo -e "Wallet Addresses:"
-                # Using jq to parse the JSON file
-                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/agave-xolana/wallets.json"
-            else
-                echo -e "\nwallets.json not found.\n"
-            fi
-
-            echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
-            echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
-            echo -e "\nexport PATH=\"/home/test2/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-
-            # Indicate that setup is complete
-            echo -e "Setup is complete.\n"
             continue
             ;;
         

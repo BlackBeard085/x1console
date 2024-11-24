@@ -22,6 +22,19 @@ function isValidatorRunning() {
     });
 }
 
+// Function to run solana catchup
+function runCatchup() {
+    return new Promise((resolve, reject) => {
+        exec('solana catchup --our-localhost', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error running catchup: ${stderr}`);
+            } else {
+                resolve(stdout); // Output from the catchup command
+            }
+        });
+    });
+}
+
 // Execute the script
 (async () => {
     try {
@@ -64,6 +77,17 @@ function isValidatorRunning() {
 
             if (isRunning) {
                 console.log('Validator started successfully and is running on port 8899.');
+
+                // Countdown for 10 seconds before running the catchup command
+                for (let i = 10; i > 0; i--) {
+                    console.log(`Waiting for ${i} seconds for the validator to stabilize...`);
+                    await new Promise(res => setTimeout(res, 1000));
+                }
+
+                // Run catchup command
+                console.log('Running catchup command...');
+                const catchupOutput = await runCatchup();
+                console.log('Catchup command output:\n', catchupOutput);
                 return; // Exit the script
             }
 
