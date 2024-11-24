@@ -191,7 +191,7 @@ health_check() {
     echo -e "$HEALTH_OUTPUT"
 
     if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
-        echo -e "\nWARNING found in health check."
+        echo -e "\nWARNING issued in health check."
 
         echo -e "\nRunning getbalances.js..."
         node "$HOME/x1console/getbalances.js"
@@ -214,7 +214,7 @@ health_check() {
             node "$HOME/x1console/restart.js"
         fi
     else
-        echo -e "\nNo WARNING found in health check. Exiting.\n"
+        echo -e "\nNo WARNING issued in health check. Exiting.\n"
     fi
     
     pause
@@ -463,7 +463,7 @@ else
 fi
 
 # Print welcome message
-echo -e "\nAYE MI HEARTIES, WELCOME TO THE X1 CONSOLE BY BLACKBEARD CAPTAIN OF X1'S THE BLACK PEARL! YOUR DELEGATIONS ARE MUCH APPRECIATED!\n"
+echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED!\n"
 
 # Interaction to execute install function or update, health check, or exit
 while true; do

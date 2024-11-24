@@ -214,7 +214,7 @@ if [[ "$fund_response" == *"success"* ]]; then
     # Get the withdrawer's wallet address from wallets.json
     withdrawer_address=$(jq -r '.[] | select(.name == "Withdrawer" or .name == "Id") | .address' wallets.json)
     echo "Transferring 1 SOL to identity wallet..."
-    solana transfer "$id_address" 1
+    solana transfer "$identity_address" 1 --allow-unfunded-recipient
     echo "Creating stake account..."
     solana create-stake-account "$stake_address" 2  # Use the path to stake.json directly
     echo "Creating vote account..."
