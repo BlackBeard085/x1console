@@ -21,7 +21,7 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
 1. Clone the repository and navigate to the directory:
 
    ```bash
-   git clone https://github.com/BlackBeard085/X1console.git && cd x1console
+   git clone https://github.com/BlackBeard085/x1console.git && cd x1console
    ```
 
 2. Start the console:
