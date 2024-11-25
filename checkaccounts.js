@@ -1,12 +1,28 @@
-const { exec } = require('child_process');
+const { exec, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
 const homeDir = process.env.HOME || process.env.HOMEPATH;
 const stakePath = path.join(homeDir, '.config/solana/stake.json');
 const votePath = path.join(homeDir, '.config/solana/vote.json');
 const identityPath = path.join(homeDir, '.config/solana/identity.json');
 const withdrawerPath = path.join(homeDir, '.config/solana/id.json');
 const archivePath = path.join(homeDir, '.config/solana/archive');
+
+// Paths for wallets.json
+const walletsDir = path.join(homeDir, 'x1console');
+const agaveXolanaDir = path.join(homeDir, 'x1/agave-xolana');
+const walletsFilePath = path.join(walletsDir, 'wallets.json');
+
+if (!fs.existsSync(walletsDir)) {
+    fs.mkdirSync(walletsDir, { recursive: true }); // Create the x1console directory if it doesn't exist
+}
+
+if (!fs.existsSync(agaveXolanaDir)) {
+    fs.mkdirSync(agaveXolanaDir, { recursive: true }); // Create the agave-xolana directory if it doesn't exist
+}
+
+let newWalletsCreated = false; // Track if any new wallets are created
 
 // Function to move and create new stake account
 function moveAndCreateStakeAccount() {
@@ -28,6 +44,7 @@ function moveAndCreateStakeAccount() {
                     return;
                 }
                 console.log(`Created new stake account: ${stakePath}`);
+                newWalletsCreated = true; // A new wallet was created for the stake account
 
                 exec(`solana create-stake-account ${stakePath} 2`, (createError) => {
                     if (createError) {
@@ -69,6 +86,7 @@ function moveAndCreateVoteAccount() {
                     return;
                 }
                 console.log(`Created new vote account: ${votePath}`);
+                newWalletsCreated = true; // A new wallet was created for the vote account
 
                 exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createError) => {
                     if (createError) {
@@ -144,6 +162,29 @@ function checkVoteAccount() {
     });
 }
 
+// Function to create wallets.json file, if new wallets were created.
+function createWalletsJSON() {
+    if (!newWalletsCreated) {
+        console.log('No new wallets were created; wallets.json will not be generated.');
+        return;
+    }
+
+    const wallets = [
+        { name: "Withdrawer", address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
+        { name: "Identity", address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
+        { name: "Stake", address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
+        { name: "Vote", address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
+    ];
+
+    fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
+    console.log('wallets.json created with the following content:');
+    console.log(wallets);
+
+    // Copy the wallets.json to the agave-xolana directory
+    fs.copyFileSync(walletsFilePath, path.join(agaveXolanaDir, 'wallets.json'));
+    console.log(`Copied wallets.json to: ${agaveXolanaDir}`);
+}
+
 // Main function to execute the checks
 async function main() {
     try {
@@ -153,6 +194,9 @@ async function main() {
         ]);
         console.log(stakeResult);
         console.log(voteResult);
+        
+        // Create wallets.json after checking accounts
+        createWalletsJSON();
     } catch (error) {
         console.error(`Error occurred: ${error}`);
     }
