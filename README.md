@@ -1,4 +1,3 @@
-
 # X1'S THE BLACK PEARL - VALIDATOR CONSOLE BY BLACKBEARD
 
 Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctional console designed for managing your X1 validator. Created by BLACKBEARD, this console streamlines your experience, providing tools for installation, updates, health checks, and various utilities tailored for validator management on the Solana network. You can call it **X1 Console** for short.
@@ -7,7 +6,7 @@ Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctiona
 
 - **Installation and Setup**: Easily install and configure your X1 validator, ensuring seamless integration with your existing wallets.
 - **Update Utilities**: Keep your validator and console up to date with minimal effort.
-- **Health Monitoring**: Perform automated health checks and remedies any concerns efficiently. An effective automated troubleshooter!
+- **Health Monitoring**: Perform health checks and manage validator uptime efficiently.
 - **Account Management**: Utilities to set commission, check balances, and manage validator logs.
 - **Interactive Command-Line Interface**: User-friendly interface allowing easy navigation through various functionalities.
 - **Integrated Ledger Management**: Monitor or remove your ledger as necessary.
