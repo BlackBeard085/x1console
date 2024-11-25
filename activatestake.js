@@ -97,7 +97,7 @@ function delegateStake() {
                         console.log('Delegate stake command output:\n', delegateOutput);
                         console.log('Delegation successful, a restart is required.'); // Message to show after successful delegation
                     } else {
-                        console.log('Validator did not catch up. No stake delegation attempted.');
+                        console.log('Validator did not catch up. No stake delegation attempted. check logs for fatal errors');
                     }
 
                     return; // Exit the script after handling catchup and delegation
@@ -107,7 +107,7 @@ function delegateStake() {
                 console.log(`Check ${attempts}: Validator not yet running...`);
             }
 
-            console.log('Failed to start the validator. Port 8899 is still not in use.');
+            console.log('Failed to start the validator. Port 8899 is still not in use. Check logs for fatal error');
         }
     } catch (error) {
         console.error('Failed to manage validator:', error);
