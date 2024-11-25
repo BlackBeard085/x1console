@@ -107,7 +107,7 @@ install() {
                 echo -e "\nFailed to restart the validator.\n"
             fi
         else
-            echo -e "\nrestart.js does not exist. Please create it.\n"
+            echo -e "\ninstall_run.sh does not exist. Please create it.\n"
         fi
     else
         echo -e "\ninstall_run.sh does not exist. Please create it.\n"
@@ -193,11 +193,12 @@ health_check() {
     if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
         echo -e "\nWARNING issued in health check."
 
-        echo -e "\nRunning getbalances.js..."
-        node "$HOME/x1console/getbalances.js"
-
+        # Execute checkaccounts.js before getbalances.js
         echo -e "\nRunning checkaccounts.js..."
         node "$HOME/x1console/checkaccounts.js"
+
+        echo -e "\nRunning getbalances.js..."
+        node "$HOME/x1console/getbalances.js"
 
         echo -e "\nRunning checkstake.js..."
         STAKE_OUTPUT=$(node "$HOME/x1console/checkstake.js")
@@ -224,6 +225,18 @@ health_check() {
 balances() {
     echo -e "\nRunning setwithdrawer.js..."
     node "$HOME/x1console/setwithdrawer.js"
+
+    echo -e "\nRunning checkaccounts.js..."
+    if [ -f "$HOME/x1console/checkaccounts.js" ]; then
+        node "$HOME/x1console/checkaccounts.js"
+        if [ $? -eq 0 ]; then
+            echo -e "\nAccounts checked successfully.\n"
+        else
+            echo -e "\nFailed to check accounts.\n"
+        fi
+    else
+        echo -e "\ncheckaccounts.js does not exist. Please create it.\n"
+    fi
 
     echo -e "\nRunning getbalances.js..."
     if [ -f "$HOME/x1console/getbalances.js" ]; then
@@ -354,7 +367,7 @@ delete_logs() {
 ledger() {
     echo -e "\nChoose a subcommand:"
     echo -e "1. Ledger Monitor"
-    echo -e "2. Remove Ledger"
+    echo -e "2. Remove Ledger" 
     read -p "Enter your choice [1-2]: " ledger_choice
 
     case $ledger_choice in
@@ -420,6 +433,32 @@ remove_ledger() {
     pause
 }
 
+# New function for setting commission
+set_commission() {
+    # Run setwithdrawer.js
+    echo -e "\nRunning setwithdrawer.js..."
+    node "$HOME/x1console/setwithdrawer.js"
+
+    # Prompt user for the commission percentage
+    read -p "What percent would you like to set your commission at? (0-100): " commission_percent
+
+    # Validate the user input
+    if [[ "$commission_percent" -ge 0 ]] && [[ "$commission_percent" -le 100 ]]; then
+        # Run the commission setting command
+        echo -e "\nSetting commission to $commission_percent%..."
+        solana vote-update-commission "$HOME/.config/solana/vote.json" "$commission_percent" "$HOME/.config/solana/id.json"
+        if [ $? -eq 0 ]; then
+            echo -e "\nCommission set successfully.\n"
+        else
+            echo -e "\nFailed to set commission.\n"
+        fi
+    else
+        echo -e "\nInvalid percentage. Please enter a value between 0 and 100.\n"
+    fi
+    
+    pause
+}
+
 # Function to exit the script
 exit_script() {
     echo -e "\nExiting the script.\n"
@@ -476,9 +515,10 @@ while true; do
     echo -e "6. Pinger"
     echo -e "7. Validator Logs"
     echo -e "8. Ledger"
-    echo -e "9. Exit"
+    echo -e "9. Set Commission"
+    echo -e "10. Exit"
 
-    read -p "Enter your choice [1-9]: " choice
+    read -p "Enter your choice [1-10]: " choice
 
     case $choice in
         1)
@@ -539,11 +579,16 @@ while true; do
             ;;
         
         9)
+            set_commission
+            continue
+            ;;
+        
+        10)
             exit_script
             ;;
         
         *)
-            echo -e "\nInvalid choice. Please choose 1, 2, 3, 4, 5, 6, 7, 8, or 9.\n"
+            echo -e "\nInvalid choice. Please choose from 1 to 10.\n"
             ;;
     esac
 done
