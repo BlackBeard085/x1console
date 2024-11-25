@@ -8,7 +8,7 @@ const username = os.userInfo().username;
 const validatorDirectory = `/home/${username}/x1/agave-xolana`;
 
 // Command to start the validator
-const startCommand = `agave-validator --identity identity.json --limit-ledger-size 50000000 --log "$HOME/x1/log.txt" --vote-account vote.json --rpc-port 8899 --full-rpc-api --max-genesis-archive-unpacked-size 1073741824 --enable-rpc-transaction-history --enable-extended-tx-metadata-storage --rpc-pubsub-enable-block-subscription --entrypoint xolana.xen.network:8001 --only-known-rpc --known-validator C58LhVv822GiE3s84pwb58yiaezWLaFFdUtTWDGFySsU --expected-shred-version 19582 &`;
+const startCommand = `agave-validator --identity identity.json --limit-ledger-size 50000000 --log "$HOME/x1/log.txt" --vote-account vote.json --rpc-port 8899 --full-rpc-api --max-genesis-archive-unpacked-size 1073741824 --enable-rpc-transaction-history --enable-extended-tx-metadata-storage --rpc-pubsub-enable-block-subscription --entrypoint xolana.xen.network:8001 --only-known-rpc --known-validator C58LhVv822GiE3s84pwb58yiaezWLaFFdUtTWDGFySsU --expected-shred-version 19582 --full-snapshot-interval-slots 300 --maximum-incremental-snapshots-to-retain 100 --maximum-full-snapshots-to-retain 50 &`;
 
 // Check if the validator is running by checking port 8899
 function isValidatorRunning() {

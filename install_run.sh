@@ -236,7 +236,10 @@ if [[ "$fund_response" == *"success"* ]]; then
         --entrypoint xolana.xen.network:8001 \
         --only-known-rpc \
         --known-validator C58LhVv822GiE3s84pwb58yiaezWLaFFdUtTWDGFySsU \
-        --expected-shred-version 19582 &
+        --expected-shred-version 19582 \
+        --full-snapshot-interval-slots 300 \
+        --maximum-incremental-snapshots-to-retain 100 \
+        --maximum-full-snapshots-to-retain 50 &
     
     # Wait for a moment to allow the validator to start
     sleep 15  # Increased sleep duration to 15 seconds
