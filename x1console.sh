@@ -533,7 +533,8 @@ while true; do
             echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
             echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
             echo -e "\nexport PATH=\"/home/test2/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-
+            echo -e "\nIF THIS IS THE FIRST ISTALLATION LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
+           
             # Indicate that setup is complete
             echo -e "Setup is complete.\n"
             continue
