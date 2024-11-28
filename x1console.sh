@@ -76,24 +76,24 @@ install() {
         echo -e "\nCopying wallets.json to x1console directory..."
         sudo cp "$HOME/x1/solanalabs/wallets.json" "$HOME/x1console"
         
-        # New Addition: Attempt to execute activatestake.js
-        echo -e "\nAttempting to execute activatestake.js..."
-        if [ -f ./activatestake.js ]; then
-            node ./activatestake.js
+        # New Addition: Attempt to execute 1ststake.js
+        echo -e "\nAttempting to execute 1ststake.js..."
+        if [ -f ./1ststake.js ]; then
+            node ./1ststake.js
             if [ $? -eq 0 ]; then
-                echo -e "\nactivatestake.js executed successfully.\n"
+                echo -e "\n1ststake.js executed successfully.\n"
             else
-                echo -e "\nFailed to execute activatestake.js.\n"
+                echo -e "\nFailed to execute 1ststake.js.\n"
             fi
         else
-            echo -e "\nactivatestake.js does not exist. Please create it in the directory.\n"
+            echo -e "\n1ststake.js does not exist. Please create it in the directory.\n"
         fi
 
         # Attempting to restart validator
         echo -e "\nAttempting to restart validator..."
-        if [ -f ./restart.js ]; then
-            # Using spawn for executing restart.js
-            node ./restart.js
+        if [ -f ./1strestart.js ]; then
+            # Using spawn for executing 1strestart.js
+            node ./1strestart.js
             if [ $? -eq 0 ]; then
                 echo -e "\nValidator has been restarted successfully."
                 # Run setpinger.js after restart is successful
@@ -536,7 +536,7 @@ while true; do
 
             echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
             echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
-            echo -e "\nexport PATH=\"/home/test2/.local/share/solana/install/active_release/bin:\$PATH\"\n"
+            echo -e "\nexport PATH=\"/home/ubuntu/.local/share/solana/install/active_release/bin:\$PATH\"\n"
             echo -e "\nIF THIS IS THE FIRST ISTALLATION LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
            
             # Indicate that setup is complete
