@@ -3,7 +3,7 @@ const os = require('os');
 
 // Get the current user's username
 const username = os.userInfo().username;
-// Define the validator directory
+// Define the validator directory based on the current user
 const validatorDirectory = `/home/${username}/x1/solanalabs`;
 
 // Command to start the validator
@@ -19,51 +19,16 @@ function isValidatorRunning() {
 }
 
 // Function to run Solana catchup
-async function runCatchup() {
-    while (true) {
-        try {
-            console.log("Executing catchup command...");
-            const output = await new Promise((resolve, reject) => {
-                exec('solana catchup --our-localhost', (error, stdout, stderr) => {
-                    if (error) {
-                        reject(`Error running catchup: ${stderr.trim()}`);
-                    } else {
-                        resolve(stdout.trim()); // Output from the catchup command
-                    }
-                });
-            });
-
-            console.log('Catchup command output:\n', output);
-
-            // Check for outputs
-            if (output.includes('has caught up')) {
-                console.log('Catchup successful: Validator has caught up.');
-                return output; // Return the output if caught up
-            } else if (output.includes('Connection refused')) {
-                console.log('Connection refused. Checking if the validator is still running...');
-
-                // Check if the validator is running and wait if it's still running
-                for (let attempt = 0; attempt < 5; attempt++) {  // Try 5 times
-                    const running = await isValidatorRunning();
-                    if (running) {
-                        console.log('Validator is still running. Waiting for 10 seconds before trying catchup again...');
-                        await new Promise(res => setTimeout(res, 10000)); // Wait for 10 seconds
-                        console.log('Retrying catchup command...');
-                        break; // Exit retry loop
-                    } else {
-                        console.log('Validator is not running. Exiting catchup.');
-                        throw new Error('Validator is not running.');
-                    }
-                }
+function runCatchup() {
+    return new Promise((resolve, reject) => {
+        exec('solana catchup --our-localhost', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error running catchup: ${stderr}`);
             } else {
-                console.log('Unexpected output from catchup command. Checking again...');
-                await new Promise(res => setTimeout(res, 10000)); // Wait for 10 seconds
+                resolve(stdout); // Output from the catchup command
             }
-        } catch (error) {
-            console.error('Error during catchup:', error);
-            await new Promise(res => setTimeout(res, 10000)); // Wait for 10 seconds before retrying
-        }
-    }
+        });
+    });
 }
 
 // Function to delegate stake
@@ -71,9 +36,9 @@ function delegateStake() {
     return new Promise((resolve, reject) => {
         exec(`cd ${validatorDirectory} && solana delegate-stake stake.json vote.json`, (error, stdout, stderr) => {
             if (error) {
-                reject(`Error delegating stake: ${stderr.trim()}`);
+                reject(`Error delegating stake: ${stderr}`);
             } else {
-                resolve(stdout.trim()); // Output from the delegate stake command
+                resolve(stdout); // Output from the delegate stake command
             }
         });
     });
@@ -89,26 +54,34 @@ function delegateStake() {
             // Run catchup command before delegating stake
             console.log('Running catchup command...');
             const catchupOutput = await runCatchup();
+            console.log('Catchup command output:\n', catchupOutput);
 
-            // Proceed to delegate stake
-            const delegateOutput = await delegateStake();
-            console.log('Delegate stake command output:\n', delegateOutput);
-            console.log('Delegation successful, a restart is required.'); // Message to show after delegation
+            // Check for 'has caught up' in the catchup output
+            if (catchupOutput.includes('has caught up')) {
+                console.log('Validator caught up, proceeding to delegate stake...');
+                const delegateOutput = await delegateStake();
+                console.log('Delegate stake command output:\n', delegateOutput);
+                console.log('Delegation successful, a restart is required.'); // Message to show after delegation
+            } else {
+                console.log('Validator did not catch up. No stake delegation attempted. Check logs for fatal errors.');
+            }
             return; // Exit the script after handling catchup and delegation
         } else {
             console.log('Validator is not currently running. Proceeding to start it.');
             console.log('Starting the validator now...');
-            exec(`cd ${validatorDirectory} && ${startCommand}`, { stdio: 'pipe' }, (error, stdout, stderr) => {
+            exec(`cd ${validatorDirectory} && ${startCommand}`, { stdio: 'ignore' }, (error) => {
                 if (error) {
-                    console.error(`Error starting validator: ${stderr.trim()}`);
+                    console.error(`Error starting validator: ${error.message}`);
                     return; // Exit if there was an error starting the validator
                 }
                 console.log('Validator start command issued.');
             });
-
             // Check if the validator has started successfully
-            for (let attempt = 0; attempt < 10; attempt++) {
-                await new Promise(res => setTimeout(res, 5000)); // Wait for 5 seconds before checking
+            let attempts = 0;
+            const maxAttempts = 10; // Maximum number of attempts to check the port
+            const delayBetweenAttempts = 5; // Seconds to wait between checks
+            while (attempts < maxAttempts) {
+                await new Promise(res => setTimeout(res, delayBetweenAttempts * 1000));
                 const isRunning = await isValidatorRunning();
                 if (isRunning) {
                     console.log('Validator started successfully and is running on port 8899.');
@@ -120,12 +93,19 @@ function delegateStake() {
                     // Run catchup command
                     console.log('Running catchup command...');
                     const catchupOutput = await runCatchup();
-                    // Proceed to delegate stake
-                    const delegateOutput = await delegateStake();
-                    console.log('Delegate stake command output:\n', delegateOutput);
-                    console.log('Delegation successful, a restart is required.'); // Message to show after successful delegation
+                    console.log('Catchup command output:\n', catchupOutput);
+                    // Check for 'has caught up' in the catchup output
+                    if (catchupOutput.includes('has caught up')) {
+                        console.log('Validator caught up, delegating stake...');
+                        const delegateOutput = await delegateStake();
+                        console.log('Delegate stake command output:\n', delegateOutput);
+                        console.log('Delegation successful, a restart is required.'); // Message to show after successful delegation
+                    } else {
+                        console.log('Validator did not catch up. No stake delegation attempted. Check logs for fatal errors.');
+                    }
                     return; // Exit the script after handling catchup and delegation
                 }
+                attempts++;
             }
             console.log('Failed to start the validator. Port 8899 is still not in use. Check logs for fatal error');
         }

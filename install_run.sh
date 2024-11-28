@@ -90,8 +90,8 @@ sudo apt-get install -y libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang 
 
 echo "Rust and Cargo installation completed successfully!"
 
-# Build the agave-validator in the x1 directory
-echo "Preparing to build agave-validator..."
+# Build the solana-validator in the x1 directory
+echo "Preparing to build solana-validator..."
 
 # Get the current user's username
 CURRENT_USER=$(whoami)
@@ -109,11 +109,11 @@ fi
 cd "$X1_DIRECTORY" || error_exit "Failed to change to directory $X1_DIRECTORY."
 
 # Clone the GitHub repository
-echo "Cloning the agave-xolana repository..."
-git clone https://github.com/FairCrypto/agave-xolana.git || error_exit "Failed to clone agave-xolana repository."
+echo "Cloning the solanalabs repository..."
+git clone https://github.com/FairCrypto/solanalabs.git || error_exit "Failed to clone solanalabs repository."
 
-# Change into the agave-xolana directory
-cd agave-xolana || error_exit "Failed to change into agave-xolana directory."
+# Change into the solanalabs directory
+cd solanalabs || error_exit "Failed to change into solanalabs directory."
 
 # Checkout the specified branch
 echo "Checking out the dyn_fees_v1 branch..."
@@ -123,14 +123,14 @@ git checkout dyn_fees_v1 || error_exit "Failed to checkout dyn_fees_v1 branch."
 echo "Confirming the current branch..."
 git branch || error_exit "Failed to list branches."
 
-# Build the agave-validator
-echo "Building the agave-validator..."
-cargo build --release || error_exit "Failed to build agave-validator."
-echo "agave-validator built successfully!"
+# Build the solana-validator
+echo "Building the solana-validator..."
+cargo build --release || error_exit "Failed to build solana-validator."
+echo "solana-validator built successfully!"
 
 # Confirm the build output
 echo "Confirming the build output..."
-ls -l target/release/agave-validator || error_exit "Failed to confirm the agave-validator build output."
+ls -l target/release/solana-validator || error_exit "Failed to confirm the solana-validator build output."
 
 # Connect to the desired network
 echo "Connecting to the desired network..."
@@ -150,7 +150,7 @@ echo "Setup completed successfully!"
 USERNAME=${1:-$USER}  # Take a username from the first argument or default to current user
 HOME_DIR="/home/$USERNAME"
 SOLANA_DIR="$HOME_DIR/.config/solana"
-DEST_DIR="$HOME_DIR/x1/agave-xolana"
+DEST_DIR="$HOME_DIR/x1/solanalabs"
 WALLETS=("id.json" "identity.json" "vote.json" "stake.json")
 
 # Create the destination directory if it doesn't exist
@@ -200,70 +200,82 @@ fund_wallet() {
 
 # Extract the address for the id wallet
 id_address=$(solana-keygen pubkey "$SOLANA_DIR/id.json")
+
 # Fund the id wallet
 echo "Funding id wallet..."
 fund_response=$(fund_wallet "$id_address")
 
-# Check if funding was successful (simple check based on the response)
-if [[ "$fund_response" == *"success"* ]]; then
-    echo "Funding successful! Proceeding with the next commands..."
-    # Extract addresses for identity, stake, and vote wallets
-    identity_address="$HOME/.config/solana/identity.json"
-    stake_address="$HOME/.config/solana/stake.json"
-    vote_address="$HOME/.config/solana/vote.json"
-    # Get the withdrawer's wallet address from wallets.json
-    withdrawer_address=$(jq -r '.[] | select(.name == "Withdrawer" or .name == "Id") | .address' wallets.json)
-    echo "Transferring 1 SOL to identity wallet..."
-    solana transfer "$identity_address" 1 --allow-unfunded-recipient
-    echo "Creating stake account..."
-    solana create-stake-account "$stake_address" 2  # Use the path to stake.json directly
-    echo "Creating vote account..."
-    solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 10  # Use the path and withdrawer address.
+# Print the raw funding response for clarity
+echo -e "\nRaw funding response: $fund_response\n"
 
-    # Start the Solana validator with the new command
-    echo "Starting Solana validator..."
-    "$HOME/x1/agave-xolana/target/release/agave-validator" \
-        --identity "$HOME/.config/solana/identity.json" \
-        --limit-ledger-size 50000000 \
-        --log "$HOME/x1/log.txt" \
-        --vote-account "$HOME/.config/solana/vote.json" \
-        --rpc-port 8899 \
-        --full-rpc-api \
-        --max-genesis-archive-unpacked-size 1073741824 \
-        --enable-rpc-transaction-history \
-        --enable-extended-tx-metadata-storage \
-        --rpc-pubsub-enable-block-subscription \
-        --entrypoint xolana.xen.network:8001 \
-        --only-known-rpc \
-        --known-validator C58LhVv822GiE3s84pwb58yiaezWLaFFdUtTWDGFySsU \
-        --expected-shred-version 19582 \
-        --full-snapshot-interval-slots 300 \
-        --maximum-incremental-snapshots-to-retain 100 \
-        --maximum-full-snapshots-to-retain 50 &
+# Check for 'limit reached' in the funding response
+if [[ "$fund_response" == *"limit reached"* ]]; then
+    echo "Faucet limit reached, try again in 24 hours. Checking balance..."
     
-    # Wait for a moment to allow the validator to start
-    sleep 15  # Increased sleep duration to 15 seconds
+    # Check the current balance
+    balance_output=$(solana balance)
+    echo -e "Current balance output:\n$balance_output\n"
     
-    # Countdown before delegating stake
-    echo "Waiting for Solana validator to fully start..."
-    for ((i=15; i>0; i--)); do
-        echo "$i seconds remaining before delegating stake..."
-        sleep 1
-    done
+    # Extract the balance value as a number
+    current_balance=$(echo "$balance_output" | awk '{print $1}')
     
-    # Check if the validator started successfully
-    if pgrep -x "agave-validator" > /dev/null; then
-        echo "X1 validator has started."
+    # Check if the balance is 4 or more
+    if (( $(echo "$current_balance >= 4" | bc -l) )); then
+        echo "Balance is sufficient ($current_balance SOL). Proceeding with the rest of the script..."
+        
+        # Extract addresses for identity, stake, and vote wallets
+        identity_address="$HOME/.config/solana/identity.json"
+        stake_address="$HOME/.config/solana/stake.json"
+        vote_address="$HOME/.config/solana/vote.json"
+        
+        # Get the withdrawer's wallet address from wallets.json
+        withdrawer_address=$(jq -r '.[] | select(.name == "Withdrawer" or .name == "Id") | .address' wallets.json)
+
+        echo "Transferring 1 SOL to identity wallet..."
+        solana transfer "$identity_address" 1 --allow-unfunded-recipient
+
+        echo "Creating stake account..."
+        stake_creation_response=$(solana create-stake-account "$stake_address" 2)
+        echo -e "Stake account creation response:\n$stake_creation_response\n"
+
+        echo "Creating vote account..."
+        vote_creation_response=$(solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 10)
+        echo -e "Vote account creation response:\n$vote_creation_response\n"
+
+        # Message indicating that the script has reached completion
+        echo "Stake and vote accounts created successfully."
     else
-        echo "Failed to start the X1 validator."
+        echo "Insufficient balance ($current_balance SOL). Cannot proceed with the rest of the script."
     fi
-    
-    echo "Delegating stake..."
-    solana delegate-stake "$stake_address" "$vote_address"
-    # Message indicating the delegation was successful
-    echo "Delegation was successful and a restart is required."
 else
-    echo "Funding failed: $fund_response"
+    # Check if funding was successful
+    if [[ "$fund_response" == *"success"* ]]; then
+        echo "Funding successful! Proceeding with the next commands..."
+        
+        # Extract addresses for identity, stake, and vote wallets
+        identity_address="$HOME/.config/solana/identity.json"
+        stake_address="$HOME/.config/solana/stake.json"
+        vote_address="$HOME/.config/solana/vote.json"
+        
+        # Get the withdrawer's wallet address from wallets.json
+        withdrawer_address=$(jq -r '.[] | select(.name == "Withdrawer" or .name == "Id") | .address' wallets.json)
+
+        echo "Transferring 1 SOL to identity wallet..."
+        solana transfer "$identity_address" 1 --allow-unfunded-recipient
+
+        echo "Creating stake account..."
+        stake_creation_response=$(solana create-stake-account "$stake_address" 2)
+        echo -e "Stake account creation response:\n$stake_creation_response\n"
+
+        echo "Creating vote account..."
+        vote_creation_response=$(solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 10)
+        echo -e "Vote account creation response:\n$vote_creation_response\n"
+
+        # Message indicating that the script has reached completion
+        echo "Stake and vote accounts created successfully." 
+    else
+        echo "Funding failed: $fund_response"
+    fi
 fi
 
 # END OF SCRIPT 2

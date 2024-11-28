@@ -13,28 +13,28 @@ check_npm_package() {
     fi
 }
 
-# Function to check x1/agave-xolana directory and handle user choice
-check_agave_directory() {
-    AGAVE_DIR="$HOME/x1/agave-xolana"
+# Function to check x1/solanalabs directory and handle user choice
+check_solanalabs_directory() {
+    SOLANALABS_DIR="$HOME/x1/solanalabs"
     ARCHIVE_DIR="$HOME/archive"
 
-    if [ -d "$AGAVE_DIR" ]; then
-        echo -e "\nx1/agave-xolana directory already exists, do you wish to delete or archive this directory? (delete/archive)"
+    if [ -d "$SOLANALABS_DIR" ]; then
+        echo -e "\nx1/solanalabs directory already exists, do you wish to delete or archive this directory? (delete/archive)"
         read -r action
         
         case $action in
             delete)
-                echo -e "\nDeleting $AGAVE_DIR..."
-                rm -rf "$AGAVE_DIR"
-                echo -e "$AGAVE_DIR has been deleted.\n"
+                echo -e "\nDeleting $SOLANALABS_DIR..."
+                rm -rf "$SOLANALABS_DIR"
+                echo -e "$SOLANALABS_DIR has been deleted.\n"
                 ;;
             archive)
-                echo -e "\nArchiving $AGAVE_DIR..."
+                echo -e "\nArchiving $SOLANALABS_DIR..."
                 # Check if archive directory exists; if not, create it
                 mkdir -p "$ARCHIVE_DIR"
-                # Move the agave-xolana directory to archive
-                mv -f "$AGAVE_DIR" "$ARCHIVE_DIR/"
-                echo -e "$AGAVE_DIR has been moved to $ARCHIVE_DIR.\n"
+                # Move the solanalabs directory to archive
+                mv -f "$SOLANALABS_DIR" "$ARCHIVE_DIR/"
+                echo -e "$SOLANALABS_DIR has been moved to $ARCHIVE_DIR.\n"
                 ;;
             *)
                 echo -e "\nInvalid action. Continuing without deleting or archiving.\n"
@@ -47,11 +47,9 @@ check_agave_directory() {
 install() {
     echo -e "\nDo you have existing X1 validator wallets? (yes/no)"
     read -r wallet_response
-
     if [[ "$wallet_response" == "yes" ]]; then
         echo -e "\nHave these been copied to the .config/solana directory? (yes/no)"
         read -r copied_response
-
         if [[ "$copied_response" == "yes" ]]; then
             echo -e "\nContinuing with X1 installation...\n"
         else
@@ -62,25 +60,34 @@ install() {
     else
         echo -e "\nYour validator wallets will be created for you. Continuing with X1 installation...\n"
     fi
-
-    # Check x1/agave-xolana directory before proceeding
-    check_agave_directory
-
+    # Check x1/solanalabs directory before proceeding
+    check_solanalabs_directory
     # Allowing the firewall for ports 8000 to 10000
     echo -e "\nConfiguring firewall to allow access to ports 8000-10000..."
     sudo ufw allow 8000:10000
-
     # Execute install_run.sh
     if [ -f ./install_run.sh ]; then
         echo -e "\nExecuting install_run.sh..."
         ./install_run.sh
-
-        # Change the path for copying agave-validator to the /usr/local/bin
-        echo -e "\nCopying agave-validator to /usr/local/bin..."
-        sudo cp "$HOME/x1/agave-xolana/target/release/agave-validator" /usr/local/bin
-
+        # Change the path for copying solana-validator to your
+        echo -e "\nCopying solana-validator to your path..."
+        cp "$HOME/x1/solanalabs/target/release/solana-validator" "$HOME/.local/share/solana/install/active_release/bin/solana-validator"
+        sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
         echo -e "\nCopying wallets.json to x1console directory..."
-        sudo cp "$HOME/x1/agave-xolana/wallets.json" "$HOME/x1console"
+        sudo cp "$HOME/x1/solanalabs/wallets.json" "$HOME/x1console"
+        
+        # New Addition: Attempt to execute activatestake.js
+        echo -e "\nAttempting to execute activatestake.js..."
+        if [ -f ./activatestake.js ]; then
+            node ./activatestake.js
+            if [ $? -eq 0 ]; then
+                echo -e "\nactivatestake.js executed successfully.\n"
+            else
+                echo -e "\nFailed to execute activatestake.js.\n"
+            fi
+        else
+            echo -e "\nactivatestake.js does not exist. Please create it in the directory.\n"
+        fi
 
         # Attempting to restart validator
         echo -e "\nAttempting to restart validator..."
@@ -89,7 +96,6 @@ install() {
             node ./restart.js
             if [ $? -eq 0 ]; then
                 echo -e "\nValidator has been restarted successfully."
-
                 # Run setpinger.js after restart is successful
                 if [ -f ./setpinger.js ]; then
                     echo -e "\nExecuting setpinger.js..."
@@ -102,26 +108,24 @@ install() {
                 else
                     echo -e "\nsetpinger.js does not exist. Please create it in the directory.\n"
                 fi
-
             else
                 echo -e "\nFailed to restart the validator.\n"
             fi
         else
-            echo -e "\ninstall_run.sh does not exist. Please create it.\n"
+            echo -e "\nrestart.js does not exist. Please create it.\n"
         fi
     else
         echo -e "\ninstall_run.sh does not exist. Please create it.\n"
     fi
-    
-    pause
 }
+pause
 
 # Function to update Solana CLI and the application
 update_x1() {
-    AGAVE_DIR="$HOME/x1/agave-xolana"
+    SOLANALABS_DIR="$HOME/x1/solanalabs"
 
-    if [ -d "$AGAVE_DIR" ]; then
-        cd "$AGAVE_DIR" || exit
+    if [ -d "$SOLANALABS_DIR" ]; then
+        cd "$SOLANALABS_DIR" || exit
 
         # Check if the validator is running on port 8899
         if lsof -i :8899; then
@@ -138,10 +142,10 @@ update_x1() {
         echo -e "\nBuilding project in release mode..."
         cargo build --release
 
-        echo -e "\nCopying agave-validator to /usr/local/bin..."
-        sudo cp "$HOME/x1/agave-xolana/target/release/agave-validator" /usr/local/bin
+        echo -e "\nCopying solana-validator to /usr/local/bin..."
+        sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
     else
-        echo -e "\nDirectory $AGAVE_DIR does not exist. Skipping Cargo commands.\n"
+        echo -e "\nDirectory $SOLANALABS_DIR does not exist. Skipping Cargo commands.\n"
     fi
 
     echo -e "\nSystem updated.\n"
@@ -339,7 +343,7 @@ delete_logs() {
 
         if [[ "$user_choice" == "yes" ]]; then
             echo -e "\nStopping the validator..."
-            (cd "$HOME/x1/agave-xolana/" && solana-validator exit -f)
+            (cd "$HOME/x1/solanalabs/" && solana-validator exit -f)
             echo -e "Validator has been stopped."
 
             echo -e "\nDeleting log.txt..."
@@ -381,8 +385,8 @@ ledger() {
 ledger_monitor() {
     echo -e "\nStarting ledger monitoring. Press any key to stop...\n"
     
-    # Navigate to the agave-xolana directory and run the command
-    cd "$HOME/x1/agave-xolana/" || exit
+    # Navigate to the solanalabs directory and run the command
+    cd "$HOME/x1/solanalabs/" || exit
     solana-validator --ledger ledger monitor & # Run in the background
     
     # Get the PID of the last command run in the background
@@ -413,7 +417,7 @@ remove_ledger() {
     case $confirmation in
         y|Y)
             echo -e "\nRemoving the ledger..."
-            rm -rf "$HOME/x1/agave-xolana/ledger"
+            rm -rf "$HOME/x1/solanalabs/ledger"
             echo -e "Ledger removed successfully.\n"
             ;;
         n|N)
@@ -522,10 +526,10 @@ while true; do
             echo -e "\n"
 
             # Read wallet addresses from wallets.json
-            if [ -f "$HOME/x1/agave-xolana/wallets.json" ]; then
+            if [ -f "$HOME/x1/solanalabs/wallets.json" ]; then
                 echo -e "Wallet Addresses:"
                 # Using jq to parse the JSON file
-                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/agave-xolana/wallets.json"
+                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/solanalabs/wallets.json"
             else
                 echo -e "\nwallets.json not found.\n"
             fi

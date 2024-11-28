@@ -11,15 +11,15 @@ const archivePath = path.join(homeDir, '.config/solana/archive');
 
 // Paths for wallets.json
 const walletsDir = path.join(homeDir, 'x1console');
-const agaveXolanaDir = path.join(homeDir, 'x1/agave-xolana');
+const solanalabsDir = path.join(homeDir, 'x1/solanalabs');
 const walletsFilePath = path.join(walletsDir, 'wallets.json');
 
 if (!fs.existsSync(walletsDir)) {
     fs.mkdirSync(walletsDir, { recursive: true }); // Create the x1console directory if it doesn't exist
 }
 
-if (!fs.existsSync(agaveXolanaDir)) {
-    fs.mkdirSync(agaveXolanaDir, { recursive: true }); // Create the agave-xolana directory if it doesn't exist
+if (!fs.existsSync(solanalabsDir)) {
+    fs.mkdirSync(solanalabsDir, { recursive: true }); // Create the solanalabs directory if it doesn't exist
 }
 
 let newWalletsCreated = false; // Track if any new wallets are created
@@ -180,9 +180,9 @@ function createWalletsJSON() {
     console.log('wallets.json created with the following content:');
     console.log(wallets);
 
-    // Copy the wallets.json to the agave-xolana directory
-    fs.copyFileSync(walletsFilePath, path.join(agaveXolanaDir, 'wallets.json'));
-    console.log(`Copied wallets.json to: ${agaveXolanaDir}`);
+    // Copy the wallets.json to the solanalabs directory
+    fs.copyFileSync(walletsFilePath, path.join(solanalabsDir, 'wallets.json'));
+    console.log(`Copied wallets.json to: ${solanalabsDir}`);
 }
 
 // Main function to execute the checks

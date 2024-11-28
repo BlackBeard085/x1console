@@ -40,7 +40,7 @@ function loadWallets() {
 
 // Function to attempt to load wallets from an alternative directory
 function loadWalletsFromBackup() {
-    const backupPath = path.join(os.homedir(), 'x1/agave-xolana', CONFIG_FILE);
+    const backupPath = path.join(os.homedir(), 'x1/solanalabs', CONFIG_FILE);
     if (fs.existsSync(backupPath)) {
         console.log(`Found ${CONFIG_FILE} in backup directory. Copying to current directory...`);
         fs.copyFileSync(backupPath, CONFIG_FILE);
