@@ -168,13 +168,13 @@ update_x1() {
 
 # Function to update the X1 console
 update_x1_console() {
-   # echo -e "\nStashing local changes..."
-   # git stash
+    echo -e "\nStashing local changes..."
+    git stash
 
-   # echo -e "\nPulling latest changes..."
-    #git pull
+    echo -e "\nPulling latest changes..."
+    git pull
 
-    echo -e "\nX1 console update feature paused.\n"
+    echo -e "\nX1 console update to solanalabs v1.18.26.\n"
     
     pause
 }
