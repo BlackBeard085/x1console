@@ -30,7 +30,7 @@ echo 'export PATH="$HOME/.local/share/solana/install/active/solana-release/bin:$
 echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
 
 # Load the new PATH in the current shell
-export PATH="/home/test2/.local/share/solana/install/active_release/bin:$PATH" && source ~/.profile && source ~/.bashrc
+export PATH="/home/ubuntu/.local/share/solana/install/active_release/bin:$PATH" && source ~/.profile && source ~/.bashrc
 
 # Verify the installation
 echo "Verifying Solana CLI installation..."

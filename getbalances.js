@@ -90,7 +90,7 @@ async function main() {
     if (!wallets) {
         console.log('No wallet addresses found. You will be prompted to enter them.');
         wallets = [
-            { name: 'Withdrawer', address: await askForWalletAddress('Withdrawer') },
+            { name: 'Id', address: await askForWalletAddress('Id') },
             { name: 'Identity', address: await askForWalletAddress('Identity') },
             { name: 'Stake', address: await askForWalletAddress('Stake') },
             { name: 'Vote', address: await askForWalletAddress('Vote') },
@@ -106,14 +106,14 @@ async function main() {
     
     await getBalances(wallets);
 
-    const identityWallet = wallets.find(w => w.name === 'Identity');
+    const idWallet = wallets.find(w => w.name === 'Id');
     const stakeWallet = wallets.find(w => w.name === 'Stake');
     
-    // Check balances of Identity and Stake wallets
+    // Check balances of Id and Stake wallets
     const needsFunding = [];
     
-    if (identityWallet.balance < 1) {
-        needsFunding.push(identityWallet);
+    if (idWallet.balance < 1) {
+        needsFunding.push(idWallet);
     }
     if (stakeWallet.balance < 1) {
         needsFunding.push(stakeWallet);
@@ -121,25 +121,23 @@ async function main() {
 
     // If any wallets need funding
     if (needsFunding.length > 0) {
-        const sourceWallet = wallets.find(w => w.name === 'Withdrawer');
-
-        // Check if the Withdrawer wallet has enough balance for the transfers
-        if (sourceWallet.balance >= needsFunding.length * TRANSFER_AMOUNT) {
+        // Check if the Id wallet has enough balance for the transfers
+        if (idWallet.balance >= needsFunding.length * TRANSFER_AMOUNT) {
             // Loop through the wallets that need funding and transfer 2 SOL to each
             for (const wallet of needsFunding) {
                 console.log(`\nSending ${TRANSFER_AMOUNT} SOL to ${wallet.address}`);
-                await transferSOL(sourceWallet.address, wallet.address, TRANSFER_AMOUNT);
+                await transferSOL(idWallet.address, wallet.address, TRANSFER_AMOUNT);
             }
             console.log(`\nChecking balances again...`);
             await getBalances(wallets);
 
             // Final check to see if both accounts are now funded
-            if (identityWallet.balance >= 1 && stakeWallet.balance >= 1) {
+            if (idWallet.balance >= 1 && stakeWallet.balance >= 1) {
                 console.log("Accounts well funded");
                 process.exit(0);
             }
         } else {
-            console.log("Not enough funds in the withdrawer wallet to perform the transfers.");
+            console.log("Not enough funds in the Id wallet to perform the transfers.");
             process.exit(1);
         }
     } else {
