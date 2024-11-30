@@ -24,38 +24,6 @@ if (!fs.existsSync(solanalabsDir)) {
 
 let newWalletsCreated = false; // Track if any new wallets are created
 
-// Function to capitalize the first letter of a string
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// Function to update wallets.json with public keys from existing files
-function updateWallets() {
-    const files = [withdrawerPath, identityPath, stakePath, votePath];
-    const wallets = [];
-
-    try {
-        // Collect public keys from the specified files
-        for (const file of files) {
-            if (fs.existsSync(file)) {
-                const publicKey = execSync(`solana-keygen pubkey ${file}`).toString().trim();
-                const walletName = capitalizeFirstLetter(path.basename(file, '.json'));
-                wallets.push({ name: walletName, address: publicKey });
-            }
-        }
-
-        // Write the wallets to wallets.json
-        fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
-        console.log('wallets.json created/updated.');
-
-        // Copy the wallets.json to the solanalabs directory
-        fs.copyFileSync(walletsFilePath, path.join(solanalabsDir, 'wallets.json'));
-        console.log(`Copied wallets.json to: ${solanalabsDir}`);
-    } catch (error) {
-        console.error(`Error updating wallets.json: ${error}`);
-    }
-}
-
 // Function to move and create new stake account
 function moveAndCreateStakeAccount() {
     return new Promise((resolve, reject) => {
@@ -202,14 +170,15 @@ function createWalletsJSON() {
     }
 
     const wallets = [
-        { name: capitalizeFirstLetter("withdrawer"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
-        { name: capitalizeFirstLetter("identity"), address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
-        { name: capitalizeFirstLetter("stake"), address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
-        { name: capitalizeFirstLetter("vote"), address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
+        { name: "Withdrawer", address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
+        { name: "Identity", address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
+        { name: "Stake", address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
+        { name: "Vote", address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
     ];
 
     fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
-    console.log('wallets.json created/updated.');
+    console.log('wallets.json created with the following content:');
+    console.log(wallets);
 
     // Copy the wallets.json to the solanalabs directory
     fs.copyFileSync(walletsFilePath, path.join(solanalabsDir, 'wallets.json'));
@@ -218,8 +187,6 @@ function createWalletsJSON() {
 
 // Main function to execute the checks
 async function main() {
-    updateWallets(); // Update wallets.json with existing public keys
-
     try {
         const [stakeResult, voteResult] = await Promise.all([
             checkStakeAccount(),
