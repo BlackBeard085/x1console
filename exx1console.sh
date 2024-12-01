@@ -118,6 +118,7 @@ install() {
         echo -e "\ninstall_run.sh does not exist. Please create it.\n"
     fi
 }
+pause
 
 # Function to update Solana CLI and the application
 update_x1() {
@@ -316,7 +317,51 @@ ping_times() {
     pause
 }
 
-# New function for managing the ledger
+# New function to display validator logs
+show_logs() {
+    echo -e "\nRunning validatorlogs.js..."
+    if [ -f "$HOME/x1console/validatorlogs.js" ]; then
+        node "$HOME/x1console/validatorlogs.js"
+        if [ $? -eq 0 ]; then
+            echo -e "\nvalidatorlogs.js executed successfully.\n"
+        else
+            echo -e "\nFailed to execute validatorlogs.js.\n"
+        fi
+    else
+        echo -e "\nvalidatorlogs.js does not exist. Please create it.\n"
+    fi
+    
+    pause
+}
+
+# New function to delete validator logs
+delete_logs() {
+    if lsof -i:8899; then
+        echo -e "\nThe validator is currently running and must be turned off to delete validator logs."
+        echo -e "Do you wish to continue? (yes/no)"
+        read -r user_choice
+
+        if [[ "$user_choice" == "yes" ]]; then
+            echo -e "\nStopping the validator..."
+            (cd "$HOME/x1/solanalabs/" && solana-validator exit -f)
+            echo -e "Validator has been stopped."
+
+            echo -e "\nDeleting log.txt..."
+            rm -rf "$HOME/x1/log.txt"
+            echo -e "\nValidator logs have been deleted. Please start your validator through the health check (option 3) which will start your validator.\n"
+        else
+            echo -e "\nOperation canceled. Returning to main menu.\n"
+        fi
+    else
+        echo -e "\nValidator is not running. Deleting log.txt..."
+        rm -rf "$HOME/x1/log.txt"
+        echo -e "\nValidator logs have been deleted. Please start your validator through the health check (option 3) which will start your validator.\n"
+    fi
+    
+    pause
+}
+
+# New Ledger function to manage Ledger commands
 ledger() {
     echo -e "\nChoose a subcommand:"
     echo -e "1. Ledger Monitor"
@@ -412,130 +457,6 @@ set_commission() {
     pause
 }
 
-# Function for 'Other' menu
-other_options() {
-    while true; do
-        echo -e "\nChoose an option under 'Other':"
-        echo -e "1. Transfers"
-        echo -e "2. Manage Stake"
-        echo -e "3. Withdraw Stake/Vote"
-        echo -e "4. Speed Test"
-        echo -e "5. Return to Main Menu"
-        read -p "Enter your choice [1-5]: " other_choice
-
-        case $other_choice in
-            1)
-                transfers
-                ;;
-            2)
-                manage_stake
-                ;;
-            3)
-                withdraw_stake_vote
-                ;;
-            4)
-                speed_test
-                ;;
-            5)
-                break
-                ;;
-            *)
-                echo -e "\nInvalid choice. Please choose from 1 to 5.\n"
-                ;;
-        esac
-    done
-}
-
-# Function to handle transfers and an address book
-transfers() {
-    while true; do
-        echo -e "\nChoose a subcommand for Transfers:"
-        echo -e "1. Transfer"
-        echo -e "2. Address Book"
-        echo -e "3. Return to 'Other' Menu"
-        read -p "Enter your choice [1-3]: " transfer_choice
-
-        case $transfer_choice in
-            1)
-                echo -e "\nRunning setwithdrawer.js..."
-                node "$HOME/x1console/setwithdrawer.js"
-
-                echo -e "\nRunning transfer.js..."
-                if [ -f "$HOME/x1console/transfer.js" ]; then
-                    node "$HOME/x1console/transfer.js"
-                    if [ $? -eq 0 ]; then
-                        echo -e "\nTransfer completed successfully.\n"
-                    else
-                        echo -e "\nTransfer failed.\n"
-                    fi
-                else
-                    echo -e "\ntransfer.js does not exist. Please create it.\n"
-                fi
-                pause
-                ;;
-            2)
-                echo -e "\nRunning addressbook.js..."
-                if [ -f "$HOME/x1console/addressbook.js" ]; then
-                    node "$HOME/x1console/addressbook.js"
-                    if [ $? -eq 0 ]; then
-                        echo -e "\nAddress Book accessed successfully.\n"
-                    else
-                        echo -e "\nFailed to access Address Book.\n"
-                    fi
-                else
-                    echo -e "\naddressbook.js does not exist. Please create it.\n"
-                fi
-                pause
-                ;;
-            3)
-                break
-                ;;
-            *)
-                echo -e "\nInvalid choice. Please choose from 1 to 3.\n"
-                ;;
-        esac
-    done
-}
-
-# Function for managing stake
-manage_stake() {
-    echo -e "\nRunning managestake.sh..."
-    if [ -f "$HOME/x1console/managestake.sh" ]; then
-        bash "$HOME/x1console/managestake.sh"
-        if [ $? -eq 0 ]; then
-            echo -e "\nManage Stake completed successfully.\n"
-        else
-            echo -e "\nFailed to manage stake.\n"
-        fi
-    else
-        echo -e "\nmanagestake.sh does not exist. Please create it.\n"
-    fi
-    pause
-}
-
-# Function for withdrawing stake/vote
-withdraw_stake_vote() {
-    echo -e "\nRunning withdraw.sh..."
-    if [ -f "$HOME/x1console/withdraw.sh" ]; then
-        bash "$HOME/x1console/withdraw.sh"
-        if [ $? -eq 0 ]; then
-            echo -e "\nWithdraw Stake/Vote completed successfully.\n"
-        else
-            echo -e "\nFailed to withdraw stake/vote.\n"
-        fi
-    else
-        echo -e "\nwithdraw.sh does not exist. Please create it.\n"
-    fi
-    pause
-}
-
-# Placeholder function for speed test
-speed_test() {
-    echo -e "\nRunning Speed Test...\n"
-    # Placeholder for speed test logic
-    pause
-}
-
 # Function to exit the script
 exit_script() {
     echo -e "\nExiting the script.\n"
@@ -590,13 +511,12 @@ while true; do
     echo -e "4. Check Balances"
     echo -e "5. Publish Validator"
     echo -e "6. Pinger"
-    echo -e "7. Validator"
+    echo -e "7. Validator Logs"
     echo -e "8. Ledger"
     echo -e "9. Set Commission"
-    echo -e "10. Other"
-    echo -e "11. Exit"
+    echo -e "10. Exit"
 
-    read -p "Enter your choice [1-11]: " choice
+    read -p "Enter your choice [1-10]: " choice
 
     case $choice in
         1)
@@ -617,7 +537,7 @@ while true; do
             echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
             echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
             echo -e "\nexport PATH=\"/home/ubuntu/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-            echo -e "\nIF THIS IS THE FIRST INSTALLATION LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
+            echo -e "\nIF THIS IS THE FIRST ISTALLATION LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
            
             # Indicate that setup is complete
             echo -e "Setup is complete.\n"
@@ -667,18 +587,25 @@ while true; do
             ;;
         
         7)
-            echo -e "\nRunning manageval.sh..."
-            if [ -f "$HOME/x1console/manageval.sh" ]; then
-                bash "$HOME/x1console/manageval.sh"
-                if [ $? -eq 0 ]; then
-                    echo -e "\nValidator management completed successfully.\n"
-                else
-                    echo -e "\nFailed to manage validator.\n"
-                fi
-            else
-                echo -e "\nmanageval.sh does not exist. Please create it.\n"
-            fi
-            pause
+            echo -e "\nChoose a subcommand:"
+            echo -e "1. Show Logs"
+            echo -e "2. Delete Logs"
+            read -p "Enter your choice [1-2]: " logs_choice
+            case $logs_choice in
+                1)
+                    show_logs
+                    continue
+                    ;;
+                2)
+                    delete_logs
+                    continue
+                    ;;
+                *)
+                    echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+                    continue
+                    ;;
+            esac
+            show_logs
             continue
             ;;
         
@@ -693,16 +620,11 @@ while true; do
             ;;
         
         10)
-            other_options
-            continue
-            ;;
-        
-        11)
             exit_script
             ;;
         
         *)
-            echo -e "\nInvalid choice. Please choose from 1 to 11.\n"
+            echo -e "\nInvalid choice. Please choose from 1 to 10.\n"
             ;;
     esac
 done
