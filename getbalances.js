@@ -68,7 +68,7 @@ async function getBalances(wallets) {
 // Function to transfer SOL between wallets
 function transferSOL(fromWallet, toWallet, amount) {
     return new Promise((resolve, reject) => {
-        exec(`solana transfer ${toWallet} ${amount}`, (error, stdout, stderr) => {
+        exec(`solana transfer ${toWallet} ${amount} --allow-unfunded-recipient`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error executing transfer: ${stderr}`);
                 return reject(stderr);
