@@ -21,8 +21,7 @@ function isValidatorRunning() {
 // Function to delegate stake
 function delegateStake() {
     return new Promise((resolve, reject) => {
-        // Specify the absolute path to the Solana command-line tool
-        exec(`cd ${validatorDirectory} && ~/.local/share/solana/install/active_release/bin/solana delegate-stake stake.json vote.json`, (error, stdout, stderr) => {
+        exec(`cd ${validatorDirectory} && solana delegate-stake stake.json vote.json`, (error, stdout, stderr) => {
             if (error) {
                 reject(`Error delegating stake: ${stderr.trim()}`);
             } else {
