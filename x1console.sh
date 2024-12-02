@@ -416,25 +416,51 @@ set_commission() {
 other_options() {
     while true; do
         echo -e "\nChoose an option under 'Other':"
-        echo -e "1. Transfers"
-        echo -e "2. Manage Stake"
-        echo -e "3. Withdraw Stake/Vote"
+        echo -e "1. Install, Start X1 and Pinger"
+        echo -e "2. Update"
+        echo -e "3. Pinger"
         echo -e "4. Speed Test"
         echo -e "5. Return to Main Menu"
         read -p "Enter your choice [1-5]: " other_choice
 
         case $other_choice in
             1)
-                transfers
+                install
                 ;;
             2)
-                manage_stake
+                echo -e "\nChoose a subcommand:"
+                echo -e "1. Update server"
+                echo -e "2. Update X1 Console"
+                read -p "Enter your choice [1-2]: " update_choice
+
+                case $update_choice in
+                    1)
+                        update_x1
+                        ;;
+                    2)
+                        update_x1_console
+                        ;;
+                    *)
+                        echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+                        ;;
+                esac
                 ;;
             3)
-                withdraw_stake_vote
+                pinger
                 ;;
             4)
-                speed_test
+                # Execute speedtest.sh when chosen
+                echo -e "\nExecuting speedtest.sh..."
+                if [ -f "$HOME/x1console/speedtest.sh" ]; then
+                    bash "$HOME/x1console/speedtest.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nSpeed test completed successfully.\n"
+                    else
+                        echo -e "\nFailed to execute speed test.\n"
+                    fi
+                else
+                    echo -e "\nspeedtest.sh does not exist. Please create it in the x1console directory.\n"
+                fi
                 ;;
             5)
                 break
@@ -529,7 +555,7 @@ withdraw_stake_vote() {
     pause
 }
 
-# Placeholder function for speed test
+# Placeholder function for speed test (this will be handled in other_options now)
 speed_test() {
     echo -e "\nRunning Speed Test...\n"
     # Placeholder for speed test logic
@@ -584,15 +610,15 @@ echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, 
 # Interaction to execute install function or update, health check, or exit
 while true; do
     echo -e "\nChoose an option:"
-    echo -e "1. Install, Start X1 and Pinger"
-    echo -e "2. Update"
-    echo -e "3. Health Check and Start Validator"
-    echo -e "4. Check Balances"
-    echo -e "5. Publish Validator"
-    echo -e "6. Pinger"
-    echo -e "7. Validator"
-    echo -e "8. Ledger"
-    echo -e "9. Set Commission"
+    echo -e "1. Health Check and Start Validator"
+    echo -e "2. Validator"
+    echo -e "3. Check Balances"
+    echo -e "4. Transfers"
+    echo -e "5. Manage Stake"
+    echo -e "6. Withdraw Stake/Vote"
+    echo -e "7. Ledger"
+    echo -e "8. Set Commission"
+    echo -e "9. Publish Validator"
     echo -e "10. Other"
     echo -e "11. Exit"
 
@@ -600,73 +626,11 @@ while true; do
 
     case $choice in
         1)
-            install
-
-            # Display wallet addresses after installation
-            echo -e "\n"
-
-            # Read wallet addresses from wallets.json
-            if [ -f "$HOME/x1/solanalabs/wallets.json" ]; then
-                echo -e "Wallet Addresses:"
-                # Using jq to parse the JSON file
-                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/solanalabs/wallets.json"
-            else
-                echo -e "\nwallets.json not found.\n"
-            fi
-
-            echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
-            echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
-            echo -e "\nexport PATH=\"/home/ubuntu/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-            echo -e "\nIF THIS IS THE FIRST INSTALLATION LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
-           
-            # Indicate that setup is complete
-            echo -e "Setup is complete.\n"
-            continue
-            ;;
-        
-        2)
-            echo -e "\nChoose a subcommand:"
-            echo -e "1. Update server"
-            echo -e "2. Update X1 Console"
-            read -p "Enter your choice [1-2]: " update_choice
-
-            case $update_choice in
-                1)
-                    update_x1
-                    continue
-                    ;;
-                2)
-                    update_x1_console
-                    continue
-                    ;;
-                *)
-                    echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
-                    continue
-                    ;;
-            esac
-            ;;
-        
-        3)
             health_check
             continue
             ;;
         
-        4)
-            balances
-            continue
-            ;;
-        
-        5)
-            publish_validator
-            continue
-            ;;
-        
-        6)
-            pinger
-            continue
-            ;;
-        
-        7)
+        2)
             echo -e "\nRunning manageval.sh..."
             if [ -f "$HOME/x1console/manageval.sh" ]; then
                 bash "$HOME/x1console/manageval.sh"
@@ -682,13 +646,38 @@ while true; do
             continue
             ;;
         
-        8)
+        3)
+            balances
+            continue
+            ;;
+        
+        4)
+            transfers
+            continue
+            ;;
+        
+        5)
+            manage_stake
+            continue
+            ;;
+        
+        6)
+            withdraw_stake_vote
+            continue
+            ;;
+        
+        7)
             ledger
             continue
             ;;
         
-        9)
+        8)
             set_commission
+            continue
+            ;;
+        
+        9)
+            publish_validator
             continue
             ;;
         
