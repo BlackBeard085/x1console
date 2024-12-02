@@ -107,13 +107,14 @@ async function main() {
     await getBalances(wallets);
 
     const idWallet = wallets.find(w => w.name === 'Id');
+    const identityWallet = wallets.find(w => w.name === 'Identity');
     const stakeWallet = wallets.find(w => w.name === 'Stake');
     
-    // Check balances of Id and Stake wallets
+    // Check balances of Identity and Stake wallets
     const needsFunding = [];
     
-    if (idWallet.balance < 1) {
-        needsFunding.push(idWallet);
+    if (identityWallet.balance < 1) {
+        needsFunding.push(identityWallet);
     }
     if (stakeWallet.balance < 1) {
         needsFunding.push(stakeWallet);
@@ -132,7 +133,7 @@ async function main() {
             await getBalances(wallets);
 
             // Final check to see if both accounts are now funded
-            if (idWallet.balance >= 1 && stakeWallet.balance >= 1) {
+            if (identityWallet.balance >= 1 && stakeWallet.balance >= 1) {
                 console.log("Accounts well funded");
                 process.exit(0);
             }
