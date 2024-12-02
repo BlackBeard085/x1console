@@ -43,6 +43,12 @@ while true; do
 
         # Calculate unstaked balance
         unstaked_balance=$(bc <<< "$balance - $active_stake")
+        
+        # If active stake is empty, set unstaked balance to balance
+        if [ -z "$active_stake" ]; then
+            unstaked_balance=$balance
+        fi
+        
         echo "---------------------------------"
         echo "Balance: $balance"
         echo "Active Stake: $active_stake"
@@ -59,7 +65,13 @@ while true; do
                 break
             fi
             
-            # Validate the amount
+            # Validate the amount (must be a number)
+            if ! [[ "$withdraw_amount" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+                echo "Incorrect value entered, returning to menu."
+                break
+            fi
+            
+            # Validate the amount is within the unstaked balance range
             if (( $(echo "$withdraw_amount <= $unstaked_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
                 # Withdraw funds
                 solana withdraw-stake "$stake_address" "$withdraw_to_address" "$withdraw_amount"
@@ -99,7 +111,13 @@ while true; do
                 break
             fi
             
-            # Validate the amount
+            # Validate the amount (must be a number)
+            if ! [[ "$withdraw_amount" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+                echo "Incorrect value entered, returning to menu."
+                break
+            fi
+            
+            # Validate the amount is within the vote balance range
             if (( $(echo "$withdraw_amount <= $vote_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
                 # Withdraw funds from Vote account
                 solana withdraw-from-vote-account "$vote_address" "$withdraw_to_address" "$withdraw_amount"

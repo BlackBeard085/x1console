@@ -76,7 +76,7 @@ const main = async () => {
             }
 
         } else if (action === '3') {
-            console.log('Exiting address book management. Have a great day!');
+            console.log('Exiting address book management.');
             process.stdin.pause();
             break; // Exit the loop and terminate the script
         } else {

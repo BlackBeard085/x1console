@@ -25,7 +25,7 @@ check_solanalabs_directory() {
         case $action in
             delete)
                 echo -e "\nDeleting $SOLANALABS_DIR..."
-                rm -rf "$SOLANALABS_DIR"
+                rm -rf "$SOLANALABS_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HONE/x1console/addressbook.json
                 echo -e "$SOLANALABS_DIR has been deleted.\n"
                 ;;
             archive)
@@ -416,7 +416,7 @@ set_commission() {
 other_options() {
     while true; do
         echo -e "\nChoose an option under 'Other':"
-        echo -e "1. Install, Start X1 and Pinger"
+        echo -e "1. Install, Start X1 and Pinger or [RESET]"
         echo -e "2. Update"
         echo -e "3. Pinger"
         echo -e "4. Speed Test"
@@ -605,7 +605,7 @@ else
 fi
 
 # Print welcome message
-echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED!\n"
+echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========\n"
 
 # Interaction to execute install function or update, health check, or exit
 while true; do
