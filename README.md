@@ -1,12 +1,14 @@
+
+
 # X1'S THE BLACK PEARL - VALIDATOR CONSOLE BY BLACKBEARD
 
 Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctional console designed for managing your X1 validator. Created by BLACKBEARD, this console streamlines your experience, providing tools for installation, updates, health checks, and various utilities tailored for validator management on the Solana network. You can call it **X1 Console** for short.
 
 ## Features
 
-- **Installation and Setup**: Easily install and configure your X1 validator, ensuring seamless integration with your existing wallets. The console automates the installation process, tuning the system for a X1 validator, installing the the X1 compatible CLI, builds the agave validator, opens the required ports, connects to the X1 network, creates four new X1 wallets or uses your exisying wallets if you prefer, starts your validator, funds your id.json (withdrawer) which funds your identity, it registers both your stake.json and vot.json, delegates your stake and restarts your validator. it then installs and starts Pinger. ALL IN ONE COMMAND. streamlining the process so anyone can become an X1 validator.
+- **Installation and Setup**: Easily install and configure your X1 validator, ensuring seamless integration with your existing wallets. The console automates the installation process, tuning the system for an X1 validator, installing the X1-compatible CLI, building the agave validator, opening the required ports, connecting to the X1 network, creating four new X1 wallets or using your existing wallets if you prefer, starting your validator, funding your id.json (withdrawer) which funds your identity, registering both your stake.json and vote.json, delegating your stake, and restarting your validator. It then installs and starts Pinger—all in one command, streamlining the process so anyone can become an X1 validator.
 - **Update Utilities**: Keep your validator and console up to date with minimal effort.
-- **Health Monitoring**: Perform automated health checks and take appropriate action where needed to bring a delinquent validator tonactive status again. AN AUTOMATED TROUBLESHOOTER IN EFFECT
+- **Health Monitoring**: Perform automated health checks and take appropriate action where needed to bring a delinquent validator to active status again—an automated troubleshooter in effect.
 - **Account Management**: Utilities to set commission, check balances, and manage validator logs.
 - **Interactive Command-Line Interface**: User-friendly interface allowing easy navigation through various functionalities.
 - **Integrated Ledger Management**: Monitor or remove your ledger as necessary.
@@ -15,7 +17,7 @@ Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctiona
 
 To get started with X1's The Black Pearl (or **X1 Console**), follow these steps:
 
-### Installation
+### Console Installation
 
 1. Clone the repository and navigate to the directory:
 
@@ -28,6 +30,80 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
    ```bash
    ./x1console.sh
    ```
+
+### Installing X1
+
+To install and start your X1 validator, follow these steps after starting the console:
+
+1. From the main menu, choose option **10. Other**.
+2. Next, select option **1. Install, Start X1 and Pinger**.
+
+This command will initiate a comprehensive setup process that automatically tunes your system to run a validator. It will open the required ports, download the necessary CLI, applications, and dependencies, build your validator, create your wallets, fund your id.json (the withdrawer), register your vote and stake accounts, delegate your stake, and ultimately start your validator. You will become an active validator right from the initial installation! This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
+
+### Health Check
+
+Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
+
+- If your validator is active, no action is taken.
+- If your validator is delinquent, the X1 console will automatically check aspects of your validator to determine what is wrong.
+  - If your stake or identity balances are under 1 XN, it will fund them by 2 XN by default, which is enough to start a validator.
+  - If your stake or vote accounts are not registered, it will register them.
+  - If they have been funded beforehand and cannot be used as stake or vote accounts, it will replace them.
+  - If you have 0 delegated stake, it will delegate your stake.
+
+Once it has corrected any errors, it will restart the validator.
+
+### Validator
+
+Option 2 from the main menu is **Validator**. This section provides three sub-options for more control over your X1 validator:
+
+1. **Stop the Validator**: Temporarily halt your validator operations.
+2. **Show Validator Logs**: View the logs generated by your validator for monitoring and debugging purposes.
+3. **Delete Validator Logs**: Remove the existing logs to free up space or for privacy concerns.
+
+### Check Balances
+
+Option 3 from the main menu is **Check Balances**. This option allows you to check your balances in all four wallets: **id.json**, **identity.json**, **vote.json**, and **stake.json**. 
+
+- It also includes an added function that automatically funds underfunded vote or stake accounts if their funds drop under 1 XN.
+
+### Transfers
+
+Option 4 is **Transfers**, which allows you to transfer funds between wallets and manage an address book, adding or removing addresses from your address book.
+
+### Manage Stake
+
+Option 5 allows you to **Manage Stake**, giving you the ability to activate or deactivate your stake account and check the epoch when these changes will take effect.
+
+### Withdraw Stake/Vote
+
+Option 6 allows you to **Withdraw Stake/Vote**, enabling you to withdraw any unstaked balance in your stake account and any balance in your vote account.
+
+### Ledger
+
+Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of fatal crashes or ledger failures, this option enables you to remove the ledger for a smoother restart.
+
+### Set Commission
+
+Option 8 allows you to **Set Commission**, with the default commission set at 10%. You can easily adjust this by entering your desired commission rate, and it will automatically be set once a value has been entered.
+
+### Publish Validator
+
+Option 9 allows you to **Publish Validator**. This option lets you register your validator. The console will prompt you for:
+- The name you wish to give to your validator.
+- The web URL tied to your validator, such as your X account.
+- An image you wish to use as an icon for your validator.
+
+The console will then register your details on the X1 blockchain, making this information visible on x1val.online.
+
+### Other Menu
+
+The **Other Menu** is reserved for functions that will be used rarely. It includes the following options:
+
+1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
+2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
+3. **Reset Pinger**: This option resets your Pinger settings.
+4. **Speedtest**: This option carries out a speed test to evaluate your network performance.
 
 ## Functions Overview
 
@@ -63,4 +139,4 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 ---
 
-For further inquiries or contributions, feel free to reach out via GitHub or engage with the community supporting X1's The Black Pearl. Happy validating! ⚓
+For further inquiries or contributions, feel free to reach out via GitHub or engage with the community supporting X1's The Black Pearl. Happy validating! ⚓ 
