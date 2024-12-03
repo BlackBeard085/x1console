@@ -90,11 +90,6 @@ function moveAndCreateStakeAccount() {
                             return;
                         }
                         const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
-                        
-                        // Copy the stake.json to the solanalabs directory
-                        fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
-                        console.log(`Copied stake.json to: ${solanalabsDir}`);
-
                         resolve(`New stake account exists:\n${outputLines}`);
                     });
                 });
@@ -137,11 +132,6 @@ function moveAndCreateVoteAccount() {
                             return;
                         }
                         const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
-                        
-                        // Copy the vote.json to the solanalabs directory
-                        fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
-                        console.log(`Copied vote.json to: ${solanalabsDir}`);
-
                         resolve(`New vote account exists:\n${outputLines}`);
                     });
                 });
@@ -182,11 +172,11 @@ function checkVoteAccount() {
     return new Promise((resolve, reject) => {
         exec(`solana vote-account ${votePath}`, (error, stdout, stderr) => {
             if (stderr.includes("account does not exist")) {
-                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr) => {
+                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr, createStdout, createStderr) => {
                     if (createErr) {
-                        reject(`Error creating vote account: ${createErr}`);
+                        reject(`Error creating vote account: ${createStderr}`);
                     } else {
-                        resolve(`Vote account created: ${stdout}`);
+                        resolve(`Vote account created: ${createStdout}`);
                     }
                 });
             } else if (stderr.includes("is not a vote account")) {

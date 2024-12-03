@@ -229,7 +229,7 @@ balances() {
         if [ $? -eq 0 ]; then
             echo -e "\nAccounts checked successfully.\n"
         else
-            echo -e "\nFailed to check accounts.\n"
+            echo -e "\nUnable to send funds to underfunded wallets.\n"
         fi
     else
         echo -e "\ncheckaccounts.js does not exist. Please create it.\n"

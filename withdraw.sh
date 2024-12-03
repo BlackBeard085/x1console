@@ -57,7 +57,7 @@ while true; do
 
         # Loop for withdrawal amount
         while true; do
-            read -p "How much unstaked balance would you like to withdraw (0 - $unstaked_balance)? [Press any key to cancel] " withdraw_amount
+            read -p "How much unstaked balance would you like to withdraw (0 - $unstaked_balance)?" withdraw_amount
             
             # Check if the user wants to cancel
             if [ -z "$withdraw_amount" ]; then
@@ -103,7 +103,7 @@ while true; do
 
         # Prompt for withdrawal amount
         while true; do
-            read -p "How much funds would you like to withdraw from the Vote account (0 - $vote_balance)? [Press any key to cancel] " withdraw_amount
+            read -p "How much funds would you like to withdraw from the Vote account (0 - $vote_balance)?" withdraw_amount
             
             # Check if the user wants to cancel
             if [ -z "$withdraw_amount" ]; then
@@ -130,7 +130,7 @@ while true; do
         done
 
     elif [[ "$option" -eq 3 ]]; then
-        echo "Exiting withdrawal process. Goodbye!"
+        echo "Exiting withdrawal process."
         exit 0
     else
         echo "Invalid option selected."
