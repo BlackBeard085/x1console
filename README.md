@@ -38,7 +38,13 @@ To install and start your X1 validator, follow these steps after starting the co
 1. From the main menu, choose option **10. Other**.
 2. Next, select option **1. Install, Start X1 and Pinger**.
 
-This command will initiate a comprehensive setup process that automatically tunes your system to run a validator. It will open the required ports, download the necessary CLI, applications, and dependencies, build your validator, create your wallets, fund your id.json (the withdrawer), register your vote and stake accounts, delegate your stake, and ultimately start your validator. You will become an active validator right from the initial installation! This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
+This command will initiate a comprehensive setup process that automatically tunes your system to run a validator. It will open the required ports, download the necessary CLI, applications, and dependencies, build your validator, create your wallets, fund your id.json (the withdrawer), register your vote and stake accounts, delegate your stake, and ultimately start your validator. You will become an active validator right from the initial installation! This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets. For firt installs please do the following.
+
+IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
+
+```bash
+export PATH="/home/test2/.local/share/solana/install/active_release/bin:$PATH"
+```
 
 ### Health Check
 
