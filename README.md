@@ -43,7 +43,7 @@ This command will initiate a comprehensive setup process that automatically tune
 IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
 
 ```bash
-export PATH="/home/test2/.local/share/solana/install/active_release/bin:$PATH"
+export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
 ### Health Check
