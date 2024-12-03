@@ -426,6 +426,23 @@ other_options() {
         case $other_choice in
             1)
                 install
+            # Display wallet addresses after installation
+            echo -e "\n"
+            # Read wallet addresses from wallets.json
+            if [ -f "$HOME/x1/solanalabs/wallets.json" ]; then
+                echo -e "Wallet Addresses:"
+                # Using jq to parse the JSON file
+                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/solanalabs/wallets.json"
+            else
+                echo -e "\nwallets.json not found.\n"
+            fi
+            echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
+            echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
+            echo -e "\nexport PATH=\"$HOME/.local/share/solana/install/active_release/bin:\$PATH\"\n"
+            echo -e "\nOR LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
+           
+            # Indicate that setup is complete
+            echo -e "Setup is complete.\n"
                 ;;
             2)
                 echo -e "\nChoose a subcommand:"
