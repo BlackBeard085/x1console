@@ -84,21 +84,16 @@ function moveAndCreateStakeAccount() {
                         return;
                     }
 
+                    // Copy newly generated stake.json to the solanalabs directory
+                    fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
+                    console.log(`Copied stake.json to: ${solanalabsDir}`);
+
                     exec(`solana stake-account ${stakePath}`, (checkError, checkStdout) => {
                         if (checkError) {
                             reject(`Error checking new stake account: ${checkError}`);
                             return;
                         }
                         const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
-
-                        // Copy the stake.json to the solanalabs directory
-                        if (fs.existsSync(stakePath)) {
-                            fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
-                            console.log(`Copied stake.json to: ${solanalabsDir}`);
-                        } else {
-                            console.error(`stake.json does not exist for copying.`);
-                        }
-
                         resolve(`New stake account exists:\n${outputLines}`);
                     });
                 });
@@ -135,21 +130,16 @@ function moveAndCreateVoteAccount() {
                         return;
                     }
 
+                    // Copy newly generated vote.json to the solanalabs directory
+                    fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
+                    console.log(`Copied vote.json to: ${solanalabsDir}`);
+
                     exec(`solana vote-account ${votePath}`, (checkError, checkStdout) => {
                         if (checkError) {
                             reject(`Error checking new vote account: ${checkError}`);
                             return;
                         }
                         const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
-                        
-                        // Copy the vote.json to the solanalabs directory
-                        if (fs.existsSync(votePath)) {
-                            fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
-                            console.log(`Copied vote.json to: ${solanalabsDir}`);
-                        } else {
-                            console.error(`vote.json does not exist for copying.`);
-                        }
-
                         resolve(`New vote account exists:\n${outputLines}`);
                     });
                 });
@@ -192,9 +182,9 @@ function checkVoteAccount() {
             if (stderr.includes("account does not exist")) {
                 exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr) => {
                     if (createErr) {
-                        reject(`Error creating vote account: ${createErr}`);
+                        reject(`Error creating vote account: ${createStderr}`);
                     } else {
-                        resolve(`Vote account created: ${stdout}`);
+                        resolve(`Vote account created: ${createStdout}`);
                     }
                 });
             } else if (stderr.includes("is not a vote account")) {
@@ -220,7 +210,7 @@ function createWalletsJSON() {
     }
 
     const wallets = [
-        { name: capitalizeFirstLetter("withdrawer"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
+        { name: capitalizeFirstLetter("id"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
         { name: capitalizeFirstLetter("identity"), address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
         { name: capitalizeFirstLetter("stake"), address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
         { name: capitalizeFirstLetter("vote"), address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
