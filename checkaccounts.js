@@ -84,7 +84,7 @@ function moveAndCreateStakeAccount() {
                         return;
                     }
 
-                    // Copy newly generated stake.json to the solanalabs directory
+                    // Copy the newly generated stake.json to the solanalabs directory
                     fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
                     console.log(`Copied stake.json to: ${solanalabsDir}`);
 
@@ -130,7 +130,7 @@ function moveAndCreateVoteAccount() {
                         return;
                     }
 
-                    // Copy newly generated vote.json to the solanalabs directory
+                    // Copy the newly generated vote.json to the solanalabs directory
                     fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
                     console.log(`Copied vote.json to: ${solanalabsDir}`);
 
@@ -153,11 +153,13 @@ function checkStakeAccount() {
     return new Promise((resolve, reject) => {
         exec(`solana stake-account ${stakePath}`, (error, stdout, stderr) => {
             if (stderr.includes("AccountNotFound")) {
-                exec(`solana create-stake-account ${stakePath} 2`, (createErr, createStdout, createStderr) => {
+                exec(`solana create-stake-account ${stakePath} 2`, (createErr) => {
                     if (createErr) {
-                        reject(`Error creating stake account: ${createStderr}`);
+                        reject(`Error creating stake account: ${stderr}`);
                     } else {
-                        resolve(`Stake account created: ${createStdout}`);
+                        // Copy the newly generated stake.json to the solanalabs directory
+                        fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
+                        resolve('Stake account created and copied to solanalabs.');
                     }
                 });
             } else if (stderr.includes("is not a stake account")) {
@@ -182,9 +184,11 @@ function checkVoteAccount() {
             if (stderr.includes("account does not exist")) {
                 exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr) => {
                     if (createErr) {
-                        reject(`Error creating vote account: ${createStderr}`);
+                        reject(`Error creating vote account: ${stderr}`);
                     } else {
-                        resolve(`Vote account created: ${createStdout}`);
+                        // Copy the newly generated vote.json to the solanalabs directory
+                        fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
+                        resolve('Vote account created and copied to solanalabs.');
                     }
                 });
             } else if (stderr.includes("is not a vote account")) {
