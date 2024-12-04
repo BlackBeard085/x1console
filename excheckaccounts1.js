@@ -90,14 +90,10 @@ function moveAndCreateStakeAccount() {
                             return;
                         }
                         const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
-
+                        
                         // Copy the stake.json to the solanalabs directory
-                        if (fs.existsSync(stakePath)) {
-                            fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
-                            console.log(`Copied stake.json to: ${solanalabsDir}`);
-                        } else {
-                            console.error(`stake.json does not exist for copying.`);
-                        }
+                        fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
+                        console.log(`Copied stake.json to: ${solanalabsDir}`);
 
                         resolve(`New stake account exists:\n${outputLines}`);
                     });
@@ -143,12 +139,8 @@ function moveAndCreateVoteAccount() {
                         const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
                         
                         // Copy the vote.json to the solanalabs directory
-                        if (fs.existsSync(votePath)) {
-                            fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
-                            console.log(`Copied vote.json to: ${solanalabsDir}`);
-                        } else {
-                            console.error(`vote.json does not exist for copying.`);
-                        }
+                        fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
+                        console.log(`Copied vote.json to: ${solanalabsDir}`);
 
                         resolve(`New vote account exists:\n${outputLines}`);
                     });
@@ -220,7 +212,7 @@ function createWalletsJSON() {
     }
 
     const wallets = [
-        { name: capitalizeFirstLetter("withdrawer"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
+        { name: capitalizeFirstLetter("id"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
         { name: capitalizeFirstLetter("identity"), address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
         { name: capitalizeFirstLetter("stake"), address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
         { name: capitalizeFirstLetter("vote"), address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
