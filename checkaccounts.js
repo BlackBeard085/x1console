@@ -212,7 +212,7 @@ function createWalletsJSON() {
     }
 
     const wallets = [
-        { name: capitalizeFirstLetter("withdrawer"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
+        { name: capitalizeFirstLetter("id"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
         { name: capitalizeFirstLetter("identity"), address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
         { name: capitalizeFirstLetter("stake"), address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
         { name: capitalizeFirstLetter("vote"), address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
