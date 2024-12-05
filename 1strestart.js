@@ -71,7 +71,7 @@ function isValidatorRunning() {
             console.log(`Check ${attempts}: Validator not yet running...`);
         }
 
-        console.log('Failed to start the validator. Port 8899 is still not in use.');
+        console.log('Failed to start the validator. Port 8899 is still not in use.Please check logs for errors, remove ledger and try again');
 
     } catch (error) {
         console.error('Failed to manage validator:', error);

@@ -63,8 +63,10 @@ install() {
     # Check x1/solanalabs directory before proceeding
     check_solanalabs_directory
     # Allowing the firewall for ports 8000 to 10000
-    echo -e "\nConfiguring firewall to allow access to ports 8000-10000..."
-    sudo ufw allow 8000:10000
+    echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
+    sudo ufw allow 8000:10000/tcp
+    sudo ufw allow 8000:10000/udp
+    sudo ufw allow 3334
     # Execute install_run.sh
     if [ -f ./install_run.sh ]; then
         echo -e "\nExecuting install_run.sh..."
