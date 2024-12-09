@@ -497,7 +497,7 @@ transfers() {
         echo -e "\nChoose a subcommand for Transfers:"
         echo -e "1. Transfer"
         echo -e "2. Address Book"
-        echo -e "3. Return to 'Other' Menu"
+        echo -e "3. Return to Main Menu"
         read -p "Enter your choice [1-3]: " transfer_choice
 
         case $transfer_choice in

@@ -4,13 +4,54 @@
 function display_wallets() {
     echo "Available wallets:"
     echo "---------------------------------"
-    printf "%-5s %-20s %-45s\n" "No" "Name" "Address"
+    printf "%-5s %-15s %-45s\n" "No" "Name" "Address"
     echo "---------------------------------"
     local index=1
     for row in $(jq -c '.[]' wallets.json); do
-        name=$(echo $row | jq -r '.name')
-        address=$(echo $row | jq -r '.address')
-        printf "%-5s %-20s %-45s\n" "$index" "$name" "$address"
+        name=$(echo "$row" | jq -r '.name')
+        address=$(echo "$row" | jq -r '.address')
+        printf "%-5s %-15s %-45s\n" "$index" "$name" "$address"
+        index=$((index + 1))
+    done
+    echo "---------------------------------"
+}
+
+# Function to display available stake accounts
+function display_stake_accounts() {
+    echo "Available Stake Accounts:"
+    echo "---------------------------------"
+    printf "%-5s %-9s %-45s %-20s\n" "No" "Name" "Address" "Unstaked Balance"
+    echo "---------------------------------"
+    
+    # Display stake accounts without sorting
+    local index=1
+    for row in $(jq -c '.[]' allstakes.json); do
+        name=$(echo "$row" | jq -r '.name')
+        address=$(echo "$row" | jq -r '.address')
+        
+        # Get balance and active stake
+        output=$(solana stake-account "$address")
+        balance=$(echo "$output" | grep "Balance:" | awk '{print $2}')
+        active_stake=$(echo "$output" | grep "Active Stake:" | awk '{print $3}')
+
+        # Format the balance and active stake to avoid leading zeros
+        balance=$(printf "%.8f" "$balance")
+        active_stake=$(printf "%.8f" "$active_stake")
+
+        # Calculate unstaked balance
+        if [[ -z "$active_stake" || "$active_stake" == "0" ]]; then
+            unstaked_balance="$balance"
+        else
+            unstaked_balance=$(echo "$balance - $active_stake" | bc)
+        fi
+
+        # Ensure that unstaked balance is formatted properly
+        if [[ "$unstaked_balance" == .* ]]; then
+            unstaked_balance="0$unstaked_balance"
+        fi
+
+        # Print the output row
+        printf "%-5s %-9s %-45s %-20s\n" "$index" "$name" "$address" "$unstaked_balance"
         index=$((index + 1))
     done
     echo "---------------------------------"
@@ -26,30 +67,56 @@ while true; do
     read -p "Please select an option (1, 2, or 3): " option
 
     if [[ "$option" -eq 1 ]]; then
-        # Display wallets
+        # Display available stake accounts
+        display_stake_accounts
+
+        # Ask the user which stake account to withdraw from
+        read -p "Choose the stake account number to withdraw from (1-5): " choice
+        
+        # Get the address and name of the selected stake account
+        stake_address=$(jq -r ".[$((choice - 1))].address" allstakes.json)
+        stake_name=$(jq -r ".[$((choice - 1))].name" allstakes.json)
+
+        # Display wallets to withdraw to
         display_wallets
 
-        # Ask the user which address they want to withdraw to
-        read -p "Choose the wallet number to withdraw to (1-4): " choice
-        withdraw_to_address=$(jq -r ".[$((choice - 1))].address" wallets.json)
+        # Ask the user which wallet they want to withdraw to
+        read -p "Choose the wallet number to withdraw to (1-4): " wallet_choice
+        withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
 
-        # Extract the stake address
-        stake_address=$(jq -r '.[] | select(.name=="Stake") | .address' wallets.json)
-
-        # Get the balance and active stake information
+        # Now retrieving the stake account details for the selected account
+        echo "Retrieving details for the selected stake account \"$stake_name\"..."
         output=$(solana stake-account "$stake_address")
+        
+        # Ensure the output retrieval is correct
+        if [[ "$output" == *"Error"* ]]; then
+            echo "Failed to retrieve details for the stake account. Please check the address."
+            continue
+        fi
+        
         balance=$(echo "$output" | grep "Balance:" | awk '{print $2}')
         active_stake=$(echo "$output" | grep "Active Stake:" | awk '{print $3}')
 
+        # Format balance and active stake
+        balance=$(printf "%.8f" "$balance")
+        active_stake=$(printf "%.8f" "$active_stake")
+
         # Calculate unstaked balance
-        unstaked_balance=$(bc <<< "$balance - $active_stake")
-        
-        # If active stake is empty, set unstaked balance to balance
-        if [ -z "$active_stake" ]; then
-            unstaked_balance=$balance
+        if [[ -z "$active_stake" || "$active_stake" == "0" ]]; then
+            unstaked_balance="$balance"
+        else
+            unstaked_balance=$(echo "$balance - $active_stake" | bc)
         fi
         
+        # Ensure unstaked balance is properly formatted
+        if [[ "$unstaked_balance" == .* ]]; then
+            unstaked_balance="0$unstaked_balance"
+        fi
+
+        # Print the outputs in the requested format
         echo "---------------------------------"
+        echo "Stake Account Name: $stake_name"
+        echo "Address: $stake_address"
         echo "Balance: $balance"
         echo "Active Stake: $active_stake"
         echo "Unstaked Balance: $unstaked_balance"
@@ -57,7 +124,7 @@ while true; do
 
         # Loop for withdrawal amount
         while true; do
-            read -p "How much unstaked balance would you like to withdraw (0 - $unstaked_balance)?" withdraw_amount
+            read -p "How much unstaked balance would you like to withdraw (0 - $unstaked_balance)? " withdraw_amount
             
             # Check if the user wants to cancel
             if [ -z "$withdraw_amount" ]; then
@@ -103,7 +170,7 @@ while true; do
 
         # Prompt for withdrawal amount
         while true; do
-            read -p "How much funds would you like to withdraw from the Vote account (0 - $vote_balance)?" withdraw_amount
+            read -p "How much funds would you like to withdraw from the Vote account (0 - $vote_balance)? " withdraw_amount
             
             # Check if the user wants to cancel
             if [ -z "$withdraw_amount" ]; then

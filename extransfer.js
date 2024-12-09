@@ -26,7 +26,7 @@ const loadAddressBook = () => {
 
 // Function to save an entry in the address book
 const saveAddressBook = (addressBook) => {
-    fs.writeFileSync(addressBookPath, JSON.stringify(addressBook, null, 2));
+    fs.writeFileSync(addressBookPath, JSON.stringify(addressBook, null, 2)); // Pretty print format
 };
 
 // Function to load wallets from wallets.json and populate the address book without duplicates
@@ -41,12 +41,12 @@ const populateAddressBookFromWallets = () => {
         if (Array.isArray(wallets)) {
             wallets.forEach(wallet => {
                 const newEntry = {
-                    name: wallet.name || "Unknown",
-                    address: wallet.address || "Unknown",
+                    name: wallet.name || "Unknown", // Fallback if name is missing
+                    address: wallet.address || "Unknown", // Fallback if address is missing
                 };
                 if (!existingAddresses.has(newEntry.address)) {
                     existingAddressBook.push(newEntry);
-                    existingAddresses.add(newEntry.address);
+                    existingAddresses.add(newEntry.address); // Add to Set
                 }
             });
             saveAddressBook(existingAddressBook);
@@ -86,16 +86,6 @@ const executeTransfer = (address, amount) => {
     }
 };
 
-// Function to validate Solana address
-const isValidSolanaAddress = (address) => {
-    return address.length === 44; 
-};
-
-// Function to pause for user input
-const pauseForUser = async () => {
-    await promptUser('Press any key to continue...');
-};
-
 // Main function to handle user input and transfers
 const main = async () => {
     populateAddressBookFromWallets();
@@ -103,53 +93,18 @@ const main = async () => {
 
     while (continueTransfer) {
         const addressBook = loadAddressBook();
-
-        let transferOption;
-        while (true) {
-            transferOption = await promptUser(
-                '\nChoose an option:\n1: Transfer to someone new\n2: Transfer from address book\n3: Exit\n\nPlease enter 1, 2, or 3 (or just press Enter to return to the menu): '
-            );
-
-            if (transferOption === '1' || transferOption === '2' || transferOption === '3') {
-                break; // exit the loop if a valid option is chosen
-            } else {
-                console.log('Invalid option. Please choose either 1, 2, or 3.');
-            }
-        }
+        const transferOption = await promptUser(
+            'Who would you like to transfer to?\n1: Someone new\n2: From the address book\n\nPlease enter 1 or 2: '
+        );
 
         if (transferOption === '1') {
-            const newEntryName = await promptUser('Enter the name transferring to (or just press Enter to go back): ');
-            if (!newEntryName) {
-                console.log('Process cancelled, returning to menu.');
-                await pauseForUser();
-                continue;
-            }
+            const newEntryName = await promptUser('Enter the name transferring to: ');
+            const newEntryAddress = await promptUser('Enter the address transferring to: ');
+            const transferAmount = await promptUser('Enter the amount to transfer: ');
 
-            let newEntryAddress;
-            while (true) {
-                newEntryAddress = await promptUser('Enter the address transferring to (or just press Enter to go back): ');
-                if (!newEntryAddress) {
-                    console.log('Process cancelled, returning to menu.');
-                    await pauseForUser();
-                    break;
-                }
-                if (isValidSolanaAddress(newEntryAddress)) {
-                    break;
-                } else {
-                    console.log('The address entered is not a valid Solana address.');
-                }
-            }
-            if (!newEntryAddress) continue;
-
-            const transferAmount = await promptUser('Enter the amount to transfer (or just press Enter to go back): ');
-            if (!transferAmount) {
-                console.log('Process cancelled, returning to menu.');
-                await pauseForUser();
-                continue;
-            }
-
+            // Confirmation prompt before executing transfer
             const confirmTransfer = await promptUser(
-                `Confirm transfer of ${transferAmount} to ${newEntryName} (${newEntryAddress})? (yes/no): `
+                `Are you sure you want to transfer ${transferAmount} to ${newEntryName} (${newEntryAddress})? (yes/no): `
             );
 
             if (confirmTransfer.toLowerCase() === 'yes') {
@@ -161,6 +116,8 @@ const main = async () => {
                     currentAddressBook.push({ name: newEntryName, address: newEntryAddress });
                     saveAddressBook(currentAddressBook);
                     console.log(`Added ${newEntryName} to the address book.`);
+                } else {
+                    console.log(`The address ${newEntryAddress} already exists in the address book.`);
                 }
             } else {
                 console.log('Transfer canceled.');
@@ -169,28 +126,23 @@ const main = async () => {
         } else if (transferOption === '2') {
             if (addressBook.length === 0) {
                 console.log("Address book is empty. Please add entries first.");
-                await pauseForUser(); // Pause for user to read the message
-                continueTransfer = false; // Terminating script if the address book is empty
+                continueTransfer = false;
                 break;
             }
 
             showAddressBook(addressBook);
-            const selectedEntryId = parseInt(await promptUser('Enter the ID to transfer to (or just press Enter to go back): ')) - 1;
+            const selectedEntryId = parseInt(await promptUser('Enter the ID of the person you want to transfer to: ')) - 1;
 
             if (selectedEntryId < 0 || selectedEntryId >= addressBook.length) {
                 console.log('Invalid selection. Please try again.');
                 continue;
             }
 
-            const transferAmount = await promptUser('Enter the amount to transfer (or just press Enter to go back): ');
-            if (!transferAmount) {
-                console.log('Process cancelled, returning to menu.');
-                await pauseForUser();
-                continue;
-            }
+            const transferAmount = await promptUser('Enter the amount to transfer: ');
 
+            // Confirmation prompt before executing transfer
             const confirmTransfer = await promptUser(
-                `Confirm transfer of ${transferAmount} to ${addressBook[selectedEntryId].name} (${addressBook[selectedEntryId].address})? (yes/no): `
+                `Are you sure you want to transfer ${transferAmount} to ${addressBook[selectedEntryId].name} (${addressBook[selectedEntryId].address})? (yes/no): `
             );
 
             if (confirmTransfer.toLowerCase() === 'yes') {
@@ -199,19 +151,17 @@ const main = async () => {
                 console.log('Transfer canceled.');
             }
 
-        } else if (transferOption === '3') {
-            console.log('Exiting the script. Have a nice day!');
-            process.stdin.pause();
-            return; // Terminate the script
+        } else {
+            console.log('Invalid option. Please choose either 1 or 2.');
+            continue;
         }
 
-        // Ask if user wants to make another transfer after valid operations
         const anotherTransfer = await promptUser('Would you like to make another transfer? (yes/no): ');
         continueTransfer = anotherTransfer.toLowerCase() === 'yes';
     }
 
     process.stdin.pause();
-    console.log('Exiting script. Have a nice day!');
+    console.log('Exiting script. Have a great day!');
 };
 
 // Run the main function
