@@ -137,6 +137,12 @@ update_x1() {
             echo -e "\nValidator is not running. Continuing with the update...\n"
         fi
 
+        echo -e "\nUpdating Server"
+        sudo apt update && sudo apt upgrade
+
+        echo -e "\nUpdating X1 Validator"
+        git stash && git pull
+
         echo -e "\nCleaning up Cargo build..."
         cargo clean
 
@@ -448,7 +454,7 @@ other_options() {
                 ;;
             2)
                 echo -e "\nChoose a subcommand:"
-                echo -e "1. Update server"
+                echo -e "1. Update X1 Validator"
                 echo -e "2. Update X1 Console"
                 read -p "Enter your choice [1-2]: " update_choice
 
