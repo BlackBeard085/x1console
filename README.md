@@ -19,7 +19,7 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
 
 ## Create a new user
 
-1. Create a new user for your Ubuntu system and give that user 'sudo'
+1. Create a new user for your Ubuntu system and give that user 'sudo' rights.
    ## Important: Please do not use usernames 'root' or 'admin'
    
 ### Console Installation
