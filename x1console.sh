@@ -181,7 +181,7 @@ update_x1_console() {
     echo -e "\nPulling latest changes..."
     git pull
 
-    echo -e "\nX1 console update to solanalabs v1.18.26.\n"
+    echo -e "\nX1 console updated.\n"
     
     pause
 }
