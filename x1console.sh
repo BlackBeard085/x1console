@@ -25,7 +25,7 @@ check_solanalabs_directory() {
         case $action in
             delete)
                 echo -e "\nDeleting $SOLANALABS_DIR..."
-                rm -rf "$SOLANALABS_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HONE/x1console/addressbook.json
+                rm -rf "$SOLANALABS_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HOME/x1console/addressbook.json
                 echo -e "$SOLANALABS_DIR has been deleted.\n"
                 ;;
             archive)
@@ -76,7 +76,7 @@ install() {
         cp "$HOME/x1/solanalabs/target/release/solana-validator" "$HOME/.local/share/solana/install/active_release/bin/solana-validator"
         sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
         echo -e "\nCopying wallets.json to x1console directory..."
-        sudo cp "$HOME/x1/solanalabs/wallets.json" "$HOME/x1console"
+        cp "$HOME/x1/solanalabs/wallets.json" "$HOME/x1console"
         
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
