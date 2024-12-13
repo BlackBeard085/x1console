@@ -10,6 +10,7 @@ exec solana-validator \
     --rpc-port 8899 \
     --dynamic-port-range 8000-8020 \
     --entrypoint xolana.xen.network:8001 \
+    --entrypoint 206.72.198.218:8000 \
     --wal-recovery-mode skip_any_corrupted_record \
     --limit-ledger-size 50000000 \
     --enable-rpc-transaction-history \
