@@ -69,7 +69,7 @@ function runCatchup() {
         // Check if the validator has started successfully
         let attempts = 0;
         const maxAttempts = 10; // Maximum number of attempts to check the port
-        const delayBetweenAttempts = 5; // Seconds to wait between checks
+        const delayBetweenAttempts = 10; // Seconds to wait between checks
 
         while (attempts < maxAttempts) {
             await new Promise(res => setTimeout(res, delayBetweenAttempts * 1000));
