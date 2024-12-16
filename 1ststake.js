@@ -59,7 +59,7 @@ function delegateStake() {
 
             // Check if the validator has started successfully
             for (let attempt = 0; attempt < 10; attempt++) {
-                await new Promise(res => setTimeout(res, 5000)); // Wait for 5 seconds before checking
+                await new Promise(res => setTimeout(res, 10000)); // Wait for 10 seconds before checking
                 const isRunning = await isValidatorRunning();
                 if (isRunning) {
                     console.log('Validator started successfully and is running on port 8899.');
