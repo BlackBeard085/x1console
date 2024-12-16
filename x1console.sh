@@ -77,6 +77,9 @@ install() {
         sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
         echo -e "\nCopying wallets.json to x1console directory..."
         cp "$HOME/x1/solanalabs/wallets.json" "$HOME/x1console"
+
+        echo -e "\nManually Increasing systemd and session file limits"
+        ulimit -n 1000000
         
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
