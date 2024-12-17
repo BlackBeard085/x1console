@@ -7,7 +7,7 @@ const username = os.userInfo().username;
 const validatorDirectory = `/home/${username}/x1/solanalabs`;
 
 // Command to start the validator
-const startCommand = `target/release/solana-validator --identity $HOME/.config/solana/identity.json --limit-ledger-size 50000000 --rpc-port 8899 --entrypoint xolana.xen.network:8001 --full-rpc-api --log - --vote-account $HOME/.config/solana/vote.json --max-genesis-archive-unpacked-size 1073741824 --require-tower --enable-rpc-transaction-history --enable-extended-tx-metadata-storage --rpc-pubsub-enable-block-subscription --only-known-rpc --known-validator C58LhVv822GiE3s84pwb58yiaezWLaFFdUtTWDGFySsU --known-validator Abt4r6uhFs7yPwR3jT5qbnLjBtasgHkRVAd1W6H5yonT --expected-shred-version 19582 --minimal-snapshot-download-speed 5000000 --full-snapshot-interval-slots 300 --maximum-incremental-snapshots-to-retain 100 --maximum-full-snapshots-to-retain 50`;
+const startCommand = `target/release/solana-validator --identity ~/.config/solana/identity.json --vote-account ~/.config/solana/vote.json --known-validator C58LhVv822GiE3s84pwb58yiaezWLaFFdUtTWDGFySsU --known-validator Abt4r6uhFs7yPwR3jT5qbnLjBtasgHkRVAd1W6H5yonT --known-validator 5NfpgFCwrYzcgJkda9bRJvccycLUo3dvVQsVAK2W43Um --only-known-rpc --log $HOME/x1/log.txt --rpc-port 8899 --full-rpc-api --dynamic-port-range 8000-8020 --entrypoint xolana.xen.network:8001 --entrypoint owlnet.dev:8000 --wal-recovery-mode skip_any_corrupted_record --limit-ledger-size 50000000 --enable-rpc-transaction-history --enable-extended-tx-metadata-storage --rpc-pubsub-enable-block-subscription --full-snapshot-interval-slots 5000 --maximum-incremental-snapshots-to-retain 10 --maximum-full-snapshots-to-retain 50`;
 
 // Check if the validator is running by checking port 8899
 function isValidatorRunning() {
@@ -108,7 +108,7 @@ function delegateStake() {
 
             // Check if the validator has started successfully
             for (let attempt = 0; attempt < 10; attempt++) {
-                await new Promise(res => setTimeout(res, 5000)); // Wait for 5 seconds before checking
+                await new Promise(res => setTimeout(res, 10000)); // Wait for 10 seconds before checking
                 const isRunning = await isValidatorRunning();
                 if (isRunning) {
                     console.log('Validator started successfully and is running on port 8899.');
