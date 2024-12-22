@@ -151,6 +151,9 @@ update_x1() {
 
         echo -e "\nBuilding project in release mode..."
         cargo build --release
+       
+        echo -e "\nCopying solana-validator to your path..."
+        cp "$HOME/x1/solanalabs/target/release/solana-validator" "$HOME/.local/share/solana/install/active_release/bin/solana-validator"
 
         echo -e "\nCopying solana-validator to /usr/local/bin..."
         sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
