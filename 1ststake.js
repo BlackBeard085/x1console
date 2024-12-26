@@ -7,7 +7,7 @@ const username = os.userInfo().username;
 const validatorDirectory = `/home/${username}/x1/solanalabs`;
 
 // Command to start the validator
-const startCommand = `$HOME/.local/share/solana/install/active_release/bin/solana-validator --identity ~/.config/solana/identity.json --vote-account ~/.config/solana/vote.json --log ~/x1/log.txt --only-known-rpc --rpc-port 8899 --full-rpc-api --dynamic-port-range 8000-8020 --wal-recovery-mode skip_any_corrupted_record --limit-ledger-size 50000000 --enable-rpc-transaction-history --enable-extended-tx-metadata-storage --rpc-pubsub-enable-block-subscription --full-snapshot-interval-slots 5000 --maximum-incremental-snapshots-to-retain 10 --maximum-full-snapshots-to-retain 50 --entrypoint 206.72.198.218:8001 --known-validator Abt4r6uhFs7yPwR3jT5qbnLjBtasgHkRVAd1W6H5yonT --wait-for-supermajority 40364979 --expected-bank-hash o8f6X33oj9mUX3ZZdPMaTYDAKpAzpvfsEvEmn3RDAFH --expected-shred-version 12168`;
+const startCommand = `./start_validator.sh`;
 
 // Check if the validator is running by checking port 8899
 function isValidatorRunning() {
@@ -50,7 +50,7 @@ function delegateStake() {
         } else {
             console.log('Validator is not currently running. Proceeding to start it.');
             console.log('Starting the validator now...');
-            exec(`cd ${validatorDirectory} && ${startCommand} > /dev/null 2>&1`, (error) => {
+            exec(`${startCommand} > /dev/null 2>&1`, (error) => {
                 if (error) {
                     console.error(`Error starting validator. Check for fatal error.`);
                     return; // Exit if there was an error starting the validator
