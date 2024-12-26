@@ -5,13 +5,13 @@ const os = require('os');
 const username = os.userInfo().username;
 
 // Define the validator directory based on the current user
-const validatorDirectory = `/home/${username}/x1/solanalabs/`;
+const validatorDirectory = `/home/${username}/x1/`;
 
 // Command to stop the validator
 const stopCommand = 'solana-validator exit -f';
 
 // New command to start the validator
-const startCommand = `./start_validator.sh`;
+const startCommand = `~/x1console/./start_validator.sh`;
 
 // Check if the validator is running by checking port 8899
 function isValidatorRunning() {

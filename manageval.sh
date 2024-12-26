@@ -2,7 +2,7 @@
 
 LOG_DIRECTORY="$HOME/x1"
 LOG_FILE="log.txt"
-VALIDATOR_DIR="$HOME/x1/solanalabs"
+VALIDATOR_DIR="$HOME/x1/"
 
 # Function to wait for user input before returning to menu
 function pause_and_return {

@@ -8,7 +8,7 @@ nohup $HOME/.local/share/solana/install/active_release/bin/solana-validator \
     --known-validator 5NfpgFCwrYzcgJkda9bRJvccycLUo3dvVQsVAK2W43Um \
     --only-known-rpc \
     --log ~/x1/log.txt \
-    --ledger ~/x1/solanalabs/ledger \
+    --ledger ~/x1/ledger \
     --rpc-port 8899 \
     --full-rpc-api \
     --dynamic-port-range 8000-8020 \

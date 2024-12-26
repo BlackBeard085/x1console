@@ -127,6 +127,7 @@ install() {
 # Function to update Solana CLI and the application
 update_x1() {
     SOLANALABS_DIR="$HOME/x1/solanalabs"
+    BASE_DIR="$HOME/x1"  # Set the base directory
 
     if [ -d "$SOLANALABS_DIR" ]; then
         cd "$SOLANALABS_DIR" || exit
@@ -134,8 +135,11 @@ update_x1() {
         # Check if the validator is running on port 8899
         if lsof -i :8899; then
             echo -e "\nValidator is currently running. Stopping the validator..."
+            # Change to the base directory to stop the validator
+            cd "$BASE_DIR" || exit
             solana-validator exit -f
             echo -e "Validator has been stopped."
+            cd "$SOLANALABS_DIR" || exit  # Return to solanalabs directory
         else
             echo -e "\nValidator is not running. Continuing with the update...\n"
         fi
@@ -355,7 +359,7 @@ ledger_monitor() {
     echo -e "\nStarting ledger monitoring. Press any key to stop...\n"
     
     # Navigate to the solanalabs directory and run the command
-    cd "$HOME/x1/solanalabs/" || exit
+    cd "$HOME/x1/" || exit
     solana-validator --ledger ledger monitor & # Run in the background
     
     # Get the PID of the last command run in the background
@@ -386,7 +390,7 @@ remove_ledger() {
     case $confirmation in
         y|Y)
             echo -e "\nRemoving the ledger..."
-            rm -rf "$HOME/x1/solanalabs/ledger"
+            rm -rf "$HOME/x1/ledger"
             echo -e "Ledger removed successfully.\n"
             ;;
         n|N)
