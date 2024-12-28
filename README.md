@@ -2,7 +2,7 @@
 
 # X1'S THE BLACK PEARL - VALIDATOR CONSOLE BY BLACKBEARD
 
-Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctional console designed for managing your X1 validator. Created by BLACKBEARD, this console streamlines your experience, providing tools for installation, updates, health checks, and various utilities tailored for validator management on the Solana network. You can call it **X1 Console** for short.
+Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctional console designed for managing your X1 validator. Created by BLACKBEARD, this console streamlines your experience, providing tools for installation, updates, health checks, and various utilities tailored for validator management on the X1 network. You can call it **X1 Console** for short.
 
 ## Features
 
