@@ -338,15 +338,18 @@ ping_times() {
 ledger() {
     echo -e "\nChoose a subcommand:"
     echo -e "1. Ledger Monitor"
-    echo -e "2. Remove Ledger" 
-    read -p "Enter your choice [1-2]: " ledger_choice
-
+    echo -e "2. Remove Ledger"
+    echo -e "3. Backup Ledger"
+    read -p "Enter your choice [1-3]: " ledger_choice
     case $ledger_choice in
         1)
             ledger_monitor
             ;;
         2)
             remove_ledger
+            ;;
+        3)
+            backup_ledger
             ;;
         *)
             echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
@@ -357,21 +360,16 @@ ledger() {
 # New function to monitor the ledger
 ledger_monitor() {
     echo -e "\nStarting ledger monitoring. Press any key to stop...\n"
-    
     # Navigate to the solanalabs directory and run the command
     cd "$HOME/x1/" || exit
     solana-validator --ledger ledger monitor & # Run in the background
-    
     # Get the PID of the last command run in the background
     PID=$!
-    
     # Wait for user input to stop the command
     read -n 1 -s -r -p "Press any key to stop the ledger monitoring..."
-    
     # Kill the running process
     kill "$PID"
     echo -e "\nLedger monitoring stopped.\n"
-
     pause
 }
 
@@ -383,7 +381,6 @@ remove_ledger() {
         pause
         return
     fi
-
     # If validator is not running, ask for confirmation to remove ledger
     echo -e "\nAre you sure you wish to remove the ledger? (y/n)"
     read -r confirmation
@@ -400,7 +397,30 @@ remove_ledger() {
             echo -e "\nInvalid option. Returning to menu.\n"
             ;;
     esac
+    pause
+}
+
+# New function to backup the ledger
+backup_ledger() {
+    # Check if the validator is running using port 8899
+    if lsof -i :8899; then
+        echo -e "\nValidator is running. Ledger backup can only be performed when the validator has stopped."
+        pause
+        return
+    fi
     
+    # Check if the ledger directory exists
+    if [ -d "$HOME/x1/ledger" ]; then
+        echo -e "\nCreating a backup of the ledger..."
+        cp -r "$HOME/x1/ledger" "$HOME/x1/ledger.bak"
+        if [ $? -eq 0 ]; then
+            echo -e "Backup created successfully at $HOME/x1/ledger.bak.\n"
+        else
+            echo -e "Failed to create backup.\n"
+        fi
+    else
+        echo -e "\nLedger directory does not exist. Unable to backup.\n"
+    fi
     pause
 }
 
