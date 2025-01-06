@@ -51,6 +51,7 @@ IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the f
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
+IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running and check x1val.online to make sure your validator is showing. it may take a minute or two for your validator to show active status when the active stake takes effect.
 ### Health Check
 
 Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
