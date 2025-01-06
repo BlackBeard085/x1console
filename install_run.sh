@@ -134,7 +134,7 @@ ls -l target/release/solana-validator || error_exit "Failed to confirm the solan
 
 # Connect to the desired network
 echo "Connecting to the desired network..."
-solana config set -u https://xolana.xen.network || error_exit "Failed to set Solana configuration to the desired network."
+solana config set -u https://rpc.testnet.x1.xyz || error_exit "Failed to set Solana configuration to the desired network."
 
 # Confirm the configuration
 echo "Confirming the Solana configuration..."
