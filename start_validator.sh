@@ -10,6 +10,7 @@ nohup $HOME/.local/share/solana/install/active_release/bin/solana-validator \
     --only-known-rpc \
     --log ~/x1/log.txt \
     --ledger ~/x1/ledger \
+    --minimal-snapshot-download-speed 5000000 \
     --rpc-port 8899 \
     --full-rpc-api \
     --dynamic-port-range 8000-8020 \
