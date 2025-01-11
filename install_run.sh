@@ -17,6 +17,10 @@ fi
 echo "Updating package index..."
 sudo apt update || error_exit "Failed to update package index."
 
+# Install logrotate
+echo "Installing logrotate..."
+sudo apt install logrotate || error_exit "Failed to install logrotate."
+
 # Install required packages
 echo "Installing required packages..."
 sudo apt install -y curl jq git || error_exit "Failed to install required packages."

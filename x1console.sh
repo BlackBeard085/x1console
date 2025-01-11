@@ -80,7 +80,11 @@ install() {
 
         echo -e "\nIncreasing systemd and session file limits"
         ulimit -n 1000000
-        
+       
+        #setup logrotation
+        echo -e "\nsetting up logrotation, executing setup_logrotation.sh..."
+        ./setup_logrotate.sh
+ 
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
         if [ -f ./1ststake.js ]; then
