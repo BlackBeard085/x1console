@@ -668,6 +668,7 @@ echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, 
 
 # Interaction to execute install function or update, health check, or exit
 while true; do
+    node newstatus.js
     echo -e "\nChoose an option:"
     echo -e "1. Health Check and Start Validator"
     echo -e "2. Validator"

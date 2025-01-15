@@ -31,6 +31,20 @@ function stop_validator {
     pause_and_return
 }
 
+# Function to restart the validator
+function restart_validator {
+    echo "Restarting the validator..."
+    (node restart.js)
+
+    if [ $? -eq 0 ]; then
+        echo "Validator restarted successfully."
+    else
+        echo "Error restarting validator."
+    fi
+
+    pause_and_return
+}
+
 # Function to show logs
 function show_logs {
     echo 
@@ -81,10 +95,11 @@ function delete_logs {
 # Main menu function
 function main_menu {
     echo -e "\nChoose an option:\n"
-    echo "1. Stop Validator"
-    echo "2. Show Logs"
-    echo "3. Delete Logs"
-    echo "4. Exit"
+    echo "1. Start/Restart Validator"
+    echo "2. Stop Validator"
+    echo "3. Show Logs"
+    echo "4. Delete Logs"
+    echo "5. Exit"
     
     echo
     read -n 1 -s option
@@ -92,15 +107,18 @@ function main_menu {
 
     case $option in
         1)
-            stop_validator
+            restart_validator
             ;;
         2)
-            show_logs
+            stop_validator
             ;;
         3)
-            delete_logs
+            show_logs
             ;;
         4)
+            delete_logs
+            ;;
+        5)
             echo -e "\nExiting...\n"
             exit 0
             ;;

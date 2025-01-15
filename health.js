@@ -43,7 +43,7 @@ async function checkValidatorHealth(identityAddress) {
 
             // Determine if the validator is delinquent by looking for "⚠️"
             const isDelinquent = validatorInfo.includes('⚠️');
-            const status = isDelinquent ? 'Delinquent'.red : 'Active'; // Use colors to color the status
+            const status = isDelinquent ? 'Delinquent'.red : 'Active'.green; // Use colors to color the status
 
             // Output validator health report
             console.log(`Validator Health Report for Identity: ${identityAddress}`);

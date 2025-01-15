@@ -77,6 +77,9 @@ function runCatchup() {
 
             if (isRunning) {
                 console.log('Validator started successfully and is running on port 8899.');
+               
+                console.log('Waiting for snapshot download..');
+                 await new Promise(res => setTimeout(res, 30000));
 
                 // Countdown for 10 seconds before running the catchup command
                 for (let i = 10; i > 0; i--) {
