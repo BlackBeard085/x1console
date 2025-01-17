@@ -481,7 +481,7 @@ other_options() {
             echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
             echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
             echo -e "\nexport PATH=\"$HOME/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-            echo -e "\nOR LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
+            echo -e "\nPLEASE LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
            
             # Indicate that setup is complete
             echo -e "Setup is complete.\n"
@@ -656,7 +656,7 @@ nvm install v20.0.0 > /dev/null 2>&1
 check_npm_package "@solana/web3.js" > /dev/null 2>&1
 
 # Print welcome message
-echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========\n"
+echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========AFTER FIRST INSTALL CLOSE YOUR TERMINAL WINDOW AND RELOGIN TO YOUR SERVER FOR ALL SYSTEM CHANGES TO TAKE EFFECT AND VALIDATOR STATUS TO UPDATE\n"
 
 # Interaction to execute install function or update, health check, or exit
 while true; do
