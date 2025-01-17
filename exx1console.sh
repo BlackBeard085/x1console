@@ -6,10 +6,10 @@ check_npm_package() {
 
     # Check if the package is installed by looking for it in the node_modules directory
     if npm list -g --depth=0 | grep -q "$PACKAGE@"; then
-        echo -e "\n$PACKAGE is already installed." > /dev/null 2>&1
+        echo -e "\n$PACKAGE is already installed."
     else
-        echo -e "\n$PACKAGE is not installed. Installing..." > /dev/null 2>&1
-        npm install -g "$PACKAGE" > /dev/null 2>&1
+        echo -e "\n$PACKAGE is not installed. Installing..."
+        npm install -g "$PACKAGE"
     fi
 }
 
@@ -635,25 +635,33 @@ pause() {
 
 # Check if NVM is installed
 if command -v nvm &> /dev/null; then
-    echo -e "\nNVM is already installed." > /dev/null 2>&1
+    echo -e "\nNVM is already installed."
 else
-    echo -e "\nNVM is not installed. Installing..." > /dev/null 2>&1
+    echo -e "\nNVM is not installed. Installing..."
     # Install NVM
-    curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash > /dev/null 2>&1
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 
     # Load NVM into the current shell session
-    export NVM_DIR="$HOME/.nvm" > /dev/null 2>&1
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" > /dev/null 2>&1
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 fi
 
 # Source .bashrc to ensure the NVM command is available in the session
-source ~/.bashrc > /dev/null 2>&1
+source ~/.bashrc
 
 # Install Node.js version 20.0.0
-nvm install v20.0.0 > /dev/null 2>&1
+nvm install v20.0.0
 
 # Check for @solana/web3.js package
-check_npm_package "@solana/web3.js" > /dev/null 2>&1
+check_npm_package "@solana/web3.js"
+
+# Make another script executable
+if [ -f ./install_run.sh ]; then
+    chmod +x ./install_run.sh
+    echo -e "\ninstall_run.sh has been made executable.\n"
+else
+    echo -e "\ninstall_run.sh does not exist. Please create it.\n"
+fi
 
 # Print welcome message
 echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========\n"

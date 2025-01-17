@@ -8,8 +8,8 @@ const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
 function checkLogFileModification() {
     fs.stat(logFilePath, (err, stats) => {
         if (err) {
-            console.error(`Error reading file: ${err}`);
-            return;
+            console.log('Active Status will show once Validator starts');
+            return; // Stop the script if the log file is not found
         }
 
         const currentTime = Date.now();
@@ -21,6 +21,9 @@ function checkLogFileModification() {
         } else {
             console.log('- Logs: Stopped');
         }
+
+        // If the log file exists, proceed to check validator status
+        checkValidatorStatus();
     });
 }
 
@@ -52,5 +55,3 @@ function checkValidatorStatus() {
 
 // Check the log file status
 checkLogFileModification();
-// Check the validator status
-checkValidatorStatus();

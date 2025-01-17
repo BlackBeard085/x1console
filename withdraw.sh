@@ -2,7 +2,7 @@
 
 # Function to display the formatted wallet addresses with indexed options
 function display_wallets() {
-    echo "Available wallets:"
+    echo -e "\nAvailable wallets:"
     echo "---------------------------------"
     printf "%-5s %-15s %-45s\n" "No" "Name" "Address"
     echo "---------------------------------"
@@ -18,7 +18,7 @@ function display_wallets() {
 
 # Function to display available stake accounts
 function display_stake_accounts() {
-    echo "Available Stake Accounts:"
+    echo -e "\nAvailable Stake Accounts:"
     echo "---------------------------------"
     printf "%-5s %-9s %-45s %-20s\n" "No" "Name" "Address" "Unstaked Balance"
     echo "---------------------------------"
@@ -63,7 +63,7 @@ while true; do
     echo "What would you like to do?"
     echo "1. Withdraw Stake"
     echo "2. Withdraw from Vote account"
-    echo "3. Exit Withdrawal"
+    echo -e "3. Exit Withdrawal\n"
     read -p "Please select an option (1, 2, or 3): " option
 
     if [[ "$option" -eq 1 ]]; then
@@ -85,7 +85,7 @@ while true; do
         withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
 
         # Now retrieving the stake account details for the selected account
-        echo "Retrieving details for the selected stake account \"$stake_name\"..."
+        echo -e "\nRetrieving details for the selected stake account \"$stake_name\"..."
         output=$(solana stake-account "$stake_address")
         
         # Ensure the output retrieval is correct
@@ -142,7 +142,7 @@ while true; do
             if (( $(echo "$withdraw_amount <= $unstaked_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
                 # Withdraw funds
                 solana withdraw-stake "$stake_address" "$withdraw_to_address" "$withdraw_amount"
-                echo "Withdrawal of $withdraw_amount SOL to $withdraw_to_address initiated."
+                echo "Withdrawn $withdraw_amount SOL to $withdraw_to_address."
                 break
             else
                 echo "Invalid withdrawal amount. Please try again."
@@ -188,7 +188,7 @@ while true; do
             if (( $(echo "$withdraw_amount <= $vote_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
                 # Withdraw funds from Vote account
                 solana withdraw-from-vote-account "$vote_address" "$withdraw_to_address" "$withdraw_amount"
-                echo "Withdrawal of $withdraw_amount SOL from Vote account to $withdraw_to_address initiated."
+                echo "Withdrawn $withdraw_amount SOL from Vote account to $withdraw_to_address."
                 break
             else
                 echo "Invalid withdrawal amount. Please try again."
