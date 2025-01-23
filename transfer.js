@@ -238,7 +238,7 @@ const main = async () => {
     }
 
     process.stdin.pause();
-    console.log('Exiting script. Have a nice day!');
+    console.log('Exiting transfers');
 };
 
 // Run the main function

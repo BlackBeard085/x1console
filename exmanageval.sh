@@ -100,9 +100,9 @@ function main_menu {
     echo "3. Show Logs"
     echo "4. Delete Logs"
     echo "5. Exit"
-    read -p "Enter your choice [1-5]: " option
+    
     echo
-
+    read -n 1 -s option
     echo  # Adding a new line after option selection for readability
 
     case $option in

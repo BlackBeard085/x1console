@@ -173,12 +173,12 @@ update_x1() {
 
     # Execute restart.js after updating
     if [ -f "$HOME/x1console/restart.js" ]; then
-        echo -e "\nExecuting restart.js..."
+        echo -e "\nRestarting validator after update..."
         node "$HOME/x1console/restart.js"
         if [ $? -eq 0 ]; then
-            echo -e "\nRestart script executed successfully.\n"
+            echo -e "\nRestart executed successfully.\n"
         else
-            echo -e "\nFailed to execute the restart script.\n"
+            echo -e "\nFailed to restart.\n"
         fi
     else
         echo -e "\nrestart.js does not exist in $HOME/x1console.\n"
@@ -661,6 +661,8 @@ echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, 
 # Interaction to execute install function or update, health check, or exit
 while true; do
     node newstatus.js
+    echo " "
+    node epoch.js
     echo -e "\nChoose an option:"
     echo -e "1. Health Check and Start Validator"
     echo -e "2. Validator"
