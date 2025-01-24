@@ -6,7 +6,7 @@ const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.0.13');
+    console.log('X1Console v0.0.14');
 }
 
 printConsoleVersion();
