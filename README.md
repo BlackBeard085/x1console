@@ -4,15 +4,6 @@
 
 Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctional console designed for managing your X1 validator. Created by BLACKBEARD, this console streamlines your experience, providing tools for installation, updates, health checks, and various utilities tailored for validator management on the X1 network. You can call it **X1 Console** for short.
 
-## Features
-
-- **Installation and Setup**: Easily install and configure your X1 validator, ensuring seamless integration with your existing wallets. The console automates the installation process, tuning the system for an X1 validator, installing the X1-compatible CLI, building the agave validator, opening the required ports, connecting to the X1 network, creating four new X1 wallets or using your existing wallets if you prefer, starting your validator, funding your id.json (withdrawer) which funds your identity, registering both your stake.json and vote.json, delegating your stake, and restarting your validator. It then installs and starts Pinger—all in one command, streamlining the process so anyone can become an X1 validator.
-- **Update Utilities**: Keep your validator and console up to date with minimal effort.
-- **Health Monitoring**: Perform automated health checks and take appropriate action where needed to bring a delinquent validator to active status again—an automated troubleshooter in effect.
-- **Account Management**: Utilities to set commission, check balances, and manage validator logs.
-- **Interactive Command-Line Interface**: User-friendly interface allowing easy navigation through various functionalities.
-- **Integrated Ledger Management**: Monitor or remove your ledger as necessary.
-
 ## Getting Started
 
 To get started with X1's The Black Pearl (or **X1 Console**), follow these steps:
@@ -43,7 +34,7 @@ To install and start your X1 validator, follow these steps after starting the co
 1. From the main menu, choose option **10. Other**.
 2. Next, select option **1. Install, Start X1 and Pinger**.
 
-This command will initiate a comprehensive setup process that automatically tunes your system to run a validator. It will open the required ports, download the necessary CLI, applications, and dependencies, build your validator, create your wallets, fund your id.json (the withdrawer), register your vote and stake accounts, delegate your stake, and ultimately start your validator. You will become an active validator right from the initial installation! This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets. For firt installs please do the following.
+For first installs please do the following.
 
 IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
 
@@ -52,6 +43,8 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
 IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running and check x1val.online to make sure your validator is showing. it may take a minute or two for your validator to show active status when the active stake takes effect.
+
+This command will initiate a comprehensive setup process that automatically tunes your system to run a validator. It will open the required ports, download the necessary CLI, applications, and dependencies, build your validator, create your wallets, fund your id.json (the withdrawer), register your vote and stake accounts, delegate your stake, and ultimately start your validator. You will become an active validator right from the initial installation! This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets. 
 ### Health Check
 
 Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
@@ -117,7 +110,15 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 3. **Reset Pinger**: This option resets your Pinger settings.
 4. **Speedtest**: This option carries out a speed test to evaluate your network performance.
 
-## Functions Overview
+## Functions and Features Overview
+
+- **Installation and Setup**: Easily install and configure your X1 validator, ensuring seamless integration with your existing wallets. The console automates the installation process, tuning the system for an X1 validator, installing the X1-compatible CLI, building the agave validator, opening the required ports, connecting to the X1 network, creating four new X1 wallets or using your existing wallets if you prefer, starting your validator, funding your id.json (withdrawer) which funds your identity, registering both your stake.json and vote.json, delegating your stake, and restarting your validator. It then installs and starts Pinger—all in one command, streamlining the process so anyone can become an X1 validator.
+- **Update Utilities**: Keep your validator and console up to date with minimal effort.
+- **Health Monitoring**: Perform automated health checks and take appropriate action where needed to bring a delinquent validator to active status again—an automated troubleshooter in effect.
+- **Account Management**: Utilities to set commission, check balances, and manage validator logs.
+- **Interactive Command-Line Interface**: User-friendly interface allowing easy navigation through various functionalities.
+- **Integrated Ledger Management**: Monitor or remove your ledger as necessary.
+
 
 - **check_npm_package**: Checks if a Node.js package is installed; installs if not.
 - **check_agave_directory**: Checks for the existence of the X1 agave-xolana directory and handles user options for deletion or archiving.
