@@ -4,13 +4,6 @@ const { exec } = require('child_process');
 
 const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
 
-// Function to print the console version
-function printConsoleVersion() {
-    console.log('X1Console v0.0.13');
-}
-
-printConsoleVersion();
-
 // Function to check if the log file is being modified
 function checkLogFileModification() {
     fs.stat(logFilePath, (err, stats) => {
@@ -21,7 +14,7 @@ function checkLogFileModification() {
 
         const currentTime = Date.now();
         const fileModifiedTime = new Date(stats.mtime).getTime();
-        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 7000); // 7 seconds threshold
+        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 10000); // 10 seconds threshold
 
         if (hasBeenModifiedRecently) {
             console.log('- Logs: Running');

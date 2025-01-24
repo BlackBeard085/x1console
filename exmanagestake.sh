@@ -14,11 +14,7 @@ get_vote_address() {
 
 # Function to display current stake account information for all stake accounts
 display_all_stake_info() {
-    echo -e "\n--- Current Stake Account Info for All Stake Wallets ---"
-    
-    # Printing the table headers
-    printf "%-20s %-15s %-20s %-15s\n" "Wallet Name" "Balance" "Unstaked Balance" "Active Stake"
-    echo "---------------------------------------------------------------"
+    echo -e "\n--- Current Stake Account Info for All Wallets ---"
 
     # List all stake wallet files in ~/.config/solana/
     stake_wallets=("$HOME/.config/solana/stake.json" "$HOME/.config/solana/stake1.json" "$HOME/.config/solana/stake2.json" "$HOME/.config/solana/stake3.json" "$HOME/.config/solana/stake4.json")
@@ -52,9 +48,13 @@ display_all_stake_info() {
                 wallet_name=$(basename "$wallet" .json)
                 capitalized_name=$(echo "$wallet_name" | sed 's/^\(.\)/\U\1/')
 
-                # Printing the wallet information in formatted columns
-                printf "%-20s %-15s %-20s %-15s\n" "$capitalized_name" "$balance" "$unstaked_balance" "$active_stake"
-                
+                echo "Wallet Name: $capitalized_name"
+                echo "Address: $address"
+                echo "Balance: $balance"
+                echo "Unstaked Balance: $unstaked_balance"
+                echo "Active Stake Balance: $active_stake"
+                echo -e "------------------------------------"
+
                 # Add the address to existing addresses
                 existing_addresses+=("$address")
 
@@ -69,7 +69,7 @@ display_all_stake_info() {
             fi
         else
             wallet_name=$(basename "$wallet" .json)
-            echo "$wallet_name doesn't exist, create it using option 4."
+            echo "$wallet_name - Account for repurposing."
         fi
     done
 
@@ -130,7 +130,6 @@ add_new_stake_account() {
     # Ask the user for the amount to stake
     stake_amount=""
     while true; do
-        echo
         read -rp "How much XN would you like to stake in $capitalized_name (2 - 1000000): " stake_amount
 
         # Validate the input
@@ -209,6 +208,7 @@ merge_stake() {
 
     # User selects the account to merge from
     read -rp "Which stake account would you like to merge from remaining options: " merging_choice
+   # read -rp "Which stake account would you like to merge from (1-$((${#stake_accounts[@]} - 1))): " merging_choice
     merging_index=$((merging_choice - 1))
 
     # Validate user input
@@ -225,9 +225,8 @@ merge_stake() {
     echo -e "\nYou chose to merge from: $merging_name - $merging_address"
 
     # Execute the merge command
-    #echo "Running command: solana merge-stake $merge_to_address $merging_address"
-    echo "Merging chosen stake accounts $merge_to_address and $merging_address"
-
+    echo "Running command: solana merge-stake $merge_to_address $merging_address"
+    
     # Run the merge command
     if solana merge-stake "$merge_to_address" "$merging_address"; then
         echo "Successfully merged $merging_name into $merge_to_name."
@@ -278,7 +277,6 @@ create_stake_account() {
     # Ask for the amount to stake
     stake_amount=""
     while true; do
-        echo
         read -rp "How much XN would you like to stake in the new account (2 - 1000000): " stake_amount
 
         # Validate the input
@@ -369,14 +367,12 @@ activate_stake() {
     fi
 
     # Execute the delegate-stake command
-    # echo "Running command: solana delegate-stake $chosen_address $vote_address"
-    echo "delegating stake $chosen_address to vote $vote_address"
+    echo "Running command: solana delegate-stake $chosen_address $vote_address"
     if solana delegate-stake "$chosen_address" "$vote_address"; then
         echo -e "\nSuccessfully activated stake for $chosen_address with vote account $vote_address."
         
         # Run the stake-account command and filter the output
-        #echo "Running command: solana stake-account $chosen_address"
-        echo "Retrieving activation epoch."
+        echo "Running command: solana stake-account $chosen_address"
         stake_account_info=$(solana stake-account "$chosen_address")
         
         # Print the relevant output
@@ -438,14 +434,12 @@ deactivate_stake() {
     chosen_address=$(echo "$chosen_account" | jq -r '.address')
 
     # Execute the deactivate-stake command
-    #echo "Running command: solana deactivate-stake $chosen_address"
-    echo "Deactivating stake $chosen_address"
+    echo "Running command: solana deactivate-stake $chosen_address"
     if solana deactivate-stake "$chosen_address"; then
         echo -e "\nSuccessfully deactivated stake for $chosen_address."
         
         # Run the stake-account command and filter the output
-        #echo "Running command: solana stake-account $chosen_address"
-        echo "Retrieving deactivation epoch"
+        echo "Running command: solana stake-account $chosen_address"
         stake_account_info=$(solana stake-account "$chosen_address")
         
         # Print the relevant output

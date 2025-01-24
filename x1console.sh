@@ -69,7 +69,7 @@ install() {
     sudo ufw allow 3334
     # Execute install_run.sh
     if [ -f ./install_run.sh ]; then
-        echo -e "\nExecuting install_run.sh..."
+        echo -e "\nExecuting install ..."
         ./install_run.sh
         # Change the path for copying solana-validator to your
         echo -e "\nCopying solana-validator to your path..."
@@ -107,12 +107,12 @@ install() {
                 echo -e "\nValidator has been restarted successfully."
                 # Run setpinger.js after restart is successful
                 if [ -f ./setpinger.js ]; then
-                    echo -e "\nExecuting setpinger.js..."
+                    echo -e "\nSetting up pinger..."
                     node ./setpinger.js
                     if [ $? -eq 0 ]; then
-                        echo -e "\nsetpinger.js executed successfully.\n"
+                        echo -e "\nPinger set up successfully.\n"
                     else
-                        echo -e "\nFailed to execute setpinger.js.\n"
+                        echo -e "\nFailed to set up pinger.\n"
                     fi
                 else
                     echo -e "\nsetpinger.js does not exist. Please create it in the directory.\n"
@@ -202,7 +202,7 @@ update_x1_console() {
 
 # Function for health check and start validator
 health_check() {
-    echo -e "\nRunning setwithdrawer.js..."
+    echo -e "\nSetting withdrawer..."
     node "$HOME/x1console/setwithdrawer.js"
 
     echo -e "\nRunning health.js..."
@@ -213,24 +213,24 @@ health_check() {
         echo -e "\nWARNING issued in health check."
 
         # Execute checkaccounts.js before getbalances.js
-        echo -e "\nRunning checkaccounts.js..."
+        echo -e "\nChecking accounts..."
         node "$HOME/x1console/checkaccounts.js"
 
-        echo -e "\nRunning getbalances.js..."
+        echo -e "\nChecking balances..."
         node "$HOME/x1console/getbalances.js"
 
-        echo -e "\nRunning checkstake.js..."
+        echo -e "\nChecking stake..."
         STAKE_OUTPUT=$(node "$HOME/x1console/checkstake.js")
         echo -e "$STAKE_OUTPUT"
 
         if echo "$STAKE_OUTPUT" | grep -q "0 active stake"; then
-            echo -e "\n0 active stake found. Running activatestake.js..."
+            echo -e "\n0 active stake found. Running activate stake..."
             node "$HOME/x1console/activatestake.js"
 
-            echo -e "\nRunning restart.js after activating stake..."
+            echo -e "\nAttempting restart after activating stake..."
             node "$HOME/x1console/restart.js"
         else
-            echo -e "\nActive stake found. Running restart.js..."
+            echo -e "\nActive stake found. Attempting restart..."
             node "$HOME/x1console/restart.js"
         fi
     else
@@ -242,10 +242,10 @@ health_check() {
 
 # New function to check balances
 balances() {
-    echo -e "\nRunning setwithdrawer.js..."
+    echo -e "\nSetting withdrawer..."
     node "$HOME/x1console/setwithdrawer.js"
 
-    echo -e "\nRunning checkaccounts.js..."
+    echo -e "\nChecking accounts..."
     if [ -f "$HOME/x1console/checkaccounts.js" ]; then
         node "$HOME/x1console/checkaccounts.js"
         if [ $? -eq 0 ]; then
@@ -257,7 +257,7 @@ balances() {
         echo -e "\ncheckaccounts.js does not exist. Please create it.\n"
     fi
 
-    echo -e "\nRunning getbalances.js..."
+    echo -e "\nChecking balances..."
     if [ -f "$HOME/x1console/getbalances.js" ]; then
         node "$HOME/x1console/getbalances.js"
         if [ $? -eq 0 ]; then
@@ -274,7 +274,7 @@ balances() {
 
 # Updated function to publish validator info
 publish_validator() {
-    echo -e "\nRunning setwithdrawer.js..."
+    echo -e "\nSetting withdrawer..."
     node "$HOME/x1console/setwithdrawer.js"
 
     echo -e "\nPublishing validator information..."
@@ -314,7 +314,7 @@ pinger() {
 
 # New function to restart pinger
 restart_pinger() {
-    echo -e "\nExecuting setpinger.js..."
+    echo -e "\nRestarting pinger set up..."
     if [ -f "$HOME/x1console/setpinger.js" ]; then
         node "$HOME/x1console/setpinger.js"
         if [ $? -eq 0 ]; then
@@ -431,7 +431,7 @@ backup_ledger() {
 # New function for setting commission
 set_commission() {
     # Run setwithdrawer.js
-    echo -e "\nRunning setwithdrawer.js..."
+    echo -e "\nSetting withdrawer..."
     node "$HOME/x1console/setwithdrawer.js"
 
     # Prompt user for the commission percentage
@@ -509,7 +509,7 @@ other_options() {
                 ;;
             4)
                 # Execute speedtest.sh when chosen
-                echo -e "\nExecuting speedtest.sh..."
+                echo -e "\nExecuting speed test..."
                 if [ -f "$HOME/x1console/speedtest.sh" ]; then
                     bash "$HOME/x1console/speedtest.sh"
                     if [ $? -eq 0 ]; then
@@ -584,7 +584,7 @@ transfers() {
 
 # Function for managing stake
 manage_stake() {
-    echo -e "\nRunning managestake.sh..."
+    echo -e "\nRunning stake manager..."
     if [ -f "$HOME/x1console/managestake.sh" ]; then
         bash "$HOME/x1console/managestake.sh"
         if [ $? -eq 0 ]; then
@@ -600,7 +600,7 @@ manage_stake() {
 
 # Function for withdrawing stake/vote
 withdraw_stake_vote() {
-    echo -e "\nRunning withdraw.sh..."
+    echo -e "\nRunning withdrawls..."
     if [ -f "$HOME/x1console/withdraw.sh" ]; then
         bash "$HOME/x1console/withdraw.sh"
         if [ $? -eq 0 ]; then
@@ -685,7 +685,7 @@ while true; do
             ;;
         
         2)
-            echo -e "\nRunning manageval.sh..."
+            echo -e "\nRunning validator manager..."
             if [ -f "$HOME/x1console/manageval.sh" ]; then
                 bash "$HOME/x1console/manageval.sh"
                 if [ $? -eq 0 ]; then

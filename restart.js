@@ -23,15 +23,47 @@ function isValidatorRunning() {
 }
 
 // Function to run solana catchup
-function runCatchup() {
-    return new Promise((resolve, reject) => {
-        exec('solana catchup --our-localhost', (error, stdout, stderr) => {
-            if (error) {
-                reject(`Error running catchup: ${stderr}`);
-            } else {
-                resolve(stdout); // Output from the catchup command
-            }
-        });
+function runCatchup(callback, timeoutDuration = 20000) {
+    const child = exec('solana catchup --our-localhost');
+    let output = '';
+
+    // Set a timeout to handle the case where catchup takes too long
+    const timeout = setTimeout(() => {
+        console.error('Catchup process timed out. Validator is falling behind.');
+        child.kill();
+        callback("falling behind", output); // Notify falling behind with accumulated output
+    }, timeoutDuration);
+
+    child.stdout.on('data', (data) => {
+        output += data; // Accumulate output
+        // Log the real-time output to the console
+        console.log(data);
+
+        // Check conditions in the output
+        if (data.includes('falling behind')) {
+            clearTimeout(timeout); // Clear the timeout if we find a falling behind message
+            console.log('Falling behind output:\n' + output); // Print the accumulated output
+            callback("falling behind", output); // Notify falling behind with the output
+            child.kill(); // Kill the child process
+        }
+    });
+
+    child.stderr.on('data', (data) => {
+        console.error(`Error: ${data}`);
+        if (data.includes('Connection refused')) {
+            clearTimeout(timeout); // Clear the timeout if connection refused
+            callback("connection refused", output); // Notify connection refused with output
+            child.kill(); // Kill the child process
+        }
+    });
+
+    child.on('exit', (code) => {
+        clearTimeout(timeout); // Clear the timeout
+        if (code !== 0) {
+            callback("finished", output); // Notify finished with output
+        } else {
+            callback("successful", output); // Notify successful with output
+        }
     });
 }
 
@@ -77,9 +109,9 @@ function runCatchup() {
 
             if (isRunning) {
                 console.log('Validator started successfully and is running on port 8899.');
-               
+
                 console.log('Waiting for snapshot download to complete..');
-                 await new Promise(res => setTimeout(res, 35000));
+                await new Promise(res => setTimeout(res, 35000));
 
                 // Countdown for 10 seconds before running the catchup command
                 for (let i = 10; i > 0; i--) {
@@ -87,18 +119,66 @@ function runCatchup() {
                     await new Promise(res => setTimeout(res, 1000));
                 }
 
-                // Run catchup command
-                console.log('Running catchup command...');
-                const catchupOutput = await runCatchup();
-                console.log('Catchup command output:\n', catchupOutput);
-                return; // Exit the script
+                // Start trying to catch up with proper connection checks
+                let catchupAttempts = 0; // This will be incremented correctly
+                const maxCatchupAttempts = 4; // Max number of catchup retries
+                const catchupDelay = 25; // Delay in seconds between catchup attempts
+                let catchupSuccessful = false;
+
+                while (catchupAttempts < maxCatchupAttempts && !catchupSuccessful) {
+                    console.log(`Attempting catchup... (Attempt ${catchupAttempts + 1})`);
+
+                    // Check if the validator is still running before attempting catchup
+                    const isStillRunning = await isValidatorRunning();
+                    if (!isStillRunning) {
+                        console.log('Validator has stopped running. Please check logs for errors and report them to the team. Remove ledger and start validator again.');
+                        break; // Exit the loop if the validator is not running
+                    }
+
+                    await new Promise((resolve) => {
+                        runCatchup((status, output) => {
+                            if (status === "falling behind") {
+                                console.log('Catchup timeout, Unless you are attempting a cluster restart, your Validator is falling behind, please stop your validator, remove ledger and start validator again.');
+                               // console.log('Falling behind output:\n' + output); // Print the accumulated output
+                                catchupSuccessful = true; // Exit catchup attempts due to falling behind
+                                resolve(); // Complete the catchup promise
+                            } else if (status === "connection refused") {
+                                // When connection is refused, just log and wait before retrying
+                                console.log('Connection refused, checking if Validator is still running...');
+                                setTimeout(() => {
+                                    resolve(); // Continue the catchup attempts if connection refused
+                                }, catchupDelay * 1000);
+                            } else if (status === "successful") {
+                                catchupSuccessful = true; // Successful completion
+                                resolve();
+                            } else {
+                                resolve(); // To avoid waiting indefinitely
+                            }
+                        });
+                    });
+
+                    // Wait for 20 seconds before the next catchup attempt
+                    if (!catchupSuccessful && catchupAttempts < maxCatchupAttempts) {
+                        console.log('Validator is still running, retrying catchup in 20 seconds...');
+                        await new Promise(res => setTimeout(res, catchupDelay * 1000));
+                    }
+
+                    catchupAttempts++; // Increment the attempt number here
+                }
+
+                if (catchupSuccessful) {
+                    console.log(' ');
+                } else {
+                    console.log('Failed to start validator successfully.');
+                }
+                return; // Exit the script after catchup handling
             }
 
             attempts++;
             console.log(`Check ${attempts}: Validator not yet running...`);
         }
 
-        console.log('Failed to start the validator. Port 8899 is still not in use. Please check logs for errors, remove ledger and start again');
+        console.log('Failed to start the validator. Port 8899 is still not in use. Please check logs for errors. Remove ledger and start again.');
 
     } catch (error) {
         console.error('Failed to manage validator:', error);

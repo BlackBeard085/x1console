@@ -77,7 +77,7 @@ async function main() {
             console.error('Identity wallet not found in wallets.json');
         }
     } else {
-        console.error('No wallets found. Please run the getbalances.js script first.');
+        console.error('No wallets found. Please run Check Balances first.');
     }
 }
 
