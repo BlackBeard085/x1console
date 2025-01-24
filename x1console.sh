@@ -374,6 +374,7 @@ ledger_monitor() {
     # Kill the running process
     kill "$PID"
     echo -e "\nLedger monitoring stopped.\n"
+    cd ~/x1console
     pause
 }
 

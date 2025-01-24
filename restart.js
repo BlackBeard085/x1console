@@ -110,8 +110,8 @@ function runCatchup(callback, timeoutDuration = 20000) {
             if (isRunning) {
                 console.log('Validator started successfully and is running on port 8899.');
 
-                console.log('Waiting for snapshot download to complete..');
-                await new Promise(res => setTimeout(res, 35000));
+                console.log('allowing time for snapshot download to complete..');
+                await new Promise(res => setTimeout(res, 40000));
 
                 // Countdown for 10 seconds before running the catchup command
                 for (let i = 10; i > 0; i--) {
@@ -157,9 +157,9 @@ function runCatchup(callback, timeoutDuration = 20000) {
                         });
                     });
 
-                    // Wait for 20 seconds before the next catchup attempt
+                    // Wait for 25 seconds before the next catchup attempt
                     if (!catchupSuccessful && catchupAttempts < maxCatchupAttempts) {
-                        console.log('Validator is still running, retrying catchup in 20 seconds...');
+                        console.log('Validator is still running, retrying catchup in 25 seconds...');
                         await new Promise(res => setTimeout(res, catchupDelay * 1000));
                     }
 
@@ -169,7 +169,7 @@ function runCatchup(callback, timeoutDuration = 20000) {
                 if (catchupSuccessful) {
                     console.log(' ');
                 } else {
-                    console.log('Failed to start validator successfully.');
+                    console.log('Failed 4 catchup attempts, however, validator is running. Please check logs for a slow snapshot download. Recheck validator status after download completes.');
                 }
                 return; // Exit the script after catchup handling
             }

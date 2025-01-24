@@ -37,7 +37,7 @@ function restart_validator {
     (node restart.js)
 
     if [ $? -eq 0 ]; then
-        echo "Validator restarted successfully."
+        echo "Attepted restart successfully."
     else
         echo "Error restarting validator."
     fi
