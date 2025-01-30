@@ -67,6 +67,9 @@ install() {
     sudo ufw allow 8000:10000/tcp
     sudo ufw allow 8000:10000/udp
     sudo ufw allow 3334
+    
+    #killing all processes on port 8899
+    pkill -f solana-validator
     # Execute install_run.sh
     if [ -f ./install_run.sh ]; then
         echo -e "\nExecuting install ..."
