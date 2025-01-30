@@ -4,7 +4,7 @@ const { Connection, PublicKey } = require('@solana/web3.js');
 const readline = require('readline');
 const path = require('path'); // for handling file paths
 const os = require('os'); // for getting home directory
-const SOLANA_CLUSTER = 'https://xolana.xen.network'; // Change to your desired cluster (mainnet, testnet, etc.)
+const SOLANA_CLUSTER = 'https://rpc.testnet.x1.xyz'; // Change to your desired cluster (mainnet, testnet, etc.)
 const CONFIG_FILE = 'wallets.json'; // JSON file to store wallet addresses
 const TRANSFER_AMOUNT = 2; // Amount in SOL to transfer when funding
 
@@ -40,7 +40,7 @@ function loadWallets() {
 
 // Function to attempt to load wallets from an alternative directory
 function loadWalletsFromBackup() {
-    const backupPath = path.join(os.homedir(), 'x1/solanalabs', CONFIG_FILE);
+    const backupPath = path.join(os.homedir(), 'x1/tachyon', CONFIG_FILE);
     if (fs.existsSync(backupPath)) {
         console.log(`Found ${CONFIG_FILE} in backup directory. Copying to current directory...`);
         fs.copyFileSync(backupPath, CONFIG_FILE);

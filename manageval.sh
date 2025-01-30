@@ -17,7 +17,7 @@ function stop_validator {
 
     if lsof -i:8899 &>/dev/null; then
         echo "Stopping validator..."
-        (cd "$VALIDATOR_DIR" && solana-validator exit -f)
+        (cd "$VALIDATOR_DIR" && tachyon-validator exit -f)
         
         if [ $? -eq 0 ]; then
             echo "Validator stopped successfully."

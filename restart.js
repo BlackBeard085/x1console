@@ -8,7 +8,7 @@ const username = os.userInfo().username;
 const validatorDirectory = `/home/${username}/x1/`;
 
 // Command to stop the validator
-const stopCommand = 'solana-validator exit -f';
+const stopCommand = 'tachyon-validator exit -f';
 
 // New command to start the validator
 const startCommand = `~/x1console/./start_validator.sh`;

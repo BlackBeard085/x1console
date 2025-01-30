@@ -57,7 +57,7 @@ async function checkValidatorHealth(identityAddress) {
             const delinquentStatus = 'Delinquent'.red;
             console.log(`Validator Health Report for Identity: ${identityAddress}`);
             console.log(`- Status: ${delinquentStatus}`);
-            console.log(`${ORANGE}WARNING! Identity address was not found on Solana validators.${RESET}`);
+            console.log(`${ORANGE}WARNING! Identity address was not found on X1 validators.${RESET}`);
         }
         console.log();
     } catch (error) {

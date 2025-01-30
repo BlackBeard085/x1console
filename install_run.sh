@@ -15,7 +15,7 @@ fi
 
 # Update package index
 echo -e "\nUpdating package index..."
-sudo apt update || error_exit "Failed to update package index."
+sudo apt update && sudo apt upgrade || error_exit "Failed to update package index."
 
 # Install logrotate
 echo -e "\nInstalling logrotate..."
@@ -31,7 +31,7 @@ sh -c "$(curl -sSfL https://release.solana.com/v1.18.25/install)" || error_exit 
 
 # Export PATH variable
 echo 'export PATH="$HOME/.local/share/solana/install/active/solana-release/bin:$PATH"' >> ~/.profile
-echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 
 # Load the new PATH in the current shell
 export PATH="/home/ubuntu/.local/share/solana/install/active_release/bin:$PATH" && source ~/.profile && source ~/.bashrc
@@ -94,8 +94,8 @@ sudo apt-get install -y libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang 
 
 echo -e "\nRust and Cargo installation completed successfully!"
 
-# Build the solana-validator in the x1 directory
-echo -e "\nPreparing to build solana-validator..."
+# Build the tachyon-validator in the x1 directory
+echo -e "\nPreparing to build tachyon-validator..."
 
 # Get the current user's username
 CURRENT_USER=$(whoami)
@@ -113,28 +113,28 @@ fi
 cd "$X1_DIRECTORY" || error_exit "Failed to change to directory $X1_DIRECTORY."
 
 # Clone the GitHub repository
-echo -e "\nCloning the solanalabs repository..."
-git clone https://github.com/FairCrypto/solanalabs.git || error_exit "Failed to clone solanalabs repository."
+echo -e "\nCloning the tachyon repository..."
+git clone https://github.com/x1-labs/tachyon.git || error_exit "Failed to clone tachyon repository."
 
-# Change into the solanalabs directory
-cd solanalabs || error_exit "Failed to change into solanalabs directory."
+# Change into the tachyon directory
+cd tachyon || error_exit "Failed to change into tachyon directory."
 
 # Checkout the specified branch
-echo -e "\nChecking out the dyn_fees_v1 branch..."
-git checkout dyn_fees_v1 || error_exit "Failed to checkout dyn_fees_v1 branch."
+#echo -e "\nChecking out v2.0 branch..."
+#git checkout v2.0 || error_exit "Failed to checkout v2.0 branch."
 
 # Confirm the current branch
 echo -e "\nConfirming the current branch..."
 git branch || error_exit "Failed to list branches."
 
-# Build the solana-validator
-echo -e "\nBuilding the solana-validator..."
-cargo build --release || error_exit "Failed to build solana-validator."
-echo -e "\nsolana-validator built successfully!"
+# Build the tachyon-validator
+echo -e "\nBuilding the tachyon-validator..."
+cargo build --release || error_exit "Failed to build tachyon-validator."
+echo -e "\ntachyon-validator built successfully!"
 
 # Confirm the build output
 echo -e "\nConfirming the build output..."
-ls -l target/release/solana-validator || error_exit "Failed to confirm the solana-validator build output."
+ls -l target/release/tachyon-validator || error_exit "Failed to confirm the tachyon-validator build output."
 
 # Connect to the desired network
 echo -e "\nConnecting to the desired network..."
@@ -154,7 +154,7 @@ echo -e "\nSystem setup completed successfully!"
 USERNAME=${1:-$USER}  # Take a username from the first argument or default to current user
 HOME_DIR="/home/$USERNAME"
 SOLANA_DIR="$HOME_DIR/.config/solana"
-DEST_DIR="$HOME_DIR/x1/solanalabs"
+DEST_DIR="$HOME_DIR/x1/tachyon"
 WALLETS=("id.json" "identity.json" "vote.json" "stake.json")
 
 # Create the destination directory if it doesn't exist

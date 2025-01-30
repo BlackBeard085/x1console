@@ -4,7 +4,7 @@ const os = require('os');
 // Get the current user's username
 const username = os.userInfo().username;
 // Define the validator directory
-const validatorDirectory = `/home/${username}/x1/solanalabs`;
+const validatorDirectory = `/home/${username}/x1/tachyon`;
 
 // Command to start the validator
 const startCommand = `./start_validator.sh`;
@@ -64,8 +64,8 @@ function delegateStake() {
                 if (isRunning) {
                     console.log('Validator started successfully and is running on port 8899.');
 
-                    console.log('Waiting for snapshot download to complete..');
-                 await new Promise(res => setTimeout(res, 35000));
+                    console.log('Allowing time for snapshot download to complete..');
+                 await new Promise(res => setTimeout(res, 55000));
 
                     // Countdown for 10 seconds before proceeding to delegate stake
                     for (let i = 10; i > 0; i--) {

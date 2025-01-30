@@ -11,15 +11,15 @@ const archivePath = path.join(homeDir, '.config/solana/archive');
 
 // Paths for wallets.json
 const walletsDir = path.join(homeDir, 'x1console');
-const solanalabsDir = path.join(homeDir, 'x1/solanalabs');
+const tachyonDir = path.join(homeDir, 'x1/tachyon');
 const walletsFilePath = path.join(walletsDir, 'wallets.json');
 
 if (!fs.existsSync(walletsDir)) {
     fs.mkdirSync(walletsDir, { recursive: true }); // Create the x1console directory if it doesn't exist
 }
 
-if (!fs.existsSync(solanalabsDir)) {
-    fs.mkdirSync(solanalabsDir, { recursive: true }); // Create the solanalabs directory if it doesn't exist
+if (!fs.existsSync(tachyonDir)) {
+    fs.mkdirSync(tachyonDir, { recursive: true }); // Create the tachyon directory if it doesn't exist
 }
 
 let newWalletsCreated = false; // Track if any new wallets are created
@@ -48,9 +48,9 @@ function updateWallets() {
         fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
         console.log('wallets.json created/updated.');
 
-        // Copy the wallets.json to the solanalabs directory
-        fs.copyFileSync(walletsFilePath, path.join(solanalabsDir, 'wallets.json'));
-        console.log(`Copied wallets.json to: ${solanalabsDir}`);
+        // Copy the wallets.json to the tachyon directory
+        fs.copyFileSync(walletsFilePath, path.join(tachyonDir, 'wallets.json'));
+        console.log(`Copied wallets.json to: ${tachyonDir}`);
     } catch (error) {
         console.error(`Error updating wallets.json: ${error}`);
     }
@@ -84,9 +84,9 @@ function moveAndCreateStakeAccount() {
                         return;
                     }
 
-                    // Copy the newly generated stake.json to the solanalabs directory
-                    fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
-                    console.log(`Copied stake.json to: ${solanalabsDir}`);
+                    // Copy the newly generated stake.json to the tachyon directory
+                    fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
+                    console.log(`Copied stake.json to: ${tachyonDir}`);
 
                     exec(`solana stake-account ${stakePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -130,9 +130,9 @@ function moveAndCreateVoteAccount() {
                         return;
                     }
 
-                    // Copy the newly generated vote.json to the solanalabs directory
-                    fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
-                    console.log(`Copied vote.json to: ${solanalabsDir}`);
+                    // Copy the newly generated vote.json to the tachyon directory
+                    fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
+                    console.log(`Copied vote.json to: ${tachyonDir}`);
 
                     exec(`solana vote-account ${votePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -157,9 +157,9 @@ function checkStakeAccount() {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
                     } else {
-                        // Copy the newly generated stake.json to the solanalabs directory
-                        fs.copyFileSync(stakePath, path.join(solanalabsDir, 'stake.json'));
-                        resolve('Stake account created and copied to solanalabs.');
+                        // Copy the newly generated stake.json to the tachyon directory
+                        fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
+                        resolve('Stake account created and copied to tachyon.');
                     }
                 });
             } else if (stderr.includes("is not a stake account")) {
@@ -186,9 +186,9 @@ function checkVoteAccount() {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
                     } else {
-                        // Copy the newly generated vote.json to the solanalabs directory
-                        fs.copyFileSync(votePath, path.join(solanalabsDir, 'vote.json'));
-                        resolve('Vote account created and copied to solanalabs.');
+                        // Copy the newly generated vote.json to the tachyon directory
+                        fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
+                        resolve('Vote account created and copied to tachyon.');
                     }
                 });
             } else if (stderr.includes("is not a vote account")) {
@@ -223,9 +223,9 @@ function createWalletsJSON() {
     fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
     console.log('wallets.json created/updated.');
 
-    // Copy the wallets.json to the solanalabs directory
-    fs.copyFileSync(walletsFilePath, path.join(solanalabsDir, 'wallets.json'));
-    console.log(`Copied wallets.json to: ${solanalabsDir}`);
+    // Copy the wallets.json to the tachyon directory
+    fs.copyFileSync(walletsFilePath, path.join(tachyonDir, 'wallets.json'));
+    console.log(`Copied wallets.json to: ${tachyonDir}`);
 }
 
 // Main function to execute the checks

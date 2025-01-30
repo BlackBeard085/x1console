@@ -13,28 +13,28 @@ check_npm_package() {
     fi
 }
 
-# Function to check x1/solanalabs directory and handle user choice
-check_solanalabs_directory() {
-    SOLANALABS_DIR="$HOME/x1/solanalabs"
+# Function to check x1/tachyon directory and handle user choice
+check_tachyon_directory() {
+    TACHYON_DIR="$HOME/x1/tachyon"
     ARCHIVE_DIR="$HOME/archive"
 
-    if [ -d "$SOLANALABS_DIR" ]; then
-        echo -e "\nx1/solanalabs directory already exists, do you wish to delete or archive this directory? (delete/archive)"
+    if [ -d "$TACHYON_DIR" ]; then
+        echo -e "\nx1/tachyon directory already exists, do you wish to delete or archive this directory? (delete/archive)"
         read -r action
         
         case $action in
             delete)
-                echo -e "\nDeleting $SOLANALABS_DIR..."
-                rm -rf "$SOLANALABS_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HOME/x1console/addressbook.json
-                echo -e "$SOLANALABS_DIR has been deleted.\n"
+                echo -e "\nDeleting $TACHYON_DIR..."
+                rm -rf "$TACHYON_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HOME/x1console/addressbook.json
+                echo -e "$TACHYON_DIR has been deleted.\n"
                 ;;
             archive)
-                echo -e "\nArchiving $SOLANALABS_DIR..."
+                echo -e "\nArchiving $TACHYON_DIR..."
                 # Check if archive directory exists; if not, create it
                 mkdir -p "$ARCHIVE_DIR"
-                # Move the solanalabs directory to archive
-                mv -f "$SOLANALABS_DIR" "$ARCHIVE_DIR/"
-                echo -e "$SOLANALABS_DIR has been moved to $ARCHIVE_DIR.\n"
+                # Move the tachyon directory to archive
+                mv -f "$TACHYON_DIR" "$ARCHIVE_DIR/"
+                echo -e "$TACHYON_DIR has been moved to $ARCHIVE_DIR.\n"
                 ;;
             *)
                 echo -e "\nInvalid action. Continuing without deleting or archiving.\n"
@@ -60,8 +60,8 @@ install() {
     else
         echo -e "\nYour validator wallets will be created for you. Continuing with X1 installation...\n"
     fi
-    # Check x1/solanalabs directory before proceeding
-    check_solanalabs_directory
+    # Check x1/tachyon directory before proceeding
+    check_tachyon_directory
     # Allowing the firewall for ports 8000 to 10000
     echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
     sudo ufw allow 8000:10000/tcp
@@ -71,20 +71,26 @@ install() {
     if [ -f ./install_run.sh ]; then
         echo -e "\nExecuting install ..."
         ./install_run.sh
-        # Change the path for copying solana-validator to your
-        echo -e "\nCopying solana-validator to your path..."
-        cp "$HOME/x1/solanalabs/target/release/solana-validator" "$HOME/.local/share/solana/install/active_release/bin/solana-validator"
-        sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
-        echo -e "\nCopying wallets.json to x1console directory..."
-        cp "$HOME/x1/solanalabs/wallets.json" "$HOME/x1console"
+        # Change the path for copying tachyon-validator to your
+        echo -e "\nCopying tachyon-validator to your path..."
+        cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
+        sudo cp "$HOME/x1/tachyon/target/release/tachyon-validator" /usr/local/bin
+       export PATH=$PATH:~/x1/tachyon/target/release
+       echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc 
+       echo -e "\nCopying wallets.json to x1console directory..."
+        cp "$HOME/x1/tachyon/wallets.json" "$HOME/x1console"
 
         echo -e "\nIncreasing systemd and session file limits"
         ulimit -n 1000000
-       
+
         #setup logrotation
         echo -e "\nsetting up logrotation, executing setup_logrotation.sh..."
         ./setup_logrotate.sh
- 
+
+	# remove old ledger
+	echo -e "\nRemoving old ledger"
+	rm -rf "$HOME/x1/ledger"
+
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
         if [ -f ./1ststake.js ]; then
@@ -130,20 +136,20 @@ install() {
 
 # Function to update Solana CLI and the application
 update_x1() {
-    SOLANALABS_DIR="$HOME/x1/solanalabs"
+    TACHYON_DIR="$HOME/x1/tachyon"
     BASE_DIR="$HOME/x1"  # Set the base directory
 
-    if [ -d "$SOLANALABS_DIR" ]; then
-        cd "$SOLANALABS_DIR" || exit
+    if [ -d "$TACHYON_DIR" ]; then
+        cd "$TACHYON_DIR" || exit
 
         # Check if the validator is running on port 8899
         if lsof -i :8899; then
             echo -e "\nValidator is currently running. Stopping the validator..."
             # Change to the base directory to stop the validator
             cd "$BASE_DIR" || exit
-            solana-validator exit -f
+            tachyon-validator exit -f
             echo -e "Validator has been stopped."
-            cd "$SOLANALABS_DIR" || exit  # Return to solanalabs directory
+            cd "$TACHYON_DIR" || exit  # Return to tachyon directory
         else
             echo -e "\nValidator is not running. Continuing with the update...\n"
         fi
@@ -160,13 +166,16 @@ update_x1() {
         echo -e "\nBuilding project in release mode..."
         cargo build --release
        
-        echo -e "\nCopying solana-validator to your path..."
-        cp "$HOME/x1/solanalabs/target/release/solana-validator" "$HOME/.local/share/solana/install/active_release/bin/solana-validator"
+        echo -e "\nCopying tachyon-validator to your path..."
+        cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
 
-        echo -e "\nCopying solana-validator to /usr/local/bin..."
-        sudo cp "$HOME/x1/solanalabs/target/release/solana-validator" /usr/local/bin
+        export PATH=$PATH:~/x1/tachyon/target/release
+        echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc
+
+        echo -e "\nCopying tachyon-validator to /usr/local/bin..."
+        sudo cp "$HOME/x1/tachyon/target/release/tachyon-validator" /usr/local/bin
     else
-        echo -e "\nDirectory $SOLANALABS_DIR does not exist. Skipping Cargo commands.\n"
+        echo -e "\nDirectory $TACHYON_DIR does not exist. Skipping Cargo commands.\n"
     fi
 
     echo -e "\nSystem updated.\n"
@@ -177,8 +186,10 @@ update_x1() {
         node "$HOME/x1console/restart.js"
         if [ $? -eq 0 ]; then
             echo -e "\nRestart executed successfully.\n"
+            cd ~/x1console
         else
             echo -e "\nFailed to restart.\n"
+            cd ~/x1console
         fi
     else
         echo -e "\nrestart.js does not exist in $HOME/x1console.\n"
@@ -364,9 +375,9 @@ ledger() {
 # New function to monitor the ledger
 ledger_monitor() {
     echo -e "\nStarting ledger monitoring. Press any key to stop...\n"
-    # Navigate to the solanalabs directory and run the command
+    # Navigate to the tachyon directory and run the command
     cd "$HOME/x1/" || exit
-    solana-validator --ledger ledger monitor & # Run in the background
+    tachyon-validator --ledger ledger monitor & # Run in the background
     # Get the PID of the last command run in the background
     PID=$!
     # Wait for user input to stop the command
@@ -472,10 +483,10 @@ other_options() {
             # Display wallet addresses after installation
             echo -e "\n"
             # Read wallet addresses from wallets.json
-            if [ -f "$HOME/x1/solanalabs/wallets.json" ]; then
+            if [ -f "$HOME/x1/tachyon/wallets.json" ]; then
                 echo -e "Wallet Addresses:"
                 # Using jq to parse the JSON file
-                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/solanalabs/wallets.json"
+                jq -r 'to_entries | .[] | "\(.key): \(.value)"' "$HOME/x1/tachyon/wallets.json"
             else
                 echo -e "\nwallets.json not found.\n"
             fi
