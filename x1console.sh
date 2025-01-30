@@ -207,11 +207,10 @@ update_x1() {
 # Function to update the X1 console
 update_x1_console() {
     echo -e "\nStashing local changes..."
-    git stash -u
+    git stash
 
     echo -e "\nPulling latest changes..."
     git pull
-    git stash pop
 
     echo -e "\nX1 console updated.\n"
     
