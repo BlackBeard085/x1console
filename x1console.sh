@@ -86,6 +86,9 @@ install() {
         #setup logrotation
         echo -e "\nsetting up logrotation, executing setup_logrotation.sh..."
         ./setup_logrotate.sh
+        
+        #killing all processes on port 8899
+	pkill -f solana-validator
 
 	# remove old ledger
 	echo -e "\nRemoving old ledger"
