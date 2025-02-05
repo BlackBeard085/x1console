@@ -1,0 +1,5 @@
+#files to ignore
+wallets.json
+addressbook.json
+ledger.json
+allstakes.json
