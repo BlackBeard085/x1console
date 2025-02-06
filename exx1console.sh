@@ -92,6 +92,7 @@ install() {
         
         #killing all processes on port 8899
 	pkill -f solana-validator
+	pkill -f tachyon-validator
 
 	# remove old ledger
 	echo -e "\nRemoving old ledger"
@@ -478,10 +479,11 @@ other_options() {
         echo -e "\nChoose an option under 'Other':"
         echo -e "1. Install, Start X1 and Pinger or [RESET]"
         echo -e "2. Update"
-        echo -e "3. Pinger"
-        echo -e "4. Speed Test"
-        echo -e "5. Return to Main Menu"
-        read -p "Enter your choice [1-5]: " other_choice
+        echo -e "3. Autopilot"
+        echo -e "4. Pinger"
+        echo -e "5. Speed Test"
+        echo -e "6. Return to Main Menu"
+        read -p "Enter your choice [1-6]: " other_choice
 
         case $other_choice in
             1)
@@ -523,9 +525,22 @@ other_options() {
                 esac
                 ;;
             3)
-                pinger
+	        # Execute setautopilot.sh when chosen
+                echo -e "\nExecuting Autopilot setup"
+                if [ -f "$HOME/x1console/setautopilot.sh" ]; then
+                    bash "$HOME/x1console/setautopilot.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nAutopilot setup complete.\n"
+                    else
+                        echo -e "\nFailed to set autopilot.\n"
+                    fi
+                else
+                    echo -e "\nsetautopilot.sh does not exist. Please create it in the x1console directory.\n"
+                fi
                 ;;
-            4)
+            4)  pinger
+                ;;
+            5)
                 # Execute speedtest.sh when chosen
                 echo -e "\nExecuting speed test..."
                 if [ -f "$HOME/x1console/speedtest.sh" ]; then
@@ -539,7 +554,7 @@ other_options() {
                     echo -e "\nspeedtest.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-            5)
+            6)
                 break
                 ;;
             *)

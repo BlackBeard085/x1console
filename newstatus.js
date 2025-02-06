@@ -4,6 +4,7 @@ const { exec } = require('child_process');
 
 const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
 const autoConfigFilePath = path.join(process.env.HOME, 'x1console', 'autoconfig'); // Path to the autoconfig file
+const withdrawerConfigFilePath = path.join(process.env.HOME, 'x1console', 'withdrawerconfig.json'); // Path to the withdrawer config file
 
 // Function to print the console version
 function printConsoleVersion() {
@@ -58,8 +59,15 @@ function checkValidatorStatus() {
                 try {
                     const autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
                     console.log(`- Autopilot: ${autoConfigContent}`);
+                    
+                    // Read the withdrawer configuration
+                    const withdrawerConfigContent = fs.readFileSync(withdrawerConfigFilePath, 'utf8');
+                    const withdrawerConfig = JSON.parse(withdrawerConfigContent);
+                    const currentWithdrawer = withdrawerConfig.keypairPath;
+
+                    console.log(`- Current set Withdrawer: ${currentWithdrawer}`);
                 } catch (err) {
-                    console.error(`Error reading autoconfig: ${err.message}`);
+                    console.error(`Error reading autoconfig or withdrawer config: ${err.message}`);
                 }
                 break; // Exit loop once we find and output the status
             }

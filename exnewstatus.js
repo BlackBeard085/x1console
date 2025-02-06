@@ -3,10 +3,11 @@ const path = require('path');
 const { exec } = require('child_process');
 
 const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
+const autoConfigFilePath = path.join(process.env.HOME, 'x1console', 'autoconfig'); // Path to the autoconfig file
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.01                            The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.02  -  The BlackPearl by BlackBeard_85');
 }
 
 printConsoleVersion();
@@ -52,8 +53,14 @@ function checkValidatorStatus() {
         const lines = stdout.split('\n');
         for (let line of lines) {
             if (line.includes('- Status:')) {
-                // Output only the status line
+                // Output the status line
                 console.log(line.trim());
+                try {
+                    const autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
+                    console.log(`- Autopilot: ${autoConfigContent}`);
+                } catch (err) {
+                    console.error(`Error reading autoconfig: ${err.message}`);
+                }
                 break; // Exit loop once we find and output the status
             }
         }

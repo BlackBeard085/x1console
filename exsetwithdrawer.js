@@ -1,10 +1,9 @@
 const { exec } = require('child_process');
 const path = require('path');
 const os = require('os');
-const fs = require('fs');
 
-// Path to the withdrawer config
-const configFilePath = path.join(__dirname, 'withdrawerconfig.json');
+// Define the expected keypair path
+const expectedKeypairPath = path.join(os.homedir(), '.config', 'solana', 'id.json');
 
 // Function to execute a shell command
 const runCommand = (command) => {
@@ -18,18 +17,12 @@ const runCommand = (command) => {
     });
 };
 
-// Function to read the keypair path from config file
-const getKeypairPath = () => {
-    const configData = fs.readFileSync(configFilePath);
-    const config = JSON.parse(configData);
-    return config.keypairPath;
-};
-
 const checkSolanaConfig = async () => {
     try {
-        const expectedKeypairPath = getKeypairPath();
+        // Get the solana config
         const configOutput = await runCommand('solana config get');
-
+        
+        // Check if the output contains the expected keypair path
         if (configOutput.includes(`Keypair Path:`) && configOutput.includes(expectedKeypairPath)) {
             console.log('withdrawer is set');
         } else {
