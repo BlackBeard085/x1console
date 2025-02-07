@@ -1,11 +1,20 @@
 const https = require('https');
 const fs = require('fs');
+const path = require('path');
 
 // Change this URL to your specific cluster API URL
 const CLUSTER_URL = 'https://rpc.testnet.x1.xyz';
 
-// Load wallets from wallets.json
-const wallets = JSON.parse(fs.readFileSync('wallets.json', 'utf8'));
+// Check if wallets.json exists
+const walletsFilePath = path.join(__dirname, 'wallets.json');
+let wallets;
+
+try {
+    wallets = JSON.parse(fs.readFileSync(walletsFilePath, 'utf8'));
+} catch (error) {
+    console.error('Performance metrics will show when wallets data is available');
+    process.exit(1);
+}
 
 // Find the Identity wallet address
 const identityWallet = wallets.find(wallet => wallet.name === "Identity");

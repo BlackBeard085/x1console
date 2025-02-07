@@ -115,7 +115,9 @@ const executeTransfer = (address, amount) => {
 
 // Function to validate Solana address
 const isValidSolanaAddress = (address) => {
-    return address.length === 44; 
+    // Validating that the address length is between 32 and 44 characters
+    const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+    return address.length >= 32 && address.length <= 44 && base58Regex.test(address);
 };
 
 // Function to pause for user input

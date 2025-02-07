@@ -1,6 +1,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process'); // Import exec to run shell commands
 
 // Change this URL to your specific cluster API URL
 const CLUSTER_URL = 'https://rpc.testnet.x1.xyz';
@@ -23,6 +24,26 @@ const identityAddress = identityWallet ? identityWallet.address : undefined;
 if (!identityAddress) {
     console.error('Identity wallet address not found!');
     process.exit(1);
+}
+
+// Function to fetch the validator version using the shell command
+function fetchValidatorVersion(identity) {
+    return new Promise((resolve, reject) => {
+        exec(`solana validators | grep ${identity}`, (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing command: ${stderr}`);
+                return;
+            }
+
+            // Parse the output to extract version information
+            const versionInfo = stdout.match(/\d+\.\d+\.\d+/); // Adjusted regex pattern to match version format
+            if (versionInfo) {
+                resolve(`v${versionInfo[0]}`); // Return the version prefixed with 'v'
+            } else {
+                resolve('N/A'); // Version info not found
+            }
+        });
+    });
 }
 
 function fetchCurrentEpoch() {
@@ -162,9 +183,13 @@ async function fetchBlockProductionForLastEpochs() {
         // Log block production data for the last epochs
         console.log(`Performance metrics for Identity: ${identityAddress}`);
         
-        // Extract apiVersion from the currentEpochProduction 
-        const apiVersion = currentEpochProduction?.context?.apiVersion ? `v${currentEpochProduction.context.apiVersion}` : 'N/A';
-        console.log(apiVersion);
+        // Fetch validator version
+        const validatorVersion = await fetchValidatorVersion(identityAddress);
+        if (validatorVersion === 'N/A') {
+            console.error('Validator version not found.');
+        } else {
+            console.log(`${validatorVersion}`);
+        }
 
         // Prepare data for table formatting
         const tableRows = [];

@@ -8,7 +8,7 @@ const withdrawerConfigFilePath = path.join(process.env.HOME, 'x1console', 'withd
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.02  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.04  -  The BlackPearl by BlackBeard_85');
 }
 
 printConsoleVersion();
