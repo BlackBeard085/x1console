@@ -23,7 +23,8 @@ sudo apt install logrotate || error_exit "Failed to install logrotate."
 
 # Install required packages
 echo -e "\nInstalling required packages..."
-sudo apt install -y curl jq git || error_exit "Failed to install required packages."
+sudo apt install -y wget curl jq git build-essential tmux ufw || error_exit "Failed to install required packages."
+#sudo apt install -y curl jq git || error_exit "Failed to install required packages."
 
 # Download and install Solana CLI
 echo -e "\nDownloading Solana CLI v1.18.25..."
