@@ -53,15 +53,26 @@ display_wallets() {
 
                 # Determine if it's a stake or vote account file
                 if [[ $file_name == stake*.json ]]; then
-                    withdraw_authority=$(solana stake-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
+                    withdraw_authority=$(solana stake-account "$f" 2>&1)
+                    if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
+                        withdraw_authority="no withdraw authority, requires repurposing"
+                    else
+                        withdraw_authority=$(echo "$withdraw_authority" | grep "Withdraw Authority:" | awk '{print $3}')
+                    fi
                 elif [[ $file_name == vote.json ]]; then
                     withdraw_authority=$(solana vote-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
                 fi
 
                 # Get the wallet name associated with the withdraw authority
                 local wallet_name
-                if [ -n "$withdraw_authority" ]; then
+                if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
+                    wallet_name="no withdraw authority, requires repurposing"
+                elif [ -n "$withdraw_authority" ]; then
                     wallet_name=$(get_wallet_name "$withdraw_authority")
+                    # Check if the wallet name is empty or "Unknown"
+                    if [[ "$wallet_name" == "Unknown" ]]; then
+                        wallet_name="$withdraw_authority"  # Display the pubkey if no matching name is found
+                    fi
                 else
                     wallet_name="Unknown"
                 fi
@@ -102,15 +113,26 @@ display_wallets_for_change() {
 
                 # Determine if it's a stake or vote account file
                 if [[ $file_name == stake*.json ]]; then
-                    withdraw_authority=$(solana stake-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
+                    withdraw_authority=$(solana stake-account "$f" 2>&1)
+                    if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
+                        withdraw_authority="no withdraw authority, requires repurposing"
+                    else
+                        withdraw_authority=$(echo "$withdraw_authority" | grep "Withdraw Authority:" | awk '{print $3}')
+                    fi
                 elif [[ $file_name == vote.json ]]; then
                     withdraw_authority=$(solana vote-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
                 fi
 
                 # Get the wallet name associated with the withdraw authority
                 local wallet_name
-                if [ -n "$withdraw_authority" ]; then
+                if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
+                    wallet_name="no withdraw authority, requires repurposing"
+                elif [ -n "$withdraw_authority" ]; then
                     wallet_name=$(get_wallet_name "$withdraw_authority")
+                    # Check if the wallet name is empty or "Unknown"
+                    if [[ "$wallet_name" == "Unknown" ]]; then
+                        wallet_name="$withdraw_authority"  # Display the pubkey if no matching name is found
+                    fi
                 else
                     wallet_name="Unknown"
                 fi
