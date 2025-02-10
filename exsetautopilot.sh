@@ -4,28 +4,16 @@ CRON_JOB="*/30 * * * * cd ~/x1console/ && ./autopilot.sh"  # Example cron job
 AUTOCONFIG_FILE="$HOME/x1console/autoconfig"  # Path to your autoconfig file
 
 function add_cron_job {
-    # Check if the cron job already exists
-    if crontab -l | grep -qF "$CRON_JOB"; then
-        # Cron job already exists, update autoconfig
-        echo "Autopilot already ON. No action needed."
-    else
-        # Add the cron job
-        (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
-        #echo "Cron job added: $CRON_JOB"
-    fi
+    (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+    #echo "Cron job added: $CRON_JOB"
     echo "ON" > "$AUTOCONFIG_FILE"
     echo -e "\nAutopilot turned ON.\n"
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
 function remove_cron_job {
-    # Remove duplicates from the cron jobs
-    if crontab -l | grep -qF "$CRON_JOB"; then
-        crontab -l | grep -v -F "$CRON_JOB" | crontab -
-        #echo "Cron job removed: $CRON_JOB"
-    else
-        echo "Autopilot is already OFF "
-    fi
+    crontab -l | grep -v -F "$CRON_JOB" | crontab -
+    #echo "Cron job removed: $CRON_JOB"
     echo "OFF" > "$AUTOCONFIG_FILE"
     echo -e "\nAutopilot turned OFF.\n"
     read -n 1 -s -r -p "Press any key to continue..."
