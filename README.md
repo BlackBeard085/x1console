@@ -130,6 +130,11 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 ### 4.Authority Manager
    Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
 
+first create and open the directory on your local machine
+```bash
+mkdir -p .config/solana && cd .config/solana
+```
+Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu.
    
    When launched through the other menu option 4, you will be displayed your stake and vote wallets and their corresponding withdraw authority wallet.
 
