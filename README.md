@@ -55,7 +55,7 @@ IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the f
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
-IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running and check x1val.online to make sure your validator is showing. it may take a minute or two for your validator to show active status when the active stake takes effect.
+IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running and check x1val.online to make sure your validator is showing. REFRESH YOUR DASH BY PRESSING ENTER WITHOUT CHOOSING AN OPTION, it may take a minute or two for your validator to show active status when the active stake takes effect.
 
 This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
 
@@ -128,7 +128,9 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
 3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 ### 4.Authority Manager
-   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console.
+   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
+
+   
    When launched through the other menu option 4, you will be displayed your stake and vote wallets and their corresponding withdraw authority wallet.
 
    
@@ -136,13 +138,13 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 7. **Speedtest**: This option carries out a speed test to evaluate your network performance.
 
 
-## Official Links
+## Links
 
 - [X1 Official Website](https://x1.xyz/)
-- [X1 Documentation](https://docs.x1.xyz/)
+- [X1 Official Documentation](https://docs.x1.xyz/)
 - [Founder Jack Levin](https://x.com/mrJackLevin)
 - [Validators Portal](https://x1val.online/)
-
+- [X1 Console Dev](https://x1val.online/)
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
