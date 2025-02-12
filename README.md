@@ -27,6 +27,10 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
    ./x1console.sh
    ```
 
+Once X1 Console starts you will see a screen that looks like this 
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image1.jpg)
+
 ### Installing X1
 
 To install and start your X1 validator, follow these steps after starting the console:
