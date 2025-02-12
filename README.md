@@ -134,9 +134,11 @@ first create and open the directory on your local machine
 ```bash
 mkdir -p .config/solana && cd .config/solana
 ```
-Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This won't start your validator locally. 
+Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This will install everything needed to run x1console locally but won't start your validator, provided your validator is running on your server. 
    
-   When launched through the other menu option 4, you will be displayed your stake and vote wallets and their corresponding withdraw authority wallet.
+Launch the Athority Manager through the other menu option 4. It will be display your stake and vote wallets and their corresponding withdraw authority wallet in the opening dash.
+
+
 
    
 6. **Reset Pinger**: This option resets your Pinger settings.
