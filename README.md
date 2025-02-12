@@ -39,7 +39,7 @@ To install and start your X1 validator, Navigate to the 'Other' menu after start
 2. Next, select option **1. Install, Start X1 and Pinger**.
 
 If you have no Wallets you wish to use reply 'no' when asked if you have existing wallets.
-Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding ypur validator.
+Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding your validator.
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image1.jpg)
 
