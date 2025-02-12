@@ -53,7 +53,8 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
 IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running and check x1val.online to make sure your validator is showing. it may take a minute or two for your validator to show active status when the active stake takes effect.
 
-This command will initiate a comprehensive setup process that automatically tunes your system to run a validator. It will open the required ports, download the necessary CLI, applications, and dependencies, build your validator, create your wallets, fund your id.json (the withdrawer), register your vote and stake accounts, delegate your stake, and ultimately start your validator. You will become an active validator right from the initial installation! This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets. 
+This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
+
 ### Health Check
 
 Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
@@ -83,12 +84,14 @@ Option 3 from the main menu is **Check Balances**. This option allows you to che
 - It also includes an added function that automatically funds underfunded vote or stake accounts if their funds drop under 1 XN.
 
 ### Transfers
-
+ 
 Option 4 is **Transfers**, which allows you to transfer funds between wallets and manage an address book, adding or removing addresses from your address book.
 
 ### Manage Stake
 
-Option 5 allows you to **Manage Stake** of upto 5 stake wallets. Create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. use **Merge** option if you have 5 stakes and wish to add more, followed by the **Repurpose Old Stake Account** which will allow you to repurpose the closed merged account into a new stake. Stake manager gives you the ability to activate or deactivate your stake account and check the epoch when these changes will take effect.
+Option 5 allows you mamage upto 5 stake wallets. Your stakes list will show you how many stake walletes you have. You can create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. **Merge** option allows you to merge two stake accounts into one, closing one of the stake accounts. The closed stake account will show "Account for repurposing" in your list of stakes. **Repurpose Old Stake Account** will allow you to repurpose the closed stake account into a new stake. Stake manager gives you the ability to activate or deactivate your stake account and check the epoch when these changes will take effect.
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.jpg)
 
 ### Withdraw Stake/Vote/Identity
 
