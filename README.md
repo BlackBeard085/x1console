@@ -122,8 +122,8 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 
 1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
-3. **Autopilot** 
-4. ### Authority Manager
+3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
+### 4.Authority Manager
    Although part of the other menu Authority Manager is one of the more important security measures of X1 Console.
    When launched through the other menu option 4, you will be displayed your stake and vote wallets and their corresponding withdraw authority wallet.
 
