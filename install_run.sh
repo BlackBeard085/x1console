@@ -16,6 +16,7 @@ fi
 # Update package index
 echo -e "\nUpdating package index..."
 sudo apt update && sudo apt upgrade || error_exit "Failed to update package index."
+sudo apt-get install bc || error_exit "Failed to install bc."
 
 # Install logrotate
 echo -e "\nInstalling logrotate..."

@@ -458,9 +458,15 @@ set_commission() {
 
     # Validate the user input
     if [[ "$commission_percent" -ge 0 ]] && [[ "$commission_percent" -le 100 ]]; then
+        # Read keypair path from withdrawerconfig.json
+        keypair_path=$(jq -r '.keypairPath' withdrawerconfig.json)
+        
+        # Construct the solana command
+        solana_command="solana vote-update-commission $HOME/.config/solana/vote.json $commission_percent $keypair_path"
+        
         # Run the commission setting command
         echo -e "\nSetting commission to $commission_percent%..."
-        solana vote-update-commission "$HOME/.config/solana/vote.json" "$commission_percent" "$HOME/.config/solana/id.json"
+        eval $solana_command
         if [ $? -eq 0 ]; then
             echo -e "\nCommission set successfully.\n"
         else
@@ -472,7 +478,6 @@ set_commission() {
     
     pause
 }
-
 # Function for 'Other' menu
 other_options() {
     while true; do
@@ -671,7 +676,7 @@ speed_test() {
 
 # Function to exit the script
 exit_script() {
-    echo -e "\nExiting the script.\n"
+    echo -e "\nExiting x1console.\n"
     exit 0
 }
 
