@@ -65,7 +65,7 @@ function delegateStake() {
                     console.log('Validator started successfully and is running on port 8899.');
 
                     console.log('Allowing time for snapshot download to complete..');
-                 await new Promise(res => setTimeout(res, 55000));
+                 await new Promise(res => setTimeout(res, 59000));
 
                     // Countdown for 10 seconds before proceeding to delegate stake
                     for (let i = 10; i > 0; i--) {

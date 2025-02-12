@@ -95,7 +95,7 @@ install() {
 	pkill -f tachyon-validator
 
 	# remove old ledger
-	echo -e "\nRemoving old ledger"
+	echo -e "\nRemoving old ledger if present."
 	rm -rf "$HOME/x1/ledger"
 
         # New Addition: Attempt to execute 1ststake.js
