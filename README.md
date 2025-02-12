@@ -144,7 +144,8 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 - [X1 Official Documentation](https://docs.x1.xyz/)
 - [Founder Jack Levin](https://x.com/mrJackLevin)
 - [Validators Portal](https://x1val.online/)
-- [X1 Console Dev](https://x1val.online/)
+- [X1 Console Dev](https://x.com/BlackBeard_X1)
+- [Video Tutorials by Mike Bardi of BOOMTOWN](https://www.youtube.com/@BOOMTOWNmeme/videos)
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
