@@ -128,19 +128,30 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
 3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 ### 4.Authority Manager
-   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signiture both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to ledger HW or a locally x1console generated wallet. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
+   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signiture both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
 
 first create and open the directory on your local machine
 ```bash
 mkdir -p .config/solana && cd .config/solana
 ```
-Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This will install everything needed to run x1console locally but won't start your validator, provided your validator is running on your server. 
+Then one by one copy all your wallets over to your local machine. If you are planning to transfer withdraw authoriy to a ledger HW, connect it now. Make sure it is unlocked and the solana app is opened ready for use. Run the command to make sure your ledger is working. This command will show your pubkey.
+```bash
+solana-keygen pubkey usb://ledger
+```
+
+Once all wallets are copied and your ledger is connected properly, navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This will install everything needed to run x1console locally but won't start your validator, provided your validator is running on your server. CLOSE THE TERMINAL AND LOG BACK IN (May have to switch off and back on, need checking).
    
 Launch the Athority Manager through the other menu option 4. It will be display your currently set withdrawer (current logge in wallet) at the top, followed by stake and vote wallets and their corresponding withdraw authority wallet in the opening dash. The menu will show you two option.
 1. To change your current set withdrawer (currently logged in walle)
-2. To change the withdraw aithority of your stake or vote wallets.
+2. To change the withdraw authority of your stake or vote wallets.
 
-In order to change the withdraw authority of any wallet
+In order to change the withdraw authority of any wallet your 'Current set Withdrawer' MUST match the withdraw authority of the wallet you wish to change the withdraw authority for.
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image3.jpg)
+
+Choose the wallet you wish to change the withdraw authority for, then you will be shown a list of possible new withdraw authorities.
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image4.jpg)
 
 
 
