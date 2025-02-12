@@ -1,4 +1,4 @@
-**Disclaimer - Please carry out any due diligence before use; by running X1 Console you assume all responsibilty of its use the creator is not responsible for any damages or losses.**
+**Disclaimer - Please read all relevant documents and carry out any necessary due diligence before using X1 Console. By using X1 Console, you acknowledge that you have read the documentation and understand the risks associated with cryptocurrency and related products. You agree that the creator of X1 Console is not liable for any damages or losses that may arise from your use of this product. Use at your own risk.**
 
 # X1'S THE BLACKPEARL - VALIDATOR CONSOLE BY BLACKBEARD
 
