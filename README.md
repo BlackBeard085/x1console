@@ -123,9 +123,13 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
 3. **Autopilot** 
-4.
-5. **Reset Pinger**: This option resets your Pinger settings.
-6. **Speedtest**: This option carries out a speed test to evaluate your network performance.
+4. ### Authority Manager
+   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console.
+   When launched through the other menu option 4, you will be displayed your stake and vote wallets and their corresponding withdraw authority wallet.
+
+   
+6. **Reset Pinger**: This option resets your Pinger settings.
+7. **Speedtest**: This option carries out a speed test to evaluate your network performance.
 
 
 ## Official Links
