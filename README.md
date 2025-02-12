@@ -1,4 +1,4 @@
-
+**Disclaimer - Please carry out any due diligence before use; by running X1 Console you assume all responsibilty of its use the creator is not responsible for any damages or losses.**
 
 # X1'S THE BLACKPEARL - VALIDATOR CONSOLE BY BLACKBEARD
 
@@ -154,14 +154,14 @@ Choose the wallet you wish to change the withdraw authority for, you can also ch
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image4.jpg)
 
 The options include
-id.json - which can be left on the server with minimal funds to run the pinger after transfering withdraw authorities.
-local.json - Created by x1console on your local machinee. DO NOT PUT THIS ON SERVER.
-Ledger HWs - Four HW options, which is the safest option.
+1. id.json - which can be left on the server with minimal funds to run the pinger after transfering withdraw authorities.
+2. local.json - Created by x1console on your local machinee. DO NOT PUT THIS ON SERVER.
+3. Ledger HWs - Four HW options, which is the safest option.
 
 If choosing to transfer to a ledger HW, make sure it is unlocked and ready to use before making the choice as it will check the public key to transfer to. If it is locked the transfer will fail.
 The local.json is used incase you have no ledger HW and wish to keep your master withdrawer locally rather than on the server.
 
-After transfering withdraw authority remember to change the set withdrawer to the new withdrawer as it will need to sign all transactions related to vote and stake wallets going forward. If you chose a ledger while safer will need manual signatures, if you chose local.json while saved locally yoy still have some automation possible.
+After transfering withdraw authority remember to change the set withdrawer to the new withdrawer as it will need to sign all transactions related to vote and stake wallets going forward. If you chose a ledger while safer will need manual signatures, if you chose local.json while saved locally you still have some automation possible.
 
    
 6. **Reset Pinger**: This option resets your Pinger settings.
