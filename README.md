@@ -4,6 +4,10 @@
 
 Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctional console designed for managing your X1 validator. Created by BLACKBEARD, this console streamlines your experience, providing tools for installation, updates, health checks, and various utilities tailored for validator management on the X1 network. You can call it **X1 Console** for short.
 
+## Requirements
+To run an X1 Validator you will need a dedicated server with the following minimum specs;
+7900 ryzen, 128G ram, 500+G nvme, Ubuntu
+
 ## Getting Started
 
 To get started with X1's The Black Pearl (or **X1 Console**), follow these steps:
