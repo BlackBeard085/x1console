@@ -31,18 +31,18 @@ const saveAddressBook = (addressBook) => {
 const displayAddressBook = (addressBook) => {
     console.log("\nCurrent Address Book:");
     console.log("ID\tName                Address                          ");
-    console.log("--------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------");
 
     addressBook.forEach((entry, index) => {
         const nameColumn = entry.name.padEnd(20, ' ');  // Ensures name is 20 characters long
-        const addressColumn = entry.address.length > 30 
-            ? entry.address.substr(0, 27) + '...' 
-            : entry.address.padEnd(30, ' '); // Ensures address is 30 characters long
+        const addressColumn = entry.address.length > 45 
+            ? entry.address.substr(0, 45) + '' 
+            : entry.address.padEnd(45, ' '); // Ensures address is 30 characters long
         
         console.log(`${index + 1}\t${nameColumn}${addressColumn}`);
     });
 
-    console.log("--------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------");
 };
 
 // Main function to handle user input and address book operations
