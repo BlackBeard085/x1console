@@ -174,7 +174,7 @@ After transfering withdraw authority remember to change the set withdrawer to th
 - [X1 Official Documentation](https://docs.x1.xyz/)
 - [Founder Jack Levin](https://x.com/mrJackLevin)
 - [Validators Portal](https://x1val.online/)
-- [X1 Console Dev](https://x.com/BlackBeard_X1)
+- [X1 Console Dev BlackBeard](https://x.com/BlackBeard_X1)
 - [Video Tutorials by Mike Bardi of BOOMTOWN](https://www.youtube.com/@BOOMTOWNmeme/videos)
 ## License
 
