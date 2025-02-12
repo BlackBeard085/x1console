@@ -122,37 +122,11 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 
 1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
-3. **Reset Pinger**: This option resets your Pinger settings.
-4. **Speedtest**: This option carries out a speed test to evaluate your network performance.
+3. **Autopilot** 
+4.
+5. **Reset Pinger**: This option resets your Pinger settings.
+6. **Speedtest**: This option carries out a speed test to evaluate your network performance.
 
-## Functions and Features Overview
-
-- **Installation and Setup**: Easily install and configure your X1 validator, ensuring seamless integration with your existing wallets. The console automates the installation process, tuning the system for an X1 validator, installing the X1-compatible CLI, building the agave validator, opening the required ports, connecting to the X1 network, creating four new X1 wallets or using your existing wallets if you prefer, starting your validator, funding your id.json (withdrawer) which funds your identity, registering both your stake.json and vote.json, delegating your stake, and restarting your validator. It then installs and starts Pinger—all in one command, streamlining the process so anyone can become an X1 validator.
-- **Update Utilities**: Keep your validator and console up to date with minimal effort.
-- **Health Monitoring**: Perform automated health checks and take appropriate action where needed to bring a delinquent validator to active status again—an automated troubleshooter in effect.
-- **Account Management**: Utilities to set commission, check balances, and manage validator logs.
-- **Interactive Command-Line Interface**: User-friendly interface allowing easy navigation through various functionalities.
-- **Integrated Ledger Management**: Monitor or remove your ledger as necessary.
-
-
-- **check_npm_package**: Checks if a Node.js package is installed; installs if not.
-- **check_agave_directory**: Checks for the existence of the X1 agave-xolana directory and handles user options for deletion or archiving.
-- **install**: Installs the X1 validator setup, managing wallet configurations.
-- **update_x1**: Updates the Solana CLI and the validator application, ensuring the latest features and fixes are applied.
-- **update_x1_console**: Updates the X1 console itself to the latest version.
-- **health_check**: Conducts health checks on the validator and initiates corrective actions if needed.
-- **balances**: Retrieves and displays balance information for the configured accounts.
-- **publish_validator**: Publishes validator information on the X1 network.
-- **pinger**: Manages the pinging process for the validator and fetches ping statistics.
-- **show_logs**: Displays logs from the validator for monitoring purposes.
-- **delete_logs**: Safely deletes validator log files.
-- **ledger**: Monitors or removes the ledger corresponding to the validator.
-- **set_commission**: Configures commission percentages for your validator.
-- **exit_script**: Safely exits the console.
-
-### User Interaction Loop
-
-The console operates in a command loop, allowing users to perform actions such as installation, updates, health checks, and more based on user input.
 
 ## Official Links
 
