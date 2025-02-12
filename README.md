@@ -136,7 +136,7 @@ mkdir -p .config/solana && cd .config/solana
 ```
 Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This will install everything needed to run x1console locally but won't start your validator, provided your validator is running on your server. 
    
-Launch the Athority Manager through the other menu option 4. It will be display your stake and vote wallets and their corresponding withdraw authority wallet in the opening dash.
+Launch the Athority Manager through the other menu option 4. It will be display your currently set withdrawer (current logge in wallet) at the top, followed by stake and vote wallets and their corresponding withdraw authority wallet in the opening dash. In
 
 
 
