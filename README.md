@@ -29,14 +29,19 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
 
 Once X1 Console starts you will see a screen that looks like this 
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image1.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0.jpg)
 
 ### Installing X1
 
-To install and start your X1 validator, follow these steps after starting the console:
+To install and start your X1 validator, Navigate to the 'Other' menu after starting the console:
 
 1. From the main menu, choose option **10. Other**.
 2. Next, select option **1. Install, Start X1 and Pinger**.
+
+If you have no Wallets you wish to use reply 'no' when asked if you have existing wallets.
+Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding ypur validator.
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image1.jpgl)
 
 For first installs please do the following.
 
