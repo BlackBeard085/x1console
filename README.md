@@ -109,7 +109,7 @@ Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of
 
 ### Set Commission
 
-Option 8 allows you to **Set Commission**, with the default commission set at 10%. You can easily adjust this by entering your desired commission rate, and it will automatically be set once a value has been entered.
+Option 8 allows you to **Set Commission**, with the default commission set at 10%. You can easily adjust this by entering your desired commission rate, and it will automatically be set once a value has been entered. NOTE: This can only be done in the first half of the current epoch.
 
 ### Publish Validator
 
@@ -134,7 +134,7 @@ first create and open the directory on your local machine
 ```bash
 mkdir -p .config/solana && cd .config/solana
 ```
-Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu.
+Then one by one copy all your wallets over to your local machine. Once all wallets are copied navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This won't start your validator locally. 
    
    When launched through the other menu option 4, you will be displayed your stake and vote wallets and their corresponding withdraw authority wallet.
 
