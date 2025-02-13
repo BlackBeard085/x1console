@@ -167,6 +167,7 @@ The local.json is used incase you have no ledger HW and wish to keep your master
 
 After transfering withdraw authority remember to change the set withdrawer to the new withdrawer as it will need to sign all transactions related to vote and stake wallets going forward. If you chose a ledger while safer will need manual signatures, if you chose local.json while saved locally you still have some automation possible.
 
+Note: when you transfer the withdraw autbority to a ledger or local.json locally, x1console will generate a ledger.json file on the machine the WA transfer took place. This file will contain all pubkeys and name of wallets the WA has been transferred to. You can copy this to your server x1console directory this will allow x1console to name the wallet that holds WA on the server. If it is not copied you will only see the pubkey that holds the WA.
    
 6. **Reset Pinger**: This option resets your Pinger settings.
 7. **Speedtest**: This option carries out a speed test to evaluate your network performance.
