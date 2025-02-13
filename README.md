@@ -122,7 +122,7 @@ Option 9 allows you to customize your validator seen on x1val.online. You can cr
 
 The console will then register your details on the X1 blockchain, making this information visible on x1val.online.
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image5.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image6.jpg)
 
 ### Other Menu
 
