@@ -86,7 +86,7 @@ display_wallets() {
 
 # Function to display the wallet list and withdraw authority specifically for the Change Withdraw Authority option
 display_wallets_for_change() {
-    echo -e "\nCurrent Stake and Vote Wallets:\n"
+    echo -e "\nCurrent Stake and Vote Wallets (excluding those needing repurposing):\n"
     printf "%-5s %-30s %-30s\n" "No." "File Name" "Withdraw Authority"
     printf "%-5s %-30s %-30s\n" "---" "--------- " "----------------"
 
@@ -123,11 +123,14 @@ display_wallets_for_change() {
                     withdraw_authority=$(solana vote-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
                 fi
 
+                # Skip wallets that require repurposing
+                if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
+                    continue
+                fi
+
                 # Get the wallet name associated with the withdraw authority
                 local wallet_name
-                if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
-                    wallet_name="no withdraw authority, requires repurposing"
-                elif [ -n "$withdraw_authority" ]; then
+                if [ -n "$withdraw_authority" ]; then
                     wallet_name=$(get_wallet_name "$withdraw_authority")
                     # Check if the wallet name is empty or "Unknown"
                     if [[ "$wallet_name" == "Unknown" ]]; then

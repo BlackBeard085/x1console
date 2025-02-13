@@ -333,6 +333,27 @@ change_withdraw_authority() {
     else
         # Loop through all wallets and process each one
         for wallet in $(ls "$SOLANA_CONFIG_DIR"/stake*.json "$SOLANA_CONFIG_DIR"/vote.json); do
+            # Determine if the wallet requires repurposing
+            local withdraw_authority=""
+            local file_name=$(basename "$wallet")
+
+            if [[ $file_name == stake*.json ]]; then
+                withdraw_authority=$(solana stake-account "$wallet" 2>&1)
+                if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
+                    withdraw_authority="no withdraw authority, requires repurposing"
+                else
+                    withdraw_authority=$(echo "$withdraw_authority" | grep "Withdraw Authority:" | awk '{print $3}')
+                fi
+            elif [[ $file_name == vote.json ]]; then
+                withdraw_authority=$(solana vote-account "$wallet" | grep "Withdraw Authority:" | awk '{print $3}')
+            fi
+
+            # Skip wallets that require repurposing
+            if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
+                echo "Skipping wallet $wallet (requires repurposing)"
+                continue
+            fi
+
             if [[ $wallet == *"vote.json" ]]; then
                 # Run the solana command for each vote wallet using the current withdraw authority keypair
                 solana vote-authorize-withdrawer "$wallet" "$current_withdraw_authority_keypair" "$new_author"
@@ -347,6 +368,25 @@ change_withdraw_authority() {
 process_wallet() {
     local wallet_file="$1"
     local new_authority="$2"
+    local file_name=$(basename "$wallet_file")
+    local withdraw_authority=""
+
+    if [[ $file_name == stake*.json ]]; then
+        withdraw_authority=$(solana stake-account "$wallet_file" 2>&1)
+        if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
+            withdraw_authority="no withdraw authority, requires repurposing"
+        else
+            withdraw_authority=$(echo "$withdraw_authority" | grep "Withdraw Authority:" | awk '{print $3}')
+        fi
+    elif [[ $file_name == vote.json ]]; then
+        withdraw_authority=$(solana vote-account "$wallet_file" | grep "Withdraw Authority:" | awk '{print $3}')
+    fi
+
+    # Skip wallets that require repurposing
+    if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
+        echo "Skipping wallet $wallet_file (requires repurposing)"
+        return
+    fi
 
     if [[ $wallet_file == *"stake"* ]]; then
         echo -e "\nChanging withdraw authority for stake account: $wallet_file"
