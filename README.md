@@ -113,7 +113,7 @@ Option 8 allows you to **Set Commission**, with the default commission set at 10
 
 ### Publish Validator
 
-Option 9 allows you to custamize your validator seen on x1val.online. You can create a custom name, set an icon/image and also link any webpage to your validator. The console will prompt you for:
+Option 9 allows you to customize your validator seen on x1val.online. You can create a custom name, set an icon/image and also link any webpage to your validator. The console will prompt you for:
 - The name you wish to give to your validator.
 - The web URL tied to your validator, such as your X account.
 - An image you wish to use as an icon for your validator.
