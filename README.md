@@ -113,7 +113,7 @@ Option 8 allows you to **Set Commission**, with the default commission set at 10
 
 ### Publish Validator
 
-Option 9 allows you to **Publish Validator**. This option lets you register your validator. The console will prompt you for:
+Option 9 allows you to **Publish Validator** on the blockchain. You can create a custom name for your validator and set an icon/image for your validator and also link any webpage to your validator. The console will prompt you for:
 - The name you wish to give to your validator.
 - The web URL tied to your validator, such as your X account.
 - An image you wish to use as an icon for your validator.
