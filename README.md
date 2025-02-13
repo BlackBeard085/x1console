@@ -118,7 +118,11 @@ Option 9 allows you to customize your validator seen on x1val.online. You can cr
 - The web URL tied to your validator, such as your X account.
 - An image you wish to use as an icon for your validator.
 
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image5.jpg)
+
 The console will then register your details on the X1 blockchain, making this information visible on x1val.online.
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image5.jpg)
 
 ### Other Menu
 
