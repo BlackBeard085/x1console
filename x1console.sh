@@ -63,10 +63,10 @@ install() {
     # Check x1/tachyon directory before proceeding
     check_tachyon_directory
     # Allowing the firewall for ports 8000 to 10000
-    echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
-    sudo ufw allow 8000:10000/tcp
-    sudo ufw allow 8000:10000/udp
-    sudo ufw allow 3334
+    #echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
+    #sudo ufw allow 8000:10000/tcp
+    #sudo ufw allow 8000:10000/udp
+    #sudo ufw allow 3334
     
     #killing all processes on port 8899
     pkill -f solana-validator
