@@ -146,7 +146,7 @@ solana-keygen pubkey usb://ledger
 Once all wallets are copied and your ledger is connected properly, navigate to x1console directory, start the console and run the Install, Start X1 and Pinger from the other menu. This will install everything needed to run x1console locally but won't start your validator, provided your validator is running on your server. CLOSE THE TERMINAL AND LOG BACK IN (May have to switch off and back on, need checking).
    
 Launch the Athority Manager through the other menu option 4. It will be display your currently set withdrawer (current logge in wallet) at the top, followed by stake and vote wallets and their corresponding withdraw authority wallet in the opening dash. The menu will show you two option.
-1. To change your current set withdrawer (currently logged in walle)
+1. To change your current set withdrawer (currently logged in wallet)
 2. To change the withdraw authority of your stake or vote wallets.
 
 In order to change the withdraw authority of any wallet your 'Current set Withdrawer' MUST match the withdraw authority of the wallet you wish to change the withdraw authority for.
