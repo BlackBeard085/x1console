@@ -142,7 +142,7 @@ Then one by one copy all your wallets over to your local machine. You will have 
 ```bash
 cat <wallet name> #this will display your private key, copy it
 ```
-then in the .config/solana use
+then in the .config/solana use on your local machine
 ```bash
 nano <wallet name> #this will open an empty file, paste your key here, save and close
 ```
