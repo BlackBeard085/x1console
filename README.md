@@ -138,7 +138,17 @@ first create and open the directory on your local machine
 ```bash
 mkdir -p .config/solana && cd .config/solana
 ```
-Then one by one copy all your wallets over to your local machine. If you are planning to transfer withdraw authoriy to a ledger HW, connect it now. Make sure it is unlocked and the solana app is opened ready for use. Run the command to make sure your ledger is working. This command will show your pubkey.
+Then one by one copy all your wallets over to your local machine. You will have to copy the private keys from the server to your local machine. To copy use the following command on your server
+```bash
+cat <wallet name> #this will display your private key, copy it
+```
+then in the .config/solana use
+```bash
+nano <wallet name> #this will open an empty file, paste your key here, save and close
+```
+make sure you copy the wallet names correctly and don't mix them up.
+
+If you are planning to transfer withdraw authoriy to a ledger HW, connect it now. Make sure it is unlocked and the solana app is opened ready for use. Run the command to make sure your ledger is working. This command will show your pubkey.
 ```bash
 solana-keygen pubkey usb://ledger
 ```
