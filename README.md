@@ -170,7 +170,7 @@ Choose the wallet you wish to change the withdraw authority for, you can also ch
 The options include
 1. id.json - which can be left on the server with minimal funds to run the pinger after transfering withdraw authorities.
 2. local.json - Created by x1console on your local machinee. DO NOT PUT THIS ON SERVER.
-3. Ledger HWs - Four HW options, which is the safest option.
+3. Ledger HWs - Five HW options. Hardware wallets is the safest option.
 
 If choosing to transfer to a ledger HW, make sure it is unlocked and ready to use before making the choice as it will check the public key to transfer to. If it is locked the transfer will fail.
 The local.json is used incase you have no ledger HW and wish to keep your master withdrawer locally rather than on the server.
