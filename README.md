@@ -134,6 +134,7 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
 3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 ### 4.Authority Manager
+Requirements: You will need an Ubuntu system locally.
    Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signature both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
 
 first create and open the directory on your local machine
