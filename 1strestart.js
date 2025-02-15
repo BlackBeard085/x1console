@@ -63,7 +63,7 @@ function isValidatorRunning() {
             const isRunning = await isValidatorRunning();
 
             if (isRunning) {
-                console.log('Validator started successfully and is running on port 8899.');
+                console.log('Validator started successfully and is running on port 8899. Please allow 10-20 seconds for your validator status to update on the main dashboard. You can press enter without choosing an option to refresh your status on the main dashboard.');
                 return; // Exit the script as the validator is now running
             }
 
