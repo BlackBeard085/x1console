@@ -84,7 +84,7 @@ function fetchCurrentEpoch() {
         });
 
         req.on('error', (error) => {
-            console.error('Error fetching current epoch:', error.message);
+            console.error('Epoch data currently not available:', error.message);
             reject(error);
         });
 
