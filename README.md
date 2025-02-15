@@ -45,7 +45,7 @@ To install and start your X1 validator, Navigate to the 'Other' menu after start
 2. Next, select option **1. Install, Start X1 and Pinger**.
 
 If you have no Wallets you wish to use reply 'no' when asked if you have existing wallets.
-Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding your validator.
+Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding your validator. Some details may require time to sync, pressing enter without choosing a selection will refresh your dash. At times a slow snapshot download after the 1st restart can also delay the update, check logs for slow downloads before attempting any fix.
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image1.jpg)
 
@@ -57,7 +57,7 @@ IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the f
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
-IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running and check x1val.online to make sure your validator is showing. REFRESH YOUR DASH BY PRESSING ENTER WITHOUT CHOOSING AN OPTION, it may take a minute or two for your validator to show active status when the active stake takes effect.
+IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running or downloading a snapshot and check x1val.online to make sure your validator is showing. REFRESH YOUR DASH BY PRESSING ENTER WITHOUT CHOOSING AN OPTION, it may take a minute or two for your validator to show active status when the active stake takes effect. Very slow snapshot downloads can corrupt the ledger and will continue to show your validator as delinquent even after download has completed and validator has been running for 1 or 2 minutes. If this happens stop validator through option 2, remove the ledger through option 7 and start validator again through option 2.
 
 This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
 
