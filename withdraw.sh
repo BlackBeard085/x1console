@@ -7,12 +7,26 @@ function display_wallets() {
     printf "%-5s %-15s %-45s\n" "No" "Name" "Address"
     echo "---------------------------------"
     local index=1
+
+    # Display wallets from wallets.json
     for row in $(jq -c '.[]' wallets.json); do
         name=$(echo "$row" | jq -r '.name')
         address=$(echo "$row" | jq -r '.address')
         printf "%-5s %-15s %-45s\n" "$index" "$name" "$address"
         index=$((index + 1))
     done
+
+    # Display wallets from ledger.json if it exists
+    if [ -f ledger.json ]; then
+        for row in $(jq -c '.[]' ledger.json); do
+            full_name=$(echo "$row" | jq -r '.name')
+            name=${full_name##*/}
+            address=$(echo "$row" | jq -r '.address')
+            printf "%-5s %-15s %-45s\n" "$index" "$name" "$address"
+            index=$((index + 1))
+        done
+    fi
+
     echo "---------------------------------"
 }
 
@@ -59,8 +73,18 @@ function withdraw_from_identity() {
     display_wallets
 
     # Ask the user which wallet they want to withdraw to
-    read -p "Choose the wallet number to withdraw to (1-4): " wallet_choice
-    withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+    read -p "Choose the wallet number to withdraw to: " wallet_choice
+    
+    wallets_count=$(jq '. | length' wallets.json)
+    if [[ "$wallet_choice" -le "$wallets_count" ]]; then
+        withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+    elif [ -f ledger.json ]; then
+        ledger_index=$((wallet_choice - wallets_count - 1))
+        withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
+    else
+        echo "Invalid wallet choice."
+        return
+    fi
 
     # Get the balance of the Identity account
     identity_balance_output=$(solana balance ~/.config/solana/identity.json)
@@ -86,7 +110,7 @@ function withdraw_from_identity() {
         fi
         
         # Validate the amount is within the identity balance range
-        if (( $(echo "$withdraw_amount <= $identity_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
+        if (( $(echo "$withdraw_amount <= $identity_balance && $withdraw_amount >= 0" | bc -l) )); then
             # Withdraw funds from Identity account
             solana transfer --from ~/.config/solana/identity.json "$withdraw_to_address" "$withdraw_amount"
             echo "Withdrawn $withdraw_amount SOL from Identity account to $withdraw_to_address."
@@ -118,8 +142,26 @@ while true; do
 
         display_wallets
         
-        read -p "Choose the wallet number to withdraw to (1-4): " wallet_choice
-        withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+        read -p "Choose the wallet number to withdraw to: " wallet_choice
+        
+        wallets_count=$(jq '. | length' wallets.json)
+        if [[ "$wallet_choice" -le "$wallets_count" ]]; then
+            withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+        else
+           if [ -f ledger.json ]; then
+                ledger_count=$(jq '. | length' ledger.json)
+                ledger_index=$((wallet_choice - wallets_count - 1))
+                if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
+                    withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
+                else
+                    echo "Invalid wallet choice."
+                    continue
+                fi
+            else
+                echo "Invalid wallet choice."
+                continue
+            fi
+        fi
 
         echo -e "\nRetrieving details for the selected stake account \"$stake_name\"..."
         output=$(solana stake-account "$stake_address")
@@ -166,7 +208,7 @@ while true; do
                 break
             fi
             
-            if (( $(echo "$withdraw_amount <= $unstaked_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
+            if (( $(echo "$withdraw_amount <= $unstaked_balance && $withdraw_amount >= 0" | bc -l) )); then
                 solana withdraw-stake "$stake_address" "$withdraw_to_address" "$withdraw_amount"
                 echo "Withdrawn $withdraw_amount SOL to $withdraw_to_address."
                 break
@@ -181,8 +223,26 @@ while true; do
         echo -e "\nWithdraw from Vote Account:"
         display_wallets
 
-        read -p "Choose the wallet number to withdraw Vote funds to (1-4): " choice
-        withdraw_to_address=$(jq -r ".[$((choice - 1))].address" wallets.json)
+        read -p "Choose the wallet number to withdraw Vote funds to: " wallet_choice
+        
+        wallets_count=$(jq '. | length' wallets.json)
+        if [[ "$wallet_choice" -le "$wallets_count" ]]; then
+            withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+        else
+           if [ -f ledger.json ]; then
+                ledger_count=$(jq '. | length' ledger.json)
+                ledger_index=$((wallet_choice - wallets_count - 1))
+                if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
+                    withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
+                else
+                    echo "Invalid wallet choice."
+                    continue
+                fi
+            else
+                echo "Invalid wallet choice."
+                continue
+            fi
+        fi
 
         vote_address=$(jq -r '.[] | select(.name=="Vote") | .address' wallets.json)
 
@@ -205,7 +265,7 @@ while true; do
                 break
             fi
             
-            if (( $(echo "$withdraw_amount <= $vote_balance" | bc -l) && $(echo "$withdraw_amount >= 0" | bc -l) )); then
+            if (( $(echo "$withdraw_amount <= $vote_balance && $withdraw_amount >= 0" | bc -l) )); then
                 solana withdraw-from-vote-account "$vote_address" "$withdraw_to_address" "$withdraw_amount"
                 echo "Withdrawn $withdraw_amount SOL from Vote account to $withdraw_to_address."
                 break
