@@ -9,10 +9,10 @@ Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctiona
 ## Requirements
 To run an X1 Validator you will need a dedicated server with the following minimum specs;
 
-CPU: 12 cores/24 threads or more
-RAM: 128G or more 
-DISK: 4TB NVME
-OS: Ubuntu 22.04.5 LTS
+- CPU: 12 cores/24 threads or more
+- RAM: 128G or more 
+- DISK: 4TB NVME
+- OS: Ubuntu 22.04.5 LTS
 
 ## Getting Started
 
