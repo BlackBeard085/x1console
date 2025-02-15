@@ -23,7 +23,7 @@ function checkLogFileModification() {
 
         const currentTime = Date.now();
         const fileModifiedTime = new Date(stats.mtime).getTime();
-        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 7000); // 7 seconds threshold
+        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 5000); // 5 seconds threshold
 
         if (hasBeenModifiedRecently) {
             console.log('- Logs: Running');

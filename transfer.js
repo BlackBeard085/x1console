@@ -229,7 +229,7 @@ const main = async () => {
             }
 
         } else if (transferOption === '3') {
-            console.log('Exiting the script. Have a nice day!');
+            console.log(' ');
             process.stdin.pause();
             return; // Terminate the script
         }

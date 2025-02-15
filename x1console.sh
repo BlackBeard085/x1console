@@ -602,7 +602,7 @@ transfers() {
                 if [ -f "$HOME/x1console/transfer.js" ]; then
                     node "$HOME/x1console/transfer.js"
                     if [ $? -eq 0 ]; then
-                        echo -e "\nTransfer completed successfully.\n"
+                        echo -e "\nExiting transfers.\n"
                     else
                         echo -e "\nTransfer failed.\n"
                     fi
