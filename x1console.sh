@@ -641,7 +641,7 @@ manage_stake() {
     if [ -f "$HOME/x1console/managestake.sh" ]; then
         bash "$HOME/x1console/managestake.sh"
         if [ $? -eq 0 ]; then
-            echo -e "\nManage Stake completed successfully.\n"
+            echo -e "\nClosed Stake manager successfully.\n"
         else
             echo -e "\nFailed to manage stake.\n"
         fi
@@ -657,7 +657,7 @@ withdraw_stake_vote() {
     if [ -f "$HOME/x1console/withdraw.sh" ]; then
         bash "$HOME/x1console/withdraw.sh"
         if [ $? -eq 0 ]; then
-            echo -e "\nWithdraw Stake/Vote completed successfully.\n"
+            echo -e "\nClosed Withdrawls successfully.\n"
         else
             echo -e "\nFailed to withdraw stake/vote.\n"
         fi

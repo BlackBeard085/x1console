@@ -364,6 +364,7 @@ change_withdraw_authority() {
     if [ "$single_choice" = true ]; then
         if [[ $selected_file == *"vote.json" ]]; then
             # Run the solana command for changing the withdraw authority
+            echo -e "\nChanging withdraw authority for vote account: $wallet"
             solana vote-authorize-withdrawer "$selected_file" "$current_withdraw_authority_keypair" "$new_author"
         else
             process_wallet "$selected_file" "$new_author"
@@ -373,6 +374,7 @@ change_withdraw_authority() {
         for wallet in "${display_files[@]}"; do # Use the filtered display list
             if [[ $wallet == *"vote.json" ]]; then
                 # Run the solana command for each vote wallet using the current withdraw authority keypair
+                echo -e "\nChanging withdraw authority for vote account: $wallet"
                 solana vote-authorize-withdrawer "$wallet" "$current_withdraw_authority_keypair" "$new_author"
             else
                 process_wallet "$wallet" "$new_author"
