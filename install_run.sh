@@ -184,7 +184,7 @@ for wallet in "${WALLETS[@]}"; do
         echo -e "\nWallet $wallet already exists."
     fi
     # Copy the wallet file to the destination directory
-    cp "$wallet_path" "$DEST_DIR"
+    #cp "$wallet_path" "$DEST_DIR"
     # Extract the wallet address using solana-keygen
     address=$(solana-keygen pubkey "$wallet_path")
     # Extract the name from the wallet file basename (without .json)
