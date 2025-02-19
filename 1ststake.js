@@ -4,7 +4,7 @@ const os = require('os');
 // Get the current user's username
 const username = os.userInfo().username;
 // Define the validator directory
-const validatorDirectory = `/home/${username}/x1/tachyon`;
+const validatorDirectory = `/home/${username}/.config/solana`;
 
 // Command to start the validator
 const startCommand = `./start_validator.sh`;
