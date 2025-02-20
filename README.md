@@ -71,7 +71,7 @@ At times your validator will become delinquent for one reason or another and it 
 
 - Solution 1. Run Health Check - This is an automated check on your validator and also performs a restart of your validator fixing any abvious issues.
 -  Soution 2. If the Health check fails to bring your validator back online then try stopping your validator if it is running through option 2. Validator. remove ledger through option 7. Ledger. and start validator again through option 2. Validator.
--  Solution 3. If solution 2 fails after several attempts thsn it may be best to perform a hard reset. Run the [RESET] from the other menu option 1. and answering yes to having existing wallets and are copied to .config/solana directory. Then deleting you tachyon directory.
+-  Solution 3. If solution 2 fails after several attempts then it may be best to perform a hard reset. Run the [RESET] from the other menu option 1. and answering yes to having existing wallets and are copied to .config/solana directory. Then deleting you tachyon directory.
   
 ### Health Check
 
