@@ -239,7 +239,7 @@ if (( $(echo "$current_balance >= 4" | bc -l) )); then
     # Get the withdrawer's wallet address from wallets.json
     withdrawer_address=$(jq -r '.[] | select(.name == "Withdrawer" or .name == "Id") | .address' wallets.json)
 
-    echo "Transferring 1 SOL to identity wallet..."
+    echo "Transferring 1 XNT to identity wallet..."
     solana transfer "$identity_address" 1 --allow-unfunded-recipient
 
     echo "Creating stake account..."
