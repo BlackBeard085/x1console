@@ -76,6 +76,7 @@ install() {
         ./install_run.sh
         # Change the path for copying tachyon-validator to your
         echo -e "\nCopying tachyon-validator to your path..."
+        cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
         cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
         sudo cp "$HOME/x1/tachyon/target/release/tachyon-validator" /usr/local/bin
        export PATH=$PATH:~/x1/tachyon/target/release
@@ -117,7 +118,8 @@ install() {
             # Using spawn for executing 1strestart.js
             node ./1strestart.js
             if [ $? -eq 0 ]; then
-                echo -e "\nValidator has been restarted successfully."
+                read -n 1 -s -r -p "\Validator has been restarted successfully."
+                #echo -e "\nValidator has been restarted successfully."
                 # Run setpinger.js after restart is successful
                 if [ -f ./setpinger.js ]; then
                     echo -e "\nSetting up pinger..."
@@ -175,7 +177,7 @@ update_x1() {
        
         echo -e "\nCopying tachyon-validator to your path..."
         cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
-
+        cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
         export PATH=$PATH:~/x1/tachyon/target/release
         echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc
 

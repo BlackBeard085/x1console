@@ -63,10 +63,10 @@ install() {
     # Check x1/tachyon directory before proceeding
     check_tachyon_directory
     # Allowing the firewall for ports 8000 to 10000
-    echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
-    sudo ufw allow 8000:10000/tcp
-    sudo ufw allow 8000:10000/udp
-    sudo ufw allow 3334
+    #echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
+    #sudo ufw allow 8000:10000/tcp
+    #sudo ufw allow 8000:10000/udp
+    #sudo ufw allow 3334
     
     #killing all processes on port 8899
     pkill -f solana-validator
@@ -95,7 +95,7 @@ install() {
 	pkill -f tachyon-validator
 
 	# remove old ledger
-	echo -e "\nRemoving old ledger"
+	echo -e "\nRemoving old ledger if present."
 	rm -rf "$HOME/x1/ledger"
 
         # New Addition: Attempt to execute 1ststake.js
@@ -458,9 +458,15 @@ set_commission() {
 
     # Validate the user input
     if [[ "$commission_percent" -ge 0 ]] && [[ "$commission_percent" -le 100 ]]; then
+        # Read keypair path from withdrawerconfig.json
+        keypair_path=$(jq -r '.keypairPath' withdrawerconfig.json)
+        
+        # Construct the solana command
+        solana_command="solana vote-update-commission $HOME/.config/solana/vote.json $commission_percent $keypair_path"
+        
         # Run the commission setting command
         echo -e "\nSetting commission to $commission_percent%..."
-        solana vote-update-commission "$HOME/.config/solana/vote.json" "$commission_percent" "$HOME/.config/solana/id.json"
+        eval $solana_command
         if [ $? -eq 0 ]; then
             echo -e "\nCommission set successfully.\n"
         else
@@ -472,7 +478,6 @@ set_commission() {
     
     pause
 }
-
 # Function for 'Other' menu
 other_options() {
     while true; do
@@ -597,7 +602,7 @@ transfers() {
                 if [ -f "$HOME/x1console/transfer.js" ]; then
                     node "$HOME/x1console/transfer.js"
                     if [ $? -eq 0 ]; then
-                        echo -e "\nTransfer completed successfully.\n"
+                        echo -e "\nExiting transfers.\n"
                     else
                         echo -e "\nTransfer failed.\n"
                     fi
@@ -636,7 +641,7 @@ manage_stake() {
     if [ -f "$HOME/x1console/managestake.sh" ]; then
         bash "$HOME/x1console/managestake.sh"
         if [ $? -eq 0 ]; then
-            echo -e "\nManage Stake completed successfully.\n"
+            echo -e "\nClosed Stake manager successfully.\n"
         else
             echo -e "\nFailed to manage stake.\n"
         fi
@@ -652,7 +657,7 @@ withdraw_stake_vote() {
     if [ -f "$HOME/x1console/withdraw.sh" ]; then
         bash "$HOME/x1console/withdraw.sh"
         if [ $? -eq 0 ]; then
-            echo -e "\nWithdraw Stake/Vote completed successfully.\n"
+            echo -e "\nClosed Withdrawls successfully.\n"
         else
             echo -e "\nFailed to withdraw stake/vote.\n"
         fi
