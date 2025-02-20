@@ -67,7 +67,7 @@ This option also works as your reset. By keeping your original wallets, this wil
 
 ### Troubleshoot Delinquent Validator
 
-At times your validator will become delinquent for one reason or another and it becomes vital that you bring your validator back online. Here are some solutions to bring yoyr validator back to active status
+At times your validator will become delinquent for one reason or another and it becomes vital that you bring your validator back online. Here are some solutions to bring your validator back to active status
 
 - Solution 1. Run Health Check - This is an automated check on your validator and also performs a restart of your validator fixing any abvious issues.
 -  Soution 2. If the Health check fails to bring your validator back online then try stopping your validator if it is running through option 2. Validator. remove ledger through option 7. Ledger. and start validator again through option 2. Validator.
