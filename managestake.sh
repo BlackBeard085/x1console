@@ -142,9 +142,9 @@ add_new_stake_account() {
     done
 
     # Create the stake account with the specified amount
-    echo "Creating stake account with $stake_amount XN..."
+    echo "Creating stake account with $stake_amount XNT..."
     if solana create-stake-account "$secret_key_file" "$stake_amount"; then
-        echo "Successfully created stake account in $capitalized_name with $stake_amount XN staked."
+        echo "Successfully created stake account in $capitalized_name with $stake_amount XNT staked."
         
         # Get the vote address and delegate the stake
         vote_address=$(get_vote_address)
