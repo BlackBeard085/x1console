@@ -131,7 +131,7 @@ add_new_stake_account() {
     stake_amount=""
     while true; do
         echo
-        read -rp "How much XN would you like to stake in $capitalized_name (2 - 1000000): " stake_amount
+        read -rp "How much XNT would you like to stake in $capitalized_name (2 - 1000000): " stake_amount
 
         # Validate the input
         if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 2 ] && [ "$stake_amount" -le 1000000 ]; then
@@ -279,7 +279,7 @@ create_stake_account() {
     stake_amount=""
     while true; do
         echo
-        read -rp "How much XN would you like to stake in the new account (2 - 1000000): " stake_amount
+        read -rp "How much XNT would you like to stake in the new account (2 - 1000000): " stake_amount
 
         # Validate the input
         if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 2 ] && [ "$stake_amount" -le 1000000 ]; then
@@ -290,9 +290,9 @@ create_stake_account() {
     done
 
     # Create the stake account with the specified amount using the chosen available account
-    echo "Creating stake account with $stake_amount XN using $chosen_key_file..."
+    echo "Creating stake account with $stake_amount XNT using $chosen_key_file..."
     if solana create-stake-account "$chosen_key_file" "$stake_amount"; then
-        echo "Successfully created a new stake account using $chosen_key_file with $stake_amount XN staked."
+        echo "Successfully created a new stake account using $chosen_key_file with $stake_amount XNT staked."
         
         # Get the vote address and delegate the stake
         vote_address=$(get_vote_address)
