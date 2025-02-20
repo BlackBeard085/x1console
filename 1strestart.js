@@ -63,9 +63,9 @@ function isValidatorRunning() {
             const isRunning = await isValidatorRunning();
 
             if (isRunning) {
-                console.log('Please wait 1 minute approximately. Allowing time for sync...');
+                console.log('Please wait 1-2 minutes approximately. Allowing time for console to sync with blockchain...');
             await new Promise(res => setTimeout(res, 99000));
-                console.log('Validator started successfully and is running on port 8899. Please allow 10-20 seconds for your validator status to update on the main dashboard. You can press enter without choosing an option to refresh your status on the main dashboard.');
+                console.log('Validator started successfully and is running on port 8899. If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete and confirming validator status before taking further action.');
                 return; // Exit the script as the validator is now running
             }
 
