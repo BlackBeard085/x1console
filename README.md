@@ -65,6 +65,14 @@ IMPORTANT: Once console has delegated stake and started it will take effect on t
 
 This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
 
+### Troubleshoot Delinquent Validator
+
+At times your validator will become delinquent for one reason or another and it becomes vital that you bring your validator back online. Here are some solutions to bring yoyr validator back to active status
+
+- Solution 1. Run Health Check - This is an automated check on your validator and also performs a restart of your validator fixing any abvious issues.
+-  Soution 2. If the Health check fails to bring your validator back online then try stopping your validator if it is running through option 2. Validator. remove ledger through option 7. Ledger. and start validator again through option 2. Validator.
+-  Solution 3. If solution 2 fails after several attempts thsn it may be best to perform a hard reset. Run the [RESET] from the other menu option 1. and answering yes to having existing wallets and are copied to .config/solana directory. Then deleting you tachyon directory.
+  
 ### Health Check
 
 Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
