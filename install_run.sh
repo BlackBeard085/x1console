@@ -202,7 +202,7 @@ for i in "${!wallets[@]}"; do
 done >> wallets.json
 echo "]" >> wallets.json
 echo -e "\nWallets saved in wallets.json."
-echo "Wallet files have been copied to $DEST_DIR."
+#echo "Wallet files have been copied to $DEST_DIR."
 
 # Extract the address for the id wallet
 id_address=$(solana-keygen pubkey "$SOLANA_DIR/id.json")
