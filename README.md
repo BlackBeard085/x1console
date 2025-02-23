@@ -130,7 +130,7 @@ Option 8 allows you to **Set Commission**, with the default commission set at 10
 Option 9 allows you to customize your validator seen on x1val.online. You can create a custom name, set an icon/image and also link any webpage to your validator. The console will prompt you for:
 - The name you wish to give to your validator.
 - The web URL tied to your validator, such as your X account.
-- An image you wish to use as an icon for your validator.
+- An image you wish to use as an icon for your validator. The image must be a jpg, png or jpeg and needs to be uploaded to an image hoster like imageshack.com, then use the image URL when prompted.
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image5.jpg)
 
