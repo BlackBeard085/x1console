@@ -22,6 +22,23 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
 
 1. Create a new user for your Ubuntu system and give that user 'sudo' rights.
    ## Important: Please do not use usernames 'root' or 'admin'
+
+   You should replace username with any username you like apart from root or admin.
+
+   ```bash
+   adduser username
+   ```
+   Give admin rights to user, so user can use sudo commands in terminal
+   ```bash
+   sudo usermod -aG sudo username
+   ```
+
+   Log in to new user
+
+   ```bash
+   su - username
+   ```
+
    
 ### Console Installation
 
@@ -55,12 +72,20 @@ Once the validator and all dependencies are installed you will see the following
 
 For first installs please do the following.
 
-IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
+3. IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
 
 ```bash
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
+4. To relogin to X1Console after reopening the terminal enter the following commands.
+   ```bash
+   cd x1console
+   ```
+   ```bash
+   ./x1console.sh
+   ```
+   
 IMPORTANT: Once console has delegated stake and started it will take effect on the following epoch. Check logs through option 2 and make sure it is running or downloading a snapshot and check x1val.online to make sure your validator is showing. REFRESH YOUR DASH BY PRESSING ENTER WITHOUT CHOOSING AN OPTION, it may take a minute or two for your validator to show active status when the active stake takes effect. Very slow snapshot downloads can corrupt the ledger and will continue to show your validator as delinquent even after download has completed and validator has been running for 1 or 2 minutes. If this happens stop validator through option 2, remove the ledger through option 7 and start validator again through option 2.
 
 This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
@@ -99,7 +124,7 @@ Option 2 from the main menu is **Validator**. This section provides three sub-op
 
 Option 3 from the main menu is **Check Balances**. This option allows you to check your balances in all four wallets: **id.json**, **identity.json**, **vote.json**, and **stake.json**. 
 
-- It also includes an added function that automatically funds underfunded vote or stake accounts if their funds drop under 1 XN.
+- It also includes an added function that automatically funds underfunded identity or stake accounts if their funds drop under 1 XN.
 
 ### Transfers
  
@@ -119,7 +144,7 @@ Option 6 allows you to **Withdraw Stake/Vote/Identity**, enabling you to withdra
 
 ### Ledger
 
-Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of fatal crashes or ledger failures, this option enables you to remove the ledger for a smoother restart.
+Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of fatal crashes or ledger failures, this option enables you to remove the ledger for a smoother restart. You can also create a backup of the ledger if required
 
 ### Set Commission
 
