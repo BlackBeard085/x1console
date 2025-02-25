@@ -151,17 +151,17 @@ update_x1() {
     if [ -d "$TACHYON_DIR" ]; then
         cd "$TACHYON_DIR" || exit
 
-        # Check if the validator is running on port 8899
-        if lsof -i :8899; then
-            echo -e "\nValidator is currently running. Stopping the validator..."
-            # Change to the base directory to stop the validator
-            cd "$BASE_DIR" || exit
-            tachyon-validator exit -f
-            echo -e "Validator has been stopped."
-            cd "$TACHYON_DIR" || exit  # Return to tachyon directory
-        else
-            echo -e "\nValidator is not running. Continuing with the update...\n"
-        fi
+        # Port to check
+          PORT=3334
+        # Get the PID of the process using the specified port
+          PID=$(lsof -t -i :$PORT)
+          if [ -z "$PID" ]; then
+          echo "No process is using port $PORT."
+      else
+          echo "Killing Pinger on port $PORT with PID(s): $PID"
+          kill -9 $PID
+          echo "Process(es) terminated."
+      fi
 
         echo -e "\nUpdating Server"
         sudo apt update && sudo apt upgrade
@@ -174,6 +174,19 @@ update_x1() {
 
         echo -e "\nBuilding project in release mode..."
         cargo build --release
+
+        # Check if the validator is running on port 8899
+        if lsof -i :8899; then
+            echo -e "\nValidator is currently running. Stopping the validator..."
+            # Change to the base directory to stop the validator
+            cd "$BASE_DIR" || exit
+            tachyon-validator exit -f
+            sleep 7
+            echo -e "Validator has been stopped."
+            cd "$TACHYON_DIR" || exit  # Return to tachyon directory
+        else
+            echo -e "\nValidator is not running. Continuing with the update...\n"
+        fi
        
         echo -e "\nCopying tachyon-validator to your path..."
         cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
@@ -191,7 +204,8 @@ update_x1() {
 
     # Execute restart.js after updating
     if [ -f "$HOME/x1console/restart.js" ]; then
-        echo -e "\nRestarting validator after update..."
+        echo -e "\nRestarting pinger and validator after update..."
+        node "$HOME/x1console/setpinger.js"
         node "$HOME/x1console/restart.js"
         if [ $? -eq 0 ]; then
             echo -e "\nRestart executed successfully.\n"
