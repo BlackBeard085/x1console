@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const homeDir = process.env.HOME || process.env.USERPROFILE; // Get the user's home directory
-const pingerDir = path.join(homeDir, "x1-pinger");
+const pingerDir = path.join(homeDir, "pinger");
 
 // Function to execute a shell command and return a Promise
 function execCommand(command, cwd) {
@@ -32,7 +32,7 @@ async function validateAndRemoveDirectory(directory) {
 
         // Step 2: Clone the repository
         console.log("Cloning the repository...");
-        await execCommand("git clone https://github.com/x1-labs/x1-pinger.git", homeDir);
+        await execCommand("git clone https://github.com/jacklevin74/pinger.git", homeDir);
 
         // Step 3: Install necessary packages
         console.log("Installing packages...");
