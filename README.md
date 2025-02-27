@@ -215,7 +215,7 @@ The options include
 If choosing to transfer to a ledger HW, make sure it is unlocked and ready to use before making the choice as it will check the public key to transfer to. If it is locked the transfer will fail.
 The local.json is used incase you have no ledger HW and wish to keep your master withdrawer locally rather than on the server.
 
-After transfering withdraw authority remember to change the set withdrawer to the new withdrawer as it will need to sign all transactions related to vote and stake wallets going forward. If you chose a ledger while safer will need manual signatures, if you chose local.json while saved locally you still have some automation possible.
+After transfering withdraw authority remember to change the current set withdrawer to the new withdrawer on the local machine as it will need to sign all transactions related to vote and stake wallets going forward. Choosing a ledger is safer but will need manual signatures to complete transactions, if you chose local.json, the private key for it will be stored on your local machine in the .config/solana directory locally, please back this up and you still have some automation possible through the local x1console.
 
 Note: when you transfer the withdraw authority to a ledger or local.json locally, x1console will generate a ledger.json file on the machine the WA transfer took place. This file will contain all pubkeys and name of wallets the WA has been transferred to. You can copy this to your server x1console directory this will allow x1console to name the wallet that holds WA on the server. If it is not copied you will only see the pubkey that holds the WA.
    
