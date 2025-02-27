@@ -219,7 +219,7 @@ After transfering withdraw authority remember to change the set withdrawer to th
 
 Note: when you transfer the withdraw authority to a ledger or local.json locally, x1console will generate a ledger.json file on the machine the WA transfer took place. This file will contain all pubkeys and name of wallets the WA has been transferred to. You can copy this to your server x1console directory this will allow x1console to name the wallet that holds WA on the server. If it is not copied you will only see the pubkey that holds the WA.
    
-6. **Reset Pinger**: This option resets your Pinger settings.
+6. **Reset Pinger**: This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
 7. **Speedtest**: This option carries out a speed test to evaluate your network performance.
 
 
