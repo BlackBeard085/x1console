@@ -126,8 +126,8 @@ function moveAndCreateStakeAccount() {
                         return;
                     }
 
-                    fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
-                    console.log(`Copied stake.json to: ${tachyonDir}`);
+                    //fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
+                    //console.log(`Copied stake.json to: ${tachyonDir}`);
 
                     exec(`solana stake-account ${stakePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -171,8 +171,8 @@ function moveAndCreateVoteAccount() {
                         return;
                     }
 
-                    fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
-                    console.log(`Copied vote.json to: ${tachyonDir}`);
+                    //fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
+                    //console.log(`Copied vote.json to: ${tachyonDir}`);
 
                     exec(`solana vote-account ${votePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -211,8 +211,8 @@ function checkStakeAccount() {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
                     } else {
-                        fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
-                        resolve('Stake account created and copied to tachyon.');
+                        //fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
+                        //resolve('Stake account created and copied to tachyon.');
                     }
                 });
             } else if (stderr.includes("is not a stake account")) {
@@ -253,8 +253,8 @@ function checkVoteAccount() {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
                     } else {
-                        fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
-                        resolve('Vote account created and copied to tachyon.');
+                        //fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
+                        //resolve('Vote account created and copied to tachyon.');
                     }
                 });
             } else if (stderr.includes("is not a vote account")) {
