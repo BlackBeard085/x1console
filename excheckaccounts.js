@@ -15,42 +15,84 @@ const tachyonDir = path.join(homeDir, 'x1/tachyon');
 const walletsFilePath = path.join(walletsDir, 'wallets.json');
 
 if (!fs.existsSync(walletsDir)) {
-    fs.mkdirSync(walletsDir, { recursive: true }); // Create the x1console directory if it doesn't exist
+    fs.mkdirSync(walletsDir, { recursive: true });
 }
 
 if (!fs.existsSync(tachyonDir)) {
-    fs.mkdirSync(tachyonDir, { recursive: true }); // Create the tachyon directory if it doesn't exist
+    fs.mkdirSync(tachyonDir, { recursive: true });
 }
 
-let newWalletsCreated = false; // Track if any new wallets are created
+let newWalletsCreated = false;
 
 // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// Function to update a specific wallet entry in wallets.json
+function updateWalletEntry(wallets, name, address) {
+    const entryIndex = wallets.findIndex(wallet => wallet.name === name);
+    if (entryIndex !== -1) {
+        wallets[entryIndex].address = address;
+    } else {
+        wallets.push({ name, address });
+    }
+}
+
+// Function to read existing wallets.json
+function readWallets() {
+    if (fs.existsSync(walletsFilePath)) {
+        return JSON.parse(fs.readFileSync(walletsFilePath, 'utf8')) || [];
+    }
+    return [];
+}
+
+// Function to write the wallets.json
+function writeWallets(wallets) {
+    fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
+    fs.copyFileSync(walletsFilePath, path.join(tachyonDir, 'wallets.json'));
+    console.log(`wallets.json created/updated and copied to: ${tachyonDir}`);
+}
+
 // Function to update wallets.json with public keys from existing files
 function updateWallets() {
     const files = [withdrawerPath, identityPath, stakePath, votePath];
-    const wallets = [];
+    const wallets = readWallets();
 
     try {
-        // Collect public keys from the specified files
         for (const file of files) {
-            if (fs.existsSync(file)) {
-                const publicKey = execSync(`solana-keygen pubkey ${file}`).toString().trim();
+            if (!fs.existsSync(file)) {
                 const walletName = capitalizeFirstLetter(path.basename(file, '.json'));
-                wallets.push({ name: walletName, address: publicKey });
+                const existingWallet = wallets.find(wallet => wallet.name === walletName);
+                if (existingWallet) {
+                    console.log(`Skipping ${walletName} as the wallet file does not exist.`);
+                    continue; // Skip if wallet file does not exist but entry exists
+                }
+                continue; // If the file doesn't exist and no entry in wallets.json, just skip
+            }
+
+            const publicKey = execSync(`solana-keygen pubkey ${file}`).toString().trim();
+            const walletName = capitalizeFirstLetter(path.basename(file, '.json'));
+
+            const existingWallet = wallets.find(wallet => wallet.name === walletName);
+            if (existingWallet) {
+                if (existingWallet.address === publicKey) {
+                    console.log(`Skipping ${walletName} as it already exists in wallets.json.`);
+                    continue; // Skip if wallet exists and public key matches
+                } else {
+                    // Update the wallet address if it has changed
+                    updateWalletEntry(wallets, walletName, publicKey);
+                    console.log(`Updated ${walletName} address in wallets.json.`);
+                }
+            } else {
+                // Add new wallet entry
+                updateWalletEntry(wallets, walletName, publicKey);
+                console.log(`Added new wallet entry for ${walletName} in wallets.json.`);
             }
         }
 
-        // Write the wallets to wallets.json
-        fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
-        console.log('wallets.json created/updated.');
-
-        // Copy the wallets.json to the tachyon directory
-        fs.copyFileSync(walletsFilePath, path.join(tachyonDir, 'wallets.json'));
-        console.log(`Copied wallets.json to: ${tachyonDir}`);
+        // Write updated wallets.json only if there were changes
+        writeWallets(wallets);
     } catch (error) {
         console.error(`Error updating wallets.json: ${error}`);
     }
@@ -76,7 +118,7 @@ function moveAndCreateStakeAccount() {
                     return;
                 }
                 console.log(`Created new stake account: ${stakePath}`);
-                newWalletsCreated = true; // A new wallet was created for the stake account
+                newWalletsCreated = true;
 
                 exec(`solana create-stake-account ${stakePath} 2`, (createError) => {
                     if (createError) {
@@ -84,9 +126,8 @@ function moveAndCreateStakeAccount() {
                         return;
                     }
 
-                    // Copy the newly generated stake.json to the tachyon directory
-                    fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
-                    console.log(`Copied stake.json to: ${tachyonDir}`);
+                    //fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
+                    //console.log(`Copied stake.json to: ${tachyonDir}`);
 
                     exec(`solana stake-account ${stakePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -122,7 +163,7 @@ function moveAndCreateVoteAccount() {
                     return;
                 }
                 console.log(`Created new vote account: ${votePath}`);
-                newWalletsCreated = true; // A new wallet was created for the vote account
+                newWalletsCreated = true;
 
                 exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createError) => {
                     if (createError) {
@@ -130,9 +171,8 @@ function moveAndCreateVoteAccount() {
                         return;
                     }
 
-                    // Copy the newly generated vote.json to the tachyon directory
-                    fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
-                    console.log(`Copied vote.json to: ${tachyonDir}`);
+                    //fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
+                    //console.log(`Copied vote.json to: ${tachyonDir}`);
 
                     exec(`solana vote-account ${votePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -151,15 +191,28 @@ function moveAndCreateVoteAccount() {
 // Function to check stake account
 function checkStakeAccount() {
     return new Promise((resolve, reject) => {
-        exec(`solana stake-account ${stakePath}`, (error, stdout, stderr) => {
+        let publicKey;
+        if (fs.existsSync(stakePath)) {
+            publicKey = stakePath;
+        } else {
+            const existingWallets = readWallets();
+            const existingStake = existingWallets.find(wallet => wallet.name === capitalizeFirstLetter("stake"));
+            if (existingStake) {
+                publicKey = existingStake.address; // Use the pubkey from wallets.json
+            } else {
+                reject('Stake account file and public key not found.');
+                return;
+            }
+        }
+
+        exec(`solana stake-account ${publicKey}`, (error, stdout, stderr) => {
             if (stderr.includes("AccountNotFound")) {
                 exec(`solana create-stake-account ${stakePath} 2`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
                     } else {
-                        // Copy the newly generated stake.json to the tachyon directory
-                        fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
-                        resolve('Stake account created and copied to tachyon.');
+                        //fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
+                        //resolve('Stake account created and copied to tachyon.');
                     }
                 });
             } else if (stderr.includes("is not a stake account")) {
@@ -180,15 +233,28 @@ function checkStakeAccount() {
 // Function to check vote account
 function checkVoteAccount() {
     return new Promise((resolve, reject) => {
-        exec(`solana vote-account ${votePath}`, (error, stdout, stderr) => {
+        let publicKey;
+        if (fs.existsSync(votePath)) {
+            publicKey = votePath;
+        } else {
+            const existingWallets = readWallets();
+            const existingVote = existingWallets.find(wallet => wallet.name === capitalizeFirstLetter("vote"));
+            if (existingVote) {
+                publicKey = existingVote.address; // Use the pubkey from wallets.json
+            } else {
+                reject('Vote account file and public key not found.');
+                return;
+            }
+        }
+
+        exec(`solana vote-account ${publicKey}`, (error, stdout, stderr) => {
             if (stderr.includes("account does not exist")) {
                 exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
                     } else {
-                        // Copy the newly generated vote.json to the tachyon directory
-                        fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
-                        resolve('Vote account created and copied to tachyon.');
+                        //fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
+                        //resolve('Vote account created and copied to tachyon.');
                     }
                 });
             } else if (stderr.includes("is not a vote account")) {
@@ -220,12 +286,7 @@ function createWalletsJSON() {
         { name: capitalizeFirstLetter("vote"), address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
     ];
 
-    fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
-    console.log('wallets.json created/updated.');
-
-    // Copy the wallets.json to the tachyon directory
-    fs.copyFileSync(walletsFilePath, path.join(tachyonDir, 'wallets.json'));
-    console.log(`Copied wallets.json to: ${tachyonDir}`);
+    writeWallets(wallets);
 }
 
 // Main function to execute the checks
@@ -239,7 +300,7 @@ async function main() {
         ]);
         console.log(stakeResult);
         console.log(voteResult);
-        
+
         // Create wallets.json after checking accounts
         createWalletsJSON();
     } catch (error) {

@@ -104,7 +104,11 @@ function moveAndCreateStakeAccount() {
         if (!fs.existsSync(archivePath)) {
             fs.mkdirSync(archivePath);
         }
-        const newStakePath = path.join(archivePath, 'stake.json');
+
+        // Create a timestamped filename for the archived stake file
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const newStakePath = path.join(archivePath, `stake-${timestamp}.json`);
+
         fs.rename(stakePath, newStakePath, (err) => {
             if (err) {
                 reject(`Error moving stake account to archive: ${err}`);
@@ -126,9 +130,6 @@ function moveAndCreateStakeAccount() {
                         return;
                     }
 
-                    //fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
-                    //console.log(`Copied stake.json to: ${tachyonDir}`);
-
                     exec(`solana stake-account ${stakePath}`, (checkError, checkStdout) => {
                         if (checkError) {
                             reject(`Error checking new stake account: ${checkError}`);
@@ -149,7 +150,11 @@ function moveAndCreateVoteAccount() {
         if (!fs.existsSync(archivePath)) {
             fs.mkdirSync(archivePath);
         }
-        const newVotePath = path.join(archivePath, 'vote.json');
+
+        // Create a timestamped filename for the archived vote file
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const newVotePath = path.join(archivePath, `vote-${timestamp}.json`);
+
         fs.rename(votePath, newVotePath, (err) => {
             if (err) {
                 reject(`Error moving vote account to archive: ${err}`);
@@ -170,9 +175,6 @@ function moveAndCreateVoteAccount() {
                         reject(`Error creating vote account: ${createError}`);
                         return;
                     }
-
-                    //fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
-                    //console.log(`Copied vote.json to: ${tachyonDir}`);
 
                     exec(`solana vote-account ${votePath}`, (checkError, checkStdout) => {
                         if (checkError) {
@@ -211,7 +213,6 @@ function checkStakeAccount() {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
                     } else {
-                        //fs.copyFileSync(stakePath, path.join(tachyonDir, 'stake.json'));
                         //resolve('Stake account created and copied to tachyon.');
                     }
                 });
@@ -253,7 +254,6 @@ function checkVoteAccount() {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
                     } else {
-                        //fs.copyFileSync(votePath, path.join(tachyonDir, 'vote.json'));
                         //resolve('Vote account created and copied to tachyon.');
                     }
                 });
