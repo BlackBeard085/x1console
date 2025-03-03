@@ -5,3 +5,6 @@ ledger.json
 allstakes.json
 autoconfig
 withdrawerconfig.json
+last_reset_timestamp.txt
+restart_count.log
+restart_times.log

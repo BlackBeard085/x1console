@@ -5,10 +5,11 @@ const { exec } = require('child_process');
 const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
 const autoConfigFilePath = path.join(process.env.HOME, 'x1console', 'autoconfig'); // Path to the autoconfig file
 const withdrawerConfigFilePath = path.join(process.env.HOME, 'x1console', 'withdrawerconfig.json'); // Path to the withdrawer config file
+const restartCountFilePath = path.join(process.env.HOME, 'x1console', 'restart_count.log'); // Path to the restart count log
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.16  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.17  -  The BlackPearl by BlackBeard_85');
 }
 
 printConsoleVersion();
@@ -57,14 +58,27 @@ function checkValidatorStatus() {
                 // Output the status line
                 console.log(line.trim());
 
-                // Check if the autoconfig file exists
+                // Check if the autoconfig file exists and read its content
                 let autoConfigContent = '-'; // Default value if the file does not exist
                 try {
                     autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
                 } catch (err) {
                     // Suppress error message and use default value
                 }
-                console.log(`- Autopilot: ${autoConfigContent}`);
+
+                let autopilotOutput = `- Autopilot: ${autoConfigContent}`;
+                if (autoConfigContent === 'ON') {
+                    // If autoconfig is ON, read the restart count
+                    let restartCountContent = '-'; // Default value if the file does not exist
+                    try {
+                        restartCountContent = fs.readFileSync(restartCountFilePath, 'utf8').trim();
+                    } catch (err) {
+                        // Suppress error message and use default value
+                    }
+                    autopilotOutput += `       48 Hour auto-restart count: ${restartCountContent}`;
+                }
+
+                console.log(autopilotOutput);
 
                 // Read the withdrawer configuration
                 try {

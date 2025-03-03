@@ -8,7 +8,7 @@ const withdrawerConfigFilePath = path.join(process.env.HOME, 'x1console', 'withd
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.05  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.16  -  The BlackPearl by BlackBeard_85');
 }
 
 printConsoleVersion();
@@ -23,7 +23,7 @@ function checkLogFileModification() {
 
         const currentTime = Date.now();
         const fileModifiedTime = new Date(stats.mtime).getTime();
-        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 7000); // 7 seconds threshold
+        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 5000); // 5 seconds threshold
 
         if (hasBeenModifiedRecently) {
             console.log('- Logs: Running');
@@ -56,18 +56,25 @@ function checkValidatorStatus() {
             if (line.includes('- Status:')) {
                 // Output the status line
                 console.log(line.trim());
+
+                // Check if the autoconfig file exists
+                let autoConfigContent = '-'; // Default value if the file does not exist
                 try {
-                    const autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
-                    console.log(`- Autopilot: ${autoConfigContent}`);
-                    
-                    // Read the withdrawer configuration
+                    autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
+                } catch (err) {
+                    // Suppress error message and use default value
+                }
+                console.log(`- Autopilot: ${autoConfigContent}`);
+
+                // Read the withdrawer configuration
+                try {
                     const withdrawerConfigContent = fs.readFileSync(withdrawerConfigFilePath, 'utf8');
                     const withdrawerConfig = JSON.parse(withdrawerConfigContent);
                     const currentWithdrawer = withdrawerConfig.keypairPath;
 
                     console.log(`- Current set Withdrawer: ${currentWithdrawer}`);
                 } catch (err) {
-                    console.error(`Error reading autoconfig or withdrawer config: ${err.message}`);
+                    // Suppress error message for withdrawer config
                 }
                 break; // Exit loop once we find and output the status
             }
