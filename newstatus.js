@@ -9,7 +9,7 @@ const restartCountFilePath = path.join(process.env.HOME, 'x1console', 'restart_c
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.18  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.19  -  The BlackPearl by BlackBeard_85');
 }
 
 printConsoleVersion();
@@ -24,7 +24,7 @@ function checkLogFileModification() {
 
         const currentTime = Date.now();
         const fileModifiedTime = new Date(stats.mtime).getTime();
-        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 5000); // 5 seconds threshold
+        const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 3000); // 3 seconds threshold
 
         if (hasBeenModifiedRecently) {
             console.log('- Logs: Running');
@@ -75,7 +75,7 @@ function checkValidatorStatus() {
                     } catch (err) {
                         // Suppress error message and use default value
                     }
-                    autopilotOutput += `       48 Hour auto-restart count: ${restartCountContent}`;
+                    autopilotOutput += `       48Hrs auto-restarts: ${restartCountContent}`;
                 }
 
                 console.log(autopilotOutput);

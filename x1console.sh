@@ -562,18 +562,17 @@ other_options() {
                 ;;
             3)
 	        # Execute setautopilot.sh when chosen
-echo -e "\nFeature paused"
                 echo -e "\nExecuting Autopilot setup"
-               # if [ -f "$HOME/x1console/setautopilot.sh" ]; then
-                #    bash "$HOME/x1console/setautopilot.sh"
-                 #   if [ $? -eq 0 ]; then
-                  #      echo -e "\nAutopilot setup complete.\n"
-                   # else
-                    #    echo -e "\nFailed to set autopilot.\n"
-                   # fi
-               # else
-                #    echo -e "\nsetautopilot.sh does not exist. Please create it in the x1console directory.\n"
-               # fi
+                if [ -f "$HOME/x1console/setautopilot.sh" ]; then
+                    bash "$HOME/x1console/setautopilot.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nAutopilot setup complete.\n"
+                    else
+                        echo -e "\nFailed to set autopilot.\n"
+                    fi
+                else
+                    echo -e "\nsetautopilot.sh does not exist. Please create it in the x1console directory.\n"
+                fi
                  ;;
             4)
                 # Execute authoritymanager.sh when chosen

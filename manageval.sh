@@ -52,7 +52,7 @@ function show_logs {
     echo "Showing logs (press any key to exit)..."
     
     # Run the tail command in the background
-    tail -f "$LOG_DIRECTORY/$LOG_FILE" &
+    tail -n 100 -f "$LOG_DIRECTORY/$LOG_FILE" &
     TAIL_PID=$!
 
     # Wait for user input to cancel

@@ -1,4 +1,8 @@
 #!/bin/bash
+#export solana PATH
+export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v20.0.0/bin:$PATH"
+#export PATH="$HOME/.nvm/versions/node/v20.0.0/bin:$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
 # Define log file paths
 RESTART_COUNT_LOG="$HOME/x1console/restart_count.log"
@@ -75,4 +79,5 @@ if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     fi
 else
     echo -e "\nNo WARNING issued in health check. Exiting.\n"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Validator status Active - No Action taken" >> "$RESTART_TIMES_LOG"
 fi
