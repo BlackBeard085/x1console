@@ -515,10 +515,11 @@ other_options() {
         echo -e "2. Update"
         echo -e "3. Autopilot"
         echo -e "4. Authority Manager"
-        echo -e "5. Pinger"
-        echo -e "6. Speed Test"
-        echo -e "7. Return to Main Menu"
-        read -p "Enter your choice [1-7]: " other_choice
+        echo -e "5. Wallets Manager"
+        echo -e "6. Pinger"
+        echo -e "7. Speed Test"
+        echo -e "8. Return to Main Menu"
+        read -p "Enter your choice [1-8]: " other_choice
 
         case $other_choice in
             1)
@@ -587,9 +588,23 @@ other_options() {
                     echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-            5)  pinger
+            5)
+                # Execute walletsmanager.sh when chosen
+                echo -e "\nExecuting Wallets Manager"
+                if [ -f "$HOME/x1console/walletsmanager.sh" ]; then
+                    bash "$HOME/x1console/walletsmanager.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nWallets Manager complete.\n"
+                    else
+                        echo -e "\nFailed to open Wallets Manager.\n"
+                    fi
+                else
+                    echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
+                fi
                 ;;
-            6)
+            6)  pinger
+                ;;
+            7)
                 # Execute speedtest.sh when chosen
                 echo -e "\nExecuting speed test..."
                 if [ -f "$HOME/x1console/speedtest.sh" ]; then
@@ -603,7 +618,7 @@ other_options() {
                     echo -e "\nspeedtest.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-            7)
+            8)
                 break
                 ;;
             *)
