@@ -95,7 +95,7 @@ echo -e "\nSystem tuning for Solana validator completed!"
 
 # Install Rust and Cargo
 echo -e "\nInstalling Rust and Cargo..."
-rustup toolchain install 1.78.0-x86_64-unknown-linux-gnu || error_exit "Failed to install Rust and Cargo."
+rustup toolchain install 1.78.0-x86_64-unknown-linux-gnu
 curl https://sh.rustup.rs -sSf | sh || error_exit "Failed to install Rust and Cargo."
 source $HOME/.cargo/env || error_exit "Failed to source Cargo environment."
 rustup component add rustfmt || error_exit "Failed to add rustfmt component."
