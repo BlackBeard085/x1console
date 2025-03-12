@@ -90,7 +90,7 @@ function withdraw_from_identity() {
     identity_balance_output=$(solana balance ~/.config/solana/identity.json)
     identity_balance=$(echo "$identity_balance_output" | awk '{print $1}')
     echo "---------------------------------"
-    echo "Identity Account Balance: $identity_balance SOL"
+    echo "Identity Account Balance: $identity_balance XNT"
     echo "---------------------------------"
 
     # Prompt for withdrawal amount
@@ -249,7 +249,7 @@ while true; do
         vote_balance_output=$(solana balance "$vote_address")
         vote_balance=$(echo "$vote_balance_output" | awk '{print $1}')
         echo "---------------------------------"
-        echo "Vote Account Balance: $vote_balance SOL"
+        echo "Vote Account Balance: $vote_balance XNT"
         echo "---------------------------------"
 
         while true; do
