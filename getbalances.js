@@ -57,7 +57,7 @@ async function getBalances(wallets) {
         try {
             const publicKey = new PublicKey(wallet.address);
             const balance = await connection.getBalance(publicKey);
-            console.log(`Wallet: ${wallet.name} (${wallet.address})\nBalance: ${(balance / 1e9).toFixed(2)} SOL\n`); // Balance on the next line
+            console.log(`Wallet: ${wallet.name} (${wallet.address})\nBalance: ${(balance / 1e9).toFixed(2)} XNT\n`); // Balance on the next line
             wallet.balance = balance / 1e9; // Store the balance in XNT for later checks
         } catch (error) {
             console.error(`Error retrieving balance for wallet ${wallet.address}:`, error);
