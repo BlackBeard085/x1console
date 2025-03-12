@@ -178,7 +178,7 @@ first create and open the directory on your local machine
 ```bash
 mkdir -p .config/solana && cd .config/solana
 ```
-Then one by one copy all your wallets over to your local machine. You will have to copy the private keys from the server to your local machine. To copy use the following command on your server .config/solana directory
+Then one by one copy all your wallets over to your local machine. You will have to copy the private keys from the server to your local machine. You can use the wallets manager in the other menu, to get private keys or to copy use the following command on your server .config/solana directory
 ```bash
 cat <wallet name> #this will display your private key, copy it
 ```
