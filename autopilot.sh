@@ -44,7 +44,7 @@ if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     echo -e "\nWARNING issued in health check."
 
     # Log the time of the warning
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Validator restarted with autopilot" >> "$RESTART_TIMES_LOG"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Validator status Delinquent - Restarted with Autopilot" >> "$RESTART_TIMES_LOG"
 
     # Increment the restart count
     RESTART_COUNT=$((RESTART_COUNT + 1))

@@ -198,7 +198,7 @@ merge_stake() {
     echo -e "\nYou chose to merge to: $merge_to_name - $merge_to_address"
 
     # Display stake accounts again excluding the merge_to choice
-    echo -e "\nSelect a stake account to merge from:\n"
+    echo -e "\nSelect a stake account to merge:\n"
     for i in "${!stake_accounts[@]}"; do
         if [[ $i -ne $merge_to_index ]]; then
             name=$(echo "${stake_accounts[$i]}" | jq -r '.name')
