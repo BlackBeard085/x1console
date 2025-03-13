@@ -11,6 +11,10 @@ if [ ! -f "$CONFIG_FILE" ]; then
     exit 1
 fi
 
+if [ ! -f "$X1CONSOLE_DIR/ledger.json" ]; then
+        echo "[]" > "$X1CONSOLE_DIR/ledger.json"  # Create an empty JSON array if the file doesn't exist
+    fi
+    
 # Function to read and parse the withdrawer key pair path from the JSON file
 get_withdrawer_keypair() {
     jq -r '.keypairPath' "$CONFIG_FILE"
