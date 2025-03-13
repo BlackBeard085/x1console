@@ -22,7 +22,7 @@ print_current_withdrawer() {
     keypair_path=$(get_withdrawer_keypair)
     # Replace ~ with the user's home directory if necessary
     keypair_path=${keypair_path/#\~/$HOME}
-    echo -e "\nCurrent Withdrawer: $keypair_path\n"
+    echo -e "\nCurrent Set Withdrawer: $keypair_path\n"
 }
 
 # Function to display the wallet list and withdraw authority for normal display
