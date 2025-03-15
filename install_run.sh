@@ -163,7 +163,7 @@ echo -e "\nSystem setup completed successfully!"
 
 # Specify the username if needed, otherwise use the current user's HOME
 USERNAME=${1:-$USER}  # Take a username from the first argument or default to current user
-HOME_DIR="~/"
+HOME_DIR="~"
 SOLANA_DIR="$HOME_DIR/.config/solana"
 DEST_DIR="$HOME_DIR/x1/tachyon"
 WALLETS=("id.json" "identity.json" "vote.json" "stake.json")
