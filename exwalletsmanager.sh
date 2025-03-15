@@ -9,29 +9,13 @@ if [ ! -d "$WALLET_DIR" ]; then
     exit 1
 fi
 
-# Function to display current wallets
-current_available_wallets() {
-    echo -e "\nCurrent wallets in .config/solana directory:"
-    if [ ${#files[@]} -eq 0 ]; then
-        echo "No wallet files found in $WALLET_DIR."
-    else
-        for file in "${files[@]}"; do
-            echo "$(basename "$file")"
-        done
-    fi
-    echo " "
-    echo -e "Press any button to continue."
-    read -n 1 -s  # Wait for any key press
-}
-
 while true; do
     # Display options to the user
     echo -e "\nChoose an option:"
     echo "1. Back up a specific wallet"
     echo "2. Back up all wallets"
-    echo "3. Current available wallets"
-    echo "4. Exit"
-    read -p "Enter your choice (1/2/3/4): " choice
+    echo "3. Exit"
+    read -p "Enter your choice (1/2/3): " choice
 
     # Always gather wallet files before the options
     files=("$WALLET_DIR"/*.json)
@@ -90,17 +74,13 @@ while true; do
             fi
             ;;
         
-        3)  # Display current available wallets
-            current_available_wallets
-            ;;
-        
-        4)  # Exit the script
+        3)  # Exit the script
             echo -e "\nExiting the script."
             exit 0
             ;;
         
         *)  # Invalid option
-            echo -e "\nInvalid option, please choose 1, 2, 3, or 4."
+            echo -e "\nInvalid option, please choose 1, 2, or 3."
             ;;
     esac
 done
