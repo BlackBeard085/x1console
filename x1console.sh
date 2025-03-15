@@ -113,8 +113,8 @@ install() {
         fi
        
         #allowing console to sync with blockchain
-        echo -e "\nAllowing console to sync with blockchain"
-        sleep 60
+        echo -e "\nAllowing 1-2 minutes for console to sync with blockchain"
+        sleep 120
 
         # Attempting to check stake activation epoch
         echo -e "\nAttempting to check validator status..."
