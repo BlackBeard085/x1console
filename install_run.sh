@@ -36,8 +36,8 @@ sudo apt install -y wget curl jq git build-essential tmux ufw || error_exit "Fai
     sudo ufw allow 3334
 
 # Download and install Solana CLI
-echo -e "\nDownloading Solana CLI v1.18.25..."
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.25/install)" || error_exit "Failed to download Solana CLI."
+echo -e "\nDownloading most recent stable version of Solana CLI "
+sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || error_exit "Failed to download Solana CLI."
 
 # Export PATH variable
 echo 'export PATH="$HOME/.local/share/solana/install/active/solana-release/bin:$PATH"' >> ~/.profile
@@ -55,9 +55,9 @@ else
 fi
 
 # Update Solana CLI if there are updates available
-echo -e "\nChecking for Solana CLI updates..."
-solana-install update || error_exit "Failed to update Solana CLI."
-echo -e "\nSolana CLI is up to date!"
+#echo -e "\nChecking for Solana CLI updates..."
+#solana-install update || error_exit "Failed to update Solana CLI."
+#echo -e "\nSolana CLI is up to date!"
 
 # Tune the system for Solana validator
 echo -e "\nTuning the system for Solana validator...\n"
