@@ -100,25 +100,29 @@ install() {
 	rm -rf "$HOME/x1/ledger"
 
         # New Addition: Attempt to execute 1ststake.js
-        echo -e "\nAttempting to execute 1ststake.js..."
+        echo -e "\nAttempting to delegate first stake..."
         if [ -f ./1ststake.js ]; then
             node ./1ststake.js
             if [ $? -eq 0 ]; then
-                echo -e "\n1ststake.js executed successfully.\n"
+                echo -e "\nfirst stake executed successfully.\n"
             else
                 echo -e "\nFailed to execute 1ststake.js.\n"
             fi
         else
             echo -e "\n1ststake.js does not exist. Please create it in the directory.\n"
         fi
+       
+        #allowing console to sync with blockchain
+        echo -e "\nAllowing console to sync with blockchain"
+        sleep 60
 
-        # Attempting to restart validator
+        # Attempting to check stake activation epoch
         echo -e "\nAttempting to check validator status..."
         if [ -f ./activationepoch.sh ]; then
             # Using spawn for executing 1strestart.js
             ./activationepoch.sh
             if [ $? -eq 0 ]; then
-                read -n 1 -s -r -p "Validator status checked successfully. Press any button to continue "
+                read -n 1 -s -r -p "stake status checked successfully.  If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete and confirming validator status and attempting validator restart.  Press any button to continue "
                 #echo -e "\nValidator status checked successfully."
                 # Run setpinger.js after restart is successful
                 if [ -f ./setpinger.js ]; then
@@ -188,9 +192,9 @@ update_x1() {
             echo -e "\nValidator is not running. Continuing with the update...\n"
         fi
        
-        echo -e "\nCopying tachyon-validator to your path..."
+        echo -e "\nCopying tachyon-validator to your path and bashrc..."
         cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
-        cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
+        #cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
         export PATH=$PATH:~/x1/tachyon/target/release
         echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc
 
