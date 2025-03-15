@@ -122,7 +122,7 @@ install() {
             # Using spawn for executing 1strestart.js
             ./activationepoch.sh
             if [ $? -eq 0 ]; then
-                read -n 1 -s -r -p "stake status checked successfully.  If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete and confirming validator status and attempting validator restart.  Press any button to continue "
+                read -n 1 -s -r -p "stake status checked successfully.  If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete before confirming validator status and attempting validator restart.  Press any button to continue "
                 #echo -e "\nValidator status checked successfully."
                 # Run setpinger.js after restart is successful
                 if [ -f ./setpinger.js ]; then
