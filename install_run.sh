@@ -232,7 +232,7 @@ current_balance=$(echo "$balance_output" | awk '{print $1}')
 
 # Check if the balance is sufficient (at least 4 SOL)
 if (( $(echo "$current_balance >= 4" | bc -l) )); then
-    echo "Balance is sufficient ($current_balance SOL). Proceeding..."
+    echo "Balance is sufficient ($current_balance XNT). Proceeding..."
 
     # Extract addresses for identity, stake, and vote wallets
     identity_address="$HOME/.config/solana/identity.json"
