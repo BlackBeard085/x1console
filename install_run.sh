@@ -112,7 +112,7 @@ echo -e "\nPreparing to build tachyon-validator..."
 CURRENT_USER=$(whoami)
 
 # Define the x1 directory path
-X1_DIRECTORY="~/x1"
+X1_DIRECTORY="$HOME/x1"
 
 # Check if the x1 directory exists, create it if it doesn't
 if [ ! -d "$X1_DIRECTORY" ]; then
@@ -163,7 +163,7 @@ echo -e "\nSystem setup completed successfully!"
 
 # Specify the username if needed, otherwise use the current user's HOME
 USERNAME=${1:-$USER}  # Take a username from the first argument or default to current user
-HOME_DIR="~"
+HOME_DIR="$HOME"
 SOLANA_DIR="$HOME_DIR/.config/solana"
 DEST_DIR="$HOME_DIR/x1/tachyon"
 WALLETS=("id.json" "identity.json" "vote.json" "stake.json")
