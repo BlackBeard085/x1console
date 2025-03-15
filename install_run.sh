@@ -29,7 +29,7 @@ sudo apt install -y wget curl jq git build-essential tmux ufw || error_exit "Fai
 
     # Allowing the firewall for ports 8000 to 10000
     echo -e "\nConfiguring firewall to allow access to ports 8000-10000 and 3334..."
-    sudo ufw enable
+    echo "y" | sudo ufw enable
     sudo ufw allow 22
     sudo ufw allow 8000:10000/tcp
     sudo ufw allow 8000:10000/udp
@@ -42,6 +42,8 @@ sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || error_exit "Fai
 # Export PATH variable
 echo 'export PATH="$HOME/.local/share/solana/install/active/solana-release/bin:$PATH"' >> ~/.profile
 echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+
+echo "exported PATH and added to bashrc"
 
 # Load the new PATH in the current shell
 export PATH="~/.local/share/solana/install/active_release/bin:$PATH" && source ~/.profile && source ~/.bashrc
