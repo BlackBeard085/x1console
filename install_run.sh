@@ -112,7 +112,7 @@ echo -e "\nPreparing to build tachyon-validator..."
 CURRENT_USER=$(whoami)
 
 # Define the x1 directory path
-X1_DIRECTORY="/home/$CURRENT_USER/x1"
+X1_DIRECTORY="~/x1"
 
 # Check if the x1 directory exists, create it if it doesn't
 if [ ! -d "$X1_DIRECTORY" ]; then
