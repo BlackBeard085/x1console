@@ -5,7 +5,7 @@ const os = require('os');
 const username = os.userInfo().username;
 
 // Define the validator directory based on the current user
-const validatorDirectory = `/home/${username}/x1/`;
+const validatorDirectory = `~/x1/`;
 
 // Command to stop the validator
 const stopCommand = 'tachyon-validator exit -f';
