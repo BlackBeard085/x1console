@@ -75,7 +75,7 @@ function delegateStake() {
                     // Proceed to delegate stake
                     const delegateOutput = await delegateStake();
                     console.log('Delegate stake command output:\n', delegateOutput);
-                    console.log('Delegation successful, a restart is required.'); // Message to show after successful delegation
+                    console.log('Delegation successful, checking stake status.'); // Message to show after successful delegation
                     return; // Exit the script after handling delegation
                 }
             }
