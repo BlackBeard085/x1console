@@ -44,7 +44,7 @@ echo 'export PATH="$HOME/.local/share/solana/install/active/solana-release/bin:$
 echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 
 # Load the new PATH in the current shell
-export PATH="/home/ubuntu/.local/share/solana/install/active_release/bin:$PATH" && source ~/.profile && source ~/.bashrc
+export PATH="~/.local/share/solana/install/active_release/bin:$PATH" && source ~/.profile && source ~/.bashrc
 
 # Verify the installation
 echo -e "\nVerifying Solana CLI installation..."
@@ -163,7 +163,7 @@ echo -e "\nSystem setup completed successfully!"
 
 # Specify the username if needed, otherwise use the current user's HOME
 USERNAME=${1:-$USER}  # Take a username from the first argument or default to current user
-HOME_DIR="/home/$USERNAME"
+HOME_DIR="~/"
 SOLANA_DIR="$HOME_DIR/.config/solana"
 DEST_DIR="$HOME_DIR/x1/tachyon"
 WALLETS=("id.json" "identity.json" "vote.json" "stake.json")
