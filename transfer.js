@@ -219,7 +219,7 @@ const main = async () => {
             }
 
             const confirmTransfer = await promptUser(
-                `Confirm transfer of ${transferAmount} to ${addressBook[selectedEntryId].name} (${addressBook[selectedEntryId].address})? (yes/no): `
+                `Confirm transfer of ${transferAmount} XNT to ${addressBook[selectedEntryId].name} (${addressBook[selectedEntryId].address})? (yes/no): `
             );
 
             if (confirmTransfer.toLowerCase() === 'yes') {
