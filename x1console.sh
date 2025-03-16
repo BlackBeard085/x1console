@@ -100,7 +100,7 @@ install() {
 	rm -rf "$HOME/x1/ledger"
 
         # New Addition: Attempt to execute 1ststake.js
-        echo -e "\nAttempting to delegate first stake..."
+        echo -e "\nAttempting to execute 1ststake.js..."
         if [ -f ./1ststake.js ]; then
             node ./1ststake.js
             if [ $? -eq 0 ]; then

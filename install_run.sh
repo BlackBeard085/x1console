@@ -17,6 +17,7 @@ fi
 echo -e "\nUpdating package index..."
 sudo apt update && sudo apt upgrade || error_exit "Failed to update package index."
 sudo apt-get install bc || error_exit "Failed to install bc."
+sudo apt install fail2ban || error_exit "Failed to install fail2ban"
 
 # Install logrotate
 echo -e "\nInstalling logrotate..."
