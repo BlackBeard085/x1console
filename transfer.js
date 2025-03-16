@@ -90,15 +90,15 @@ const populateAddressBookFromFiles = () => {
 const showAddressBook = (addressBook) => {
     console.log("\nWho would you like to transfer to?");
     console.log("ID\tName                Address                          ");
-    console.log("--------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------");
     addressBook.forEach((entry, index) => {
         const nameColumn = entry.name.padEnd(20, ' '); 
-        const addressColumn = entry.address.length > 30
-            ? entry.address.substr(0, 27) + '...'
-            : entry.address.padEnd(30, ' '); 
+        const addressColumn = entry.address.length > 45
+            ? entry.address.substr(0, 45) + '...'
+            : entry.address.padEnd(45, ' '); 
         console.log(`${index + 1}\t${nameColumn}${addressColumn}`);
     });
-    console.log("--------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------");
 };
 
 // Function to execute the transfer
@@ -178,7 +178,7 @@ const main = async () => {
             }
 
             const confirmTransfer = await promptUser(
-                `Confirm transfer of ${transferAmount} to ${newEntryName} (${newEntryAddress})? (yes/no): `
+                `Confirm transfer of ${transferAmount} XNT to ${newEntryName} (${newEntryAddress})? (yes/no): `
             );
 
             if (confirmTransfer.toLowerCase() === 'yes') {
