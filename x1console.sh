@@ -170,6 +170,9 @@ update_x1() {
         echo -e "\nUpdating Server"
         sudo apt update && sudo apt upgrade
 
+        echo -e "\nUpdating to most recent stable version of Solana CLI "
+        sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || error_exit "Failed to download Solana CLI."
+
         echo -e "\nUpdating X1 Validator"
         git stash && git pull
 
