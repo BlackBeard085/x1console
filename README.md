@@ -136,6 +136,10 @@ Option 3 from the main menu is **Check Balances**. This option allows you to che
  
 Option 4 is **Transfers**, which allows you to transfer funds between wallets and manage an address book, adding or removing addresses from your address book.
 
+### -Video Tutorial/Demo
+[![Watch the video](https://img.youtube.com/vi/31dHFoneCg8/0.jpg)](https://www.youtube.com/watch?v=31dHFoneCg8)
+
+
 ### Manage Stake
 
 Option 5 allows you manage upto 5 stake wallets. Your stakes list will show you how many stake walletes you have. You can create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. **Merge** option allows you to merge two stake accounts into one, closing one of the stake accounts. The closed stake account will show "Account for repurposing" in your list of stakes. **Repurpose Old Stake Account** will allow you to repurpose the closed stake account into a new stake. Stake manager gives you the ability to activate or deactivate your any of your stakes and check the epoch when these changes will take effect. 
@@ -175,12 +179,21 @@ The console will then register your details on the X1 blockchain, making this in
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image6.jpg)
 
+### -Video Tutorial/Demo
+[![Watch the video](https://img.youtube.com/vi/K68uYbNFLDc/0.jpg)](https://www.youtube.com/watch?v=K68uYbNFLDc)
+
+
 ### Other Menu
 
 The **Other Menu** is reserved for functions that will be used rarely. It includes the following options:
 
 1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
+
+### -Video Tutorial/Demo
+[![Watch the video](https://img.youtube.com/vi/tBlSDqFAGDE/0.jpg)](https://www.youtube.com/watch?v=tBlSDqFAGDE)
+
+
 3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 
 ### -Video Tutorial/Demo
