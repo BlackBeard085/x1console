@@ -90,7 +90,7 @@ IMPORTANT: Once console has delegated stake and started it will take effect on t
 
 This option also works as your reset. By keeping your original wallets, this will reset your whole validator without deleting your wallets.
 
-### -Video Tutorial/Demo
+### -Validator setup Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/5Vnx9NoTV08/0.jpg)](https://www.youtube.com/watch?v=5Vnx9NoTV08)
 
 ### Troubleshoot Delinquent Validator
@@ -101,7 +101,7 @@ At times your validator will become delinquent for one reason or another and it 
 -  Soution 2. If the Health check fails to bring your validator back online then try stopping your validator if it is running through option 2. Validator. remove ledger through option 7. Ledger. and start validator again through option 2. Validator.
 -  Solution 3. If solution 2 fails after several attempts then it may be best to perform a hard reset. Run the [RESET] from the other menu option 1. and answering yes to having existing wallets and are copied to .config/solana directory. Then deleting you tachyon directory.
 
-### -Video Tutorial/Demo
+### -Troubleshhoting Video Tutorial/Demo
   [![Watch the video](https://img.youtube.com/vi/W9TXi0pJh9k/0.jpg)](https://www.youtube.com/watch?v=W9TXi0pJh9k)
   
 ### Health Check
@@ -136,7 +136,7 @@ Option 3 from the main menu is **Check Balances**. This option allows you to che
  
 Option 4 is **Transfers**, which allows you to transfer funds between wallets and manage an address book, adding or removing addresses from your address book.
 
-### -Video Tutorial/Demo
+### -Making Transfers Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/31dHFoneCg8/0.jpg)](https://www.youtube.com/watch?v=31dHFoneCg8)
 
 
@@ -148,14 +148,14 @@ The stakes list will show you each stake wallets balance breakdown, showimg stak
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.jpg)
 
-### -Video Tutorial/Demo
+### -Increasing Stake Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/l0hNvch2yPo/0.jpg)](https://www.youtube.com/watch?v=l0hNvch2yPo)
 
 ### Withdraw Stake/Vote/Identity
 
 Option 6 allows you to **Withdraw Stake/Vote/Identity**, enabling you to withdraw any unstaked balance in your stake account and any balance in your vote and identity accounts.
 
-### -Video tutorial/Demo
+### -Withdrawing from Vote, Stake, Identity Video tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/yFN_IOUKmo8/0.jpg)](https://www.youtube.com/watch?v=yFN_IOUKmo8)
 
 ### Ledger
@@ -179,7 +179,7 @@ The console will then register your details on the X1 blockchain, making this in
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image6.jpg)
 
-### -Video Tutorial/Demo
+### -Customize name and set Commission Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/K68uYbNFLDc/0.jpg)](https://www.youtube.com/watch?v=K68uYbNFLDc)
 
 
@@ -190,13 +190,13 @@ The **Other Menu** is reserved for functions that will be used rarely. It includ
 1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
 
-### -Video Tutorial/Demo
+### -Update Console and Validator Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/tBlSDqFAGDE/0.jpg)](https://www.youtube.com/watch?v=tBlSDqFAGDE)
 
 
 3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 
-### -Video Tutorial/Demo
+### -Setting up Autopilot Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/g0Q8o0rfKNM/0.jpg)](https://www.youtube.com/watch?v=g0Q8o0rfKNM)
 
 ### 4.Authority Manager
@@ -248,12 +248,12 @@ After transfering withdraw authority remember to change the current set withdraw
 
 Note: when you transfer the withdraw authority to a ledger or local.json locally, x1console will generate a ledger.json file on the machine the WA transfer took place. This file will contain all pubkeys and name of wallets the WA has been transferred to. You can copy this to your server x1console directory this will allow x1console to name the wallet that holds WA on the server. If it is not copied you will only see the pubkey that holds the WA.
 
-### -Video Tutorial/Demo
+### -Authority Manager Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/MvkVH7gAd0s/0.jpg)](https://www.youtube.com/watch?v=MvkVH7gAd0s)
 
 5. **Wallets Manager** Check which wallets you have available and back up your keys
 
-### -Video Tutorial/Demo
+### -Backup your wallets Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/YdI13qAWq7s/0.jpg)](https://www.youtube.com/watch?v=YdI13qAWq7s)
    
 7. **Reset Pinger**: This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
