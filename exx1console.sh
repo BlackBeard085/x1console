@@ -75,8 +75,8 @@ install() {
         echo -e "\nExecuting install ..."
         ./install_run.sh
         # Change the path for copying tachyon-validator to your
-        echo -e "\nCopying tachyon-validator to your path..."
-        cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
+        echo -e "\nCopying tachyon-validator to your path and added to bashrc..."
+        #cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
         cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
         sudo cp "$HOME/x1/tachyon/target/release/tachyon-validator" /usr/local/bin
        export PATH=$PATH:~/x1/tachyon/target/release
@@ -104,22 +104,26 @@ install() {
         if [ -f ./1ststake.js ]; then
             node ./1ststake.js
             if [ $? -eq 0 ]; then
-                echo -e "\n1ststake.js executed successfully.\n"
+                echo -e "\nfirst stake executed successfully.\n"
             else
                 echo -e "\nFailed to execute 1ststake.js.\n"
             fi
         else
             echo -e "\n1ststake.js does not exist. Please create it in the directory.\n"
         fi
+       
+        #allowing console to sync with blockchain
+        echo -e "\nAllowing 2-4 minutes for console to sync with blockchain"
+        sleep 240
 
-        # Attempting to restart validator
-        echo -e "\nAttempting to restart validator..."
-        if [ -f ./1strestart.js ]; then
+        # Attempting to check stake activation epoch
+        echo -e "\nAttempting to check validator status..."
+        if [ -f ./activationepoch.sh ]; then
             # Using spawn for executing 1strestart.js
-            node ./1strestart.js
+            ./activationepoch.sh
             if [ $? -eq 0 ]; then
-                read -n 1 -s -r -p "\Validator has been restarted successfully."
-                #echo -e "\nValidator has been restarted successfully."
+                read -n 1 -s -r -p "stake status checked successfully.  If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete before confirming validator status and attempting validator restart.  Press any button to continue "
+                #echo -e "\nValidator status checked successfully."
                 # Run setpinger.js after restart is successful
                 if [ -f ./setpinger.js ]; then
                     echo -e "\nSetting up pinger..."
@@ -166,6 +170,9 @@ update_x1() {
         echo -e "\nUpdating Server"
         sudo apt update && sudo apt upgrade
 
+        echo -e "\nUpdating to most recent stable version of Solana CLI "
+        sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || error_exit "Failed to download Solana CLI."
+
         echo -e "\nUpdating X1 Validator"
         git stash && git pull
 
@@ -188,9 +195,9 @@ update_x1() {
             echo -e "\nValidator is not running. Continuing with the update...\n"
         fi
        
-        echo -e "\nCopying tachyon-validator to your path..."
+        echo -e "\nCopying tachyon-validator to your path and bashrc..."
         cp "$HOME/x1/tachyon/target/release/tachyon-validator" "$HOME/.local/share/solana/install/active_release/bin/tachyon-validator"
-        cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
+        #cp -r ~/x1/tachyon/target/release/* ~/.local/share/solana/install/active_release/bin/
         export PATH=$PATH:~/x1/tachyon/target/release
         echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc
 
@@ -387,10 +394,12 @@ ping_times() {
 
 # New function for managing the ledger
 ledger() {
+ while true; do
     echo -e "\nChoose a subcommand:"
     echo -e "1. Ledger Monitor"
     echo -e "2. Remove Ledger"
     echo -e "3. Backup Ledger"
+    echo -e "4. Exit"
     read -p "Enter your choice [1-3]: " ledger_choice
     case $ledger_choice in
         1)
@@ -402,10 +411,14 @@ ledger() {
         3)
             backup_ledger
             ;;
+        4)
+            break
+            ;;
         *)
-            echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+            echo -e "\nInvalid subcommand choice. Returning to ledger menu.\n"
             ;;
     esac
+  done
 }
 
 # New function to monitor the ledger
@@ -515,10 +528,11 @@ other_options() {
         echo -e "2. Update"
         echo -e "3. Autopilot"
         echo -e "4. Authority Manager"
-        echo -e "5. Pinger"
-        echo -e "6. Speed Test"
-        echo -e "7. Return to Main Menu"
-        read -p "Enter your choice [1-7]: " other_choice
+        echo -e "5. Wallets Manager"
+        echo -e "6. Pinger"
+        echo -e "7. Speed Test"
+        echo -e "8. Return to Main Menu"
+        read -p "Enter your choice [1-8]: " other_choice
 
         case $other_choice in
             1)
@@ -572,7 +586,7 @@ other_options() {
                 else
                     echo -e "\nsetautopilot.sh does not exist. Please create it in the x1console directory.\n"
                 fi
-                ;;
+                 ;;
             4)
                 # Execute authoritymanager.sh when chosen
                 echo -e "\nExecuting Accounts Authority Manager"
@@ -587,9 +601,23 @@ other_options() {
                     echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-            5)  pinger
+            5)
+                # Execute walletsmanager.sh when chosen
+                echo -e "\nExecuting Wallets Manager"
+                if [ -f "$HOME/x1console/walletsmanager.sh" ]; then
+                    bash "$HOME/x1console/walletsmanager.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nWallets Manager complete.\n"
+                    else
+                        echo -e "\nFailed to open Wallets Manager.\n"
+                    fi
+                else
+                    echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
+                fi
                 ;;
-            6)
+            6)  pinger
+                ;;
+            7)
                 # Execute speedtest.sh when chosen
                 echo -e "\nExecuting speed test..."
                 if [ -f "$HOME/x1console/speedtest.sh" ]; then
@@ -603,7 +631,7 @@ other_options() {
                     echo -e "\nspeedtest.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-            7)
+            8)
                 break
                 ;;
             *)

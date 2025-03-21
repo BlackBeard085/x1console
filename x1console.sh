@@ -394,10 +394,12 @@ ping_times() {
 
 # New function for managing the ledger
 ledger() {
+ while true; do
     echo -e "\nChoose a subcommand:"
     echo -e "1. Ledger Monitor"
     echo -e "2. Remove Ledger"
     echo -e "3. Backup Ledger"
+    echo -e "4. Exit"
     read -p "Enter your choice [1-3]: " ledger_choice
     case $ledger_choice in
         1)
@@ -409,10 +411,14 @@ ledger() {
         3)
             backup_ledger
             ;;
+        4)
+            break
+            ;;
         *)
-            echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+            echo -e "\nInvalid subcommand choice. Returning to ledger menu.\n"
             ;;
     esac
+  done
 }
 
 # New function to monitor the ledger
@@ -524,7 +530,7 @@ other_options() {
         echo -e "4. Authority Manager"
         echo -e "5. Wallets Manager"
         echo -e "6. Pinger"
-        echo -e "7. Speed Test"
+        echo -e "7. Server"
         echo -e "8. Return to Main Menu"
         read -p "Enter your choice [1-8]: " other_choice
 
@@ -612,18 +618,43 @@ other_options() {
             6)  pinger
                 ;;
             7)
-                # Execute speedtest.sh when chosen
-                echo -e "\nExecuting speed test..."
-                if [ -f "$HOME/x1console/speedtest.sh" ]; then
-                    bash "$HOME/x1console/speedtest.sh"
-                    if [ $? -eq 0 ]; then
-                        echo -e "\nSpeed test completed successfully.\n"
+                echo -e "\nChoose a subcommand:"
+                echo -e "1. Security Manager"
+                echo -e "2. Speedtest"
+                read -p "Enter your choice [1-2]: " update_choice
+                case $update_choice in
+                    1)
+                        # Execute sshkeysetup.sh when chosen
+                        echo -e "\nOpening Server Security Manager"
+                        if [ -f "$HOME/x1console/sshkeysetup.sh" ]; then
+                        bash "$HOME/x1console/sshkeysetup.sh"
+                        if [ $? -eq 0 ]; then
+                            echo -e "\nServer Securoty configuration complete.\n"
+                        else
+                            echo -e "\nFailed to configure server.\n"
+                        fi
                     else
-                        echo -e "\nFailed to execute speed test.\n"
+                        echo -e "\nsetautopilot.sh does not exist. Please create it.\n"
                     fi
-                else
-                    echo -e "\nspeedtest.sh does not exist. Please create it in the x1console directory.\n"
-                fi
+                   ;;
+                    2)
+                       # Execute speedtest.sh when chosen
+                       echo -e "\nExecuting speed test..."
+                       if [ -f "$HOME/x1console/speedtest.sh" ]; then
+                             bash "$HOME/x1console/speedtest.sh"
+                             if [ $? -eq 0 ]; then
+                                  echo -e "\nSpeed test completed successfully.\n"
+                              else
+                                  echo -e "\nFailed to execute speed test.\n"
+                               fi
+                            else
+                                echo -e "\nspeedtest.sh does not exist. Please create it in x1console dirextory.\n"
+                           fi
+                       ;;
+                    *)
+                        echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+                        ;;
+                esac
                 ;;
             8)
                 break
