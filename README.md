@@ -256,9 +256,12 @@ Note: when you transfer the withdraw authority to a ledger or local.json locally
 ### -Backup your wallets Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/YdI13qAWq7s/0.jpg)](https://www.youtube.com/watch?v=YdI13qAWq7s)
    
-7. **Reset Pinger**: This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
-8. **Speedtest**: This option carries out a speed test to evaluate your network performance.
+6. **Reset Pinger**: This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
+7. **Server**: Use the server security manager to generate SSH keys on your local machine and export them to your server. Then use the server configure your ssh login to change login port and disable root login and disable password authentication to secure your server.
 
+### -Secure Your Server Video Tutorial/Demo
+[![Watch the video](https://img.youtube.com/vi/AQYFOae7SGQ/0.jpg)](https://www.youtube.com/watch?v=AQYFOae7SGQ)
+   
 
 ## Links
 
