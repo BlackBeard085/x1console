@@ -25,7 +25,7 @@ check_tachyon_directory() {
         case $action in
             delete)
                 echo -e "\nDeleting $TACHYON_DIR..."
-                rm -rf "$TACHYON_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HOME/x1console/addressbook.json
+                rm -rf "$TACHYON_DIR"
                 echo -e "$TACHYON_DIR has been deleted.\n"
                 ;;
             archive)
@@ -81,8 +81,9 @@ install() {
         sudo cp "$HOME/x1/tachyon/target/release/tachyon-validator" /usr/local/bin
        export PATH=$PATH:~/x1/tachyon/target/release
        echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc 
-       echo -e "\nCopying wallets.json to x1console directory..."
-        cp "$HOME/x1/tachyon/wallets.json" "$HOME/x1console"
+       echo -e "\nCopying wallets.json to tachyon directory..."
+       #cp "$HOME/x1/tachyon/wallets.json" "$HOME/x1console"
+        cp "$HOME/x1console/wallets.json" "$HOME/x1/tachyon/wallets.json"
 
         echo -e "\nIncreasing systemd and session file limits"
         ulimit -n 1000000
@@ -230,6 +231,8 @@ update_x1() {
 
 # Function to update the X1 console
 update_x1_console() {
+    sudo apt install iputils-ping vnstat speedtest-cli bc fail2ban
+
     echo -e "\nStashing local changes..."
     git stash
 
@@ -496,6 +499,7 @@ set_commission() {
     node "$HOME/x1console/setwithdrawer.js"
 
     # Prompt user for the commission percentage
+    echo -e "\nCommission can only be changed in the first half of the epoch."
     read -p "What percent would you like to set your commission at? (0-100): " commission_percent
 
     # Validate the user input
@@ -531,8 +535,9 @@ other_options() {
         echo -e "5. Wallets Manager"
         echo -e "6. Pinger"
         echo -e "7. Server"
-        echo -e "8. Return to Main Menu"
-        read -p "Enter your choice [1-8]: " other_choice
+        echo -e "8. Network"
+        echo -e "9. Return to Main Menu"
+        read -p "Enter your choice [1-9]: " other_choice
 
         case $other_choice in
             1)
@@ -612,7 +617,7 @@ other_options() {
                         echo -e "\nFailed to open Wallets Manager.\n"
                     fi
                 else
-                    echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
+                    echo -e "\nwalletsmanager.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
             6)  pinger
@@ -620,7 +625,7 @@ other_options() {
             7)
                 echo -e "\nChoose a subcommand:"
                 echo -e "1. Security Manager"
-                echo -e "2. Speedtest"
+                echo -e "2. Performance Check"
                 read -p "Enter your choice [1-2]: " update_choice
                 case $update_choice in
                     1)
@@ -638,17 +643,17 @@ other_options() {
                     fi
                    ;;
                     2)
-                       # Execute speedtest.sh when chosen
-                       echo -e "\nExecuting speed test..."
-                       if [ -f "$HOME/x1console/speedtest.sh" ]; then
-                             bash "$HOME/x1console/speedtest.sh"
+                       # Execute performance.sh when chosen
+                       echo -e "\nExecuting performance test..."
+                       if [ -f "$HOME/x1console/performance.sh" ]; then
+                             bash "$HOME/x1console/performance.sh"
                              if [ $? -eq 0 ]; then
-                                  echo -e "\nSpeed test completed successfully.\n"
+                                  echo -e "\nPerformance test completed successfully.\n"
                               else
-                                  echo -e "\nFailed to execute speed test.\n"
+                                  echo -e "\nFailed to execute performance test.\n"
                                fi
                             else
-                                echo -e "\nspeedtest.sh does not exist. Please create it in x1console dirextory.\n"
+                                echo -e "\nperformance.sh does not exist. Please create it in x1console dirextory.\n"
                            fi
                        ;;
                     *)
@@ -657,10 +662,25 @@ other_options() {
                 esac
                 ;;
             8)
+                # Execute network.sh when chosen
+                echo -e "\nOpening Network Manager"
+                if [ -f "$HOME/x1console/network.sh" ]; then
+                    bash "$HOME/x1console/network.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nNetwork Manager complete.\n"
+                    else
+                        echo -e "\nFailed to open Network Manager.\n"
+                    fi
+                else
+                    echo -e "\nnetwork.sh does not exist. Please create it in the x1console directory.\n"
+                fi
+                pause
+                ;;
+            9)
                 break
                 ;;
             *)
-                echo -e "\nInvalid choice. Please choose from 1 to 7.\n"
+                echo -e "\nInvalid choice. Please choose from 1 to 9.\n"
                 ;;
         esac
     done
@@ -797,6 +817,7 @@ echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, 
 while true; do
     node newstatus.js
     echo " "
+    node connectednetwork.js
     node epoch.js
     echo -e "\nChoose an option:"
     echo -e "1. Health Check and Start Validator"

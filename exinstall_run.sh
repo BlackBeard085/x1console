@@ -18,7 +18,6 @@ echo -e "\nUpdating package index..."
 sudo apt update && sudo apt upgrade || error_exit "Failed to update package index."
 sudo apt-get install bc || error_exit "Failed to install bc."
 sudo apt install fail2ban || error_exit "Failed to install fail2ban"
-sudo apt install iputils-ping vnstat speedtest-cli bc || error_exit "Failed to install fail2ban"
 
 # Install logrotate
 echo -e "\nInstalling logrotate..."
@@ -142,9 +141,8 @@ echo -e "\nConfirming the build output..."
 ls -l target/release/tachyon-validator || error_exit "Failed to confirm the tachyon-validator build output."
 
 # Connect to the desired network
-#echo -e "\nConnecting to the desired network..."
-#solana config set -u https://rpc.testnet.x1.xyz || error_exit "Failed to set Solana configuration to the desired network."
-~/x1console/./network.sh
+echo -e "\nConnecting to the desired network..."
+solana config set -u https://rpc.testnet.x1.xyz || error_exit "Failed to set Solana configuration to the desired network."
 
 # Confirm the configuration
 echo -e "\nConfirming the Solana configuration..."

@@ -9,7 +9,7 @@ const restartCountFilePath = path.join(process.env.HOME, 'x1console', 'restart_c
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.22  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.23  -  The BlackPearl by BlackBeard_85');
 }
 
 printConsoleVersion();
