@@ -51,7 +51,7 @@ function readWallets() {
 function writeWallets(wallets) {
     fs.writeFileSync(walletsFilePath, JSON.stringify(wallets, null, 2));
     fs.copyFileSync(walletsFilePath, path.join(tachyonDir, 'wallets.json'));
-    console.log(`wallets.json created/updated and copied to: ${tachyonDir}`);
+    console.log(`wallets.json public addresses updated and copied to: ${tachyonDir}`);
 }
 
 // Function to update wallets.json with public keys from existing files
@@ -275,7 +275,7 @@ function checkVoteAccount() {
 // Function to create wallets.json file, if new wallets were created.
 function createWalletsJSON() {
     if (!newWalletsCreated) {
-        console.log('No new wallets were created; wallets.json will not be generated.');
+        console.log('No new wallets were created; wallets.json will not be updated.');
         return;
     }
 
