@@ -231,6 +231,7 @@ update_x1() {
 
 # Function to update the X1 console
 update_x1_console() {
+    echo -e "\nUpdating Packages.."
     sudo apt install iputils-ping vnstat speedtest-cli bc fail2ban
 
     echo -e "\nStashing local changes..."
