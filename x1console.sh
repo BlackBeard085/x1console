@@ -645,7 +645,8 @@ other_options() {
                    ;;
                     2)
                        # Execute performance.sh when chosen
-                       echo -e "\nExecuting performance test..."
+                       sudo apt install iputils-ping vnstat speedtest-cli bc fail2ban
+		       echo -e "\nExecuting performance test..."
                        if [ -f "$HOME/x1console/performance.sh" ]; then
                              bash "$HOME/x1console/performance.sh"
                              if [ $? -eq 0 ]; then
