@@ -465,8 +465,9 @@ show_menu() {
     echo "3. Epoch Info"
     echo "4. Add New Stake Account"
     echo "5. Merge Stake"
-    echo "6. Repurpose Old Stake Account"
-    echo "7. Exit"
+    echo "6. Split Stake"
+    echo "7. Repurpose Old Stake Account"
+    echo "8. Exit"
 }
 
 # Function to pause and wait for user input
@@ -500,10 +501,24 @@ execute_option() {
             pause
             ;;
         6)
+	        # Execute setautopilot.sh when chosen
+                #echo -e "\nExecuting Autopilot setup"
+                if [ -f "$HOME/x1console/splitstake.sh" ]; then
+                    bash "$HOME/x1console/splitstake.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\n \n"
+                    else
+                        echo -e "\nFailed to split stake.\n"
+                    fi
+                else
+                    echo -e "\nsplitstake.sh does not exist. Please create it in the x1console directory.\n"
+                fi
+                 ;;
+        7)
             create_stake_account  # Call the function to create a new stake account from available accounts
             pause
             ;;
-        7)
+        8)
             echo -e "\nExiting.\n"
             exit 0
             ;;

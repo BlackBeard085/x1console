@@ -9,14 +9,22 @@ if [ ! -d "$WALLET_DIR" ]; then
     exit 1
 fi
 
-# Function to display current wallets
+# Function to display current wallets with their public addresses
 current_available_wallets() {
     echo -e "\nCurrent wallets in .config/solana directory:"
+    files=("$WALLET_DIR"/*.json)  # Gather wallet files
+
     if [ ${#files[@]} -eq 0 ]; then
         echo "No wallet files found in $WALLET_DIR."
     else
+        # Print table header
+        printf "%-30s | %s\n" "Wallet Name" "Public Address"
+        printf "%-30s | %s\n" "-------------" "--------------"
+
         for file in "${files[@]}"; do
-            echo "$(basename "$file")"
+            wallet_name=$(basename "$file")
+            public_address=$(solana-keygen pubkey "$file")  # Retrieve public address
+            printf "%-30s | %s\n" "$wallet_name" "$public_address"
         done
     fi
     echo " "
