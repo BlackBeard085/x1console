@@ -9,9 +9,18 @@ mkdir -p "$WALLET_DIR"
 # Function to get a valid wallet name
 function get_wallet_name {
     while true; do
-        read -p "Enter the wallet name including .json: " wallet_name
+        read -p "Enter the wallet name you wish to import (include .json): " wallet_name
         if [[ $wallet_name == *.json ]]; then
-            break
+            if [[ -e "$WALLET_DIR/$wallet_name" ]]; then
+                read -p "Warning: The wallet '$wallet_name' already exists. Do you want to overwrite it? (y/n): " overwrite
+                if [[ $overwrite == [Yy] ]]; then
+                    break
+                else
+                    echo "Please enter a different wallet name."
+                fi
+            else
+                break
+            fi
         else
             echo "Error: The wallet name must end with .json. Please try again."
         fi
@@ -32,5 +41,5 @@ echo "$private_key" > "$wallet_file"
 
 # Provide feedback to the user
 echo "Private key has been saved to $wallet_file."
- echo -e "Press any button to continue."
-    read -n 1 -s  # Wait for any key press
+echo -e "Press any button to continue."
+read -n 1 -s  # Wait for any key press
