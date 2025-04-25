@@ -1,13 +1,10 @@
 const { exec } = require('child_process');
 const os = require('os');
-const fs = require('fs');
-const path = require('path');
 
 // Get the current user's username
 const username = os.userInfo().username;
 // Define the validator directory
 const validatorDirectory = `~/x1/tachyon`;
-const walletsDirectory = `~/x1console/wallets.json`;
 
 // Command to start the validator
 const startCommand = `./start_validator.sh`;
@@ -69,36 +66,10 @@ async function runCatchup() {
     }
 }
 
-// Function to read wallet addresses from wallets.json
-function readWallets() {
-    const walletsPath = path.join(os.homedir(), 'x1console', 'wallets.json');
-    if (!fs.existsSync(walletsPath)) {
-        throw new Error(`Wallets file not found: ${walletsPath}`);
-    }
-    const walletsData = fs.readFileSync(walletsPath);
-    const wallets = JSON.parse(walletsData);
-    let stakeAddress, voteAddress;
-
-    wallets.forEach(wallet => {
-        if (wallet.name === 'Stake') {
-            stakeAddress = wallet.address;
-        } else if (wallet.name === 'Vote') {
-            voteAddress = wallet.address;
-        }
-    });
-
-    if (!stakeAddress || !voteAddress) {
-        throw new Error('Stake or Vote wallet address not found in wallets.json');
-    }
-
-    return { stakeAddress, voteAddress };
-}
-
-// Function to delegate stake using wallet addresses
-async function delegateStake() {
-    const { stakeAddress, voteAddress } = readWallets();
+// Function to delegate stake
+function delegateStake() {
     return new Promise((resolve, reject) => {
-        exec(`cd ${validatorDirectory} && solana delegate-stake ${stakeAddress} ${voteAddress}`, (error, stdout, stderr) => {
+        exec(`cd ${validatorDirectory} && solana delegate-stake stake.json vote.json`, (error, stdout, stderr) => {
             if (error) {
                 reject(`Error delegating stake: ${stderr.trim()}`);
             } else {

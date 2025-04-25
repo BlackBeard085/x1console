@@ -16,6 +16,7 @@ $LOGFILE {
     delaycompress
     create 0640 $USERNAME $USERNAME
     rotate 1
+    su $USERNAME $USERNAME
 }
 EOF
 

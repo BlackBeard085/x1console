@@ -817,6 +817,7 @@ echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, 
 
 # Interaction to execute install function or update, health check, or exit
 while true; do
+    ./checkwithdrawer.sh
     node newstatus.js
     echo " "
     node connectednetwork.js
