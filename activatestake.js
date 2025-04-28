@@ -122,7 +122,7 @@ async function delegateStake() {
             // Proceed to delegate stake
             const delegateOutput = await delegateStake();
             console.log('Delegate stake command output:\n', delegateOutput);
-            console.log('Delegation successful, a restart is required.'); // Message to show after delegation
+            console.log('Delegation successful, stake has been activated.'); // Message to show after delegation
             return; // Exit the script after handling catchup and delegation
         } else {
             console.log('Validator is not currently running. Proceeding to start it.');

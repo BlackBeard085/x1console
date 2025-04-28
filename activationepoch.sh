@@ -27,7 +27,7 @@ if (( $(echo "$active_stake > 0" | bc -l) )); then
     exit 0
 fi
 
-echo "Active stake is 0, stake will activate in the next epoch, proceeding to check remaining time for current epoch..."
+echo "Stake is awaiting activation, stake will activate in the next epoch, proceeding to check remaining time for current epoch..."
 
 # Command to get the epoch info
 EPOCH_INFO_CMD="$HOME/.local/share/solana/install/active_release/bin/solana epoch-info"

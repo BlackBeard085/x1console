@@ -157,7 +157,7 @@ while true; do
             remove_wallet
             ;;
         
-       76)  # Exit the script
+       7)  # Exit the script
             echo -e "\nExiting the script."
             exit 0
             ;;
