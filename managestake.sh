@@ -533,6 +533,6 @@ execute_option() {
 while true; do
     display_all_stake_info      # Display all stake account info at each loop
     show_menu
-    read -rp "Enter your choice [1-7]: " choice
+    read -rp "Enter your choice [1-8]: " choice
     execute_option "$choice"
 done
