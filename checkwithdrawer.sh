@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Check if 'solana' command exists; if not, exit silently
-if ! command -v solana >/dev/null 2>&1; then
-    exit 0
-fi
-
 # Check if withdrawerconfig.json exists; create it if it doesn't
 if [ ! -f "withdrawerconfig.json" ]; then
     touch withdrawerconfig.json
     # Initialize the JSON file with default value
     echo '{ "keypairPath": "" }' > withdrawerconfig.json
+fi
+
+# Check if 'solana' command exists; if not, exit silently
+if ! command -v solana >/dev/null 2>&1; then
+    exit 0
 fi
 
 # Get the current keypair path from solana config
