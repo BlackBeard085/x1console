@@ -120,12 +120,12 @@ install() {
         # Attempting to check stake activation epoch
         echo -e "\nAttempting to check validator status..."
         if [ -f ./activationepoch.sh ]; then
-            # Using spawn for executing 1strestart.js
+            # Using spawn for executing activationepoch.sh
             ./activationepoch.sh
             if [ $? -eq 0 ]; then
                 read -n 1 -s -r -p "stake status checked successfully.  If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete before confirming validator status and attempting validator restart.  Press any button to continue "
                 #echo -e "\nValidator status checked successfully."
-                # Run setpinger.js after restart is successful
+                # Run setpinger.js after stake activation is successful
                 if [ -f ./setpinger.js ]; then
                     echo -e "\nSetting up pinger..."
                     node ./setpinger.js
@@ -272,8 +272,10 @@ health_check() {
             echo -e "\n0 active stake found. Running activate stake..."
             node "$HOME/x1console/activatestake.js"
 
-            echo -e "\nAttempting restart after activating stake..."
-            node "$HOME/x1console/restart.js"
+            echo -e "\nChecking Epoch activation after activating stake..."
+            $HOME/x1console/./activationepoch.sh
+            echo -e "\nStake activated awaiting 30 seconds to sync"
+            sleep 30
         else
             echo -e "\nActive stake found. Attempting restart..."
             node "$HOME/x1console/restart.js"

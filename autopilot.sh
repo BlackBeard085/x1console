@@ -71,8 +71,8 @@ if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
         echo -e "\n0 active stake found. Running activate stake..."
         node "$HOME/x1console/activatestake.js"
 
-        echo -e "\nAttempting restart after activating stake..."
-        node "$HOME/x1console/restart.js"
+       #echo -e "\nAttempting restart after activating stake..."
+        #node "$HOME/x1console/restart.js"
     else
         echo -e "\nActive stake found. Attempting restart..."
         node "$HOME/x1console/restart.js"
