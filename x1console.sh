@@ -100,6 +100,10 @@ install() {
 	echo -e "\nRemoving old ledger if present."
 	rm -rf "$HOME/x1/ledger"
 
+        #Running RAM disk and swap optimization
+        echo -e "\nOptimizing swap to 1 and creating tmpfs RAM disk"
+        sudo ./optimize.sh 
+ 
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
         if [ -f ./1ststake.js ]; then

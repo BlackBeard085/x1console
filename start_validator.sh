@@ -21,6 +21,7 @@ nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --known-validator Abt4r6uhFs7yPwR3jT5qbnLjBtasgHkRVAd1W6H5yonT \
     --known-validator FcrZRBfVk2h634L9yvkysJdmvdAprq1NM4u263NuR6LC \
     --known-validator Tpsu5EYTJAXAat19VEh54zuauHvUBuryivSFRC3RiFk \
+    --accounts /run/accounts \
     --accounts-db-cache-limit-mb 10000 \
     --only-known-rpc \
     --log ~/x1/log.txt \
