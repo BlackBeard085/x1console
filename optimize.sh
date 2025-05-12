@@ -2,8 +2,8 @@
 
 # --- Configuration ---
 MOUNT_POINT="/run/accounts"
-TMPFS_SIZE="14G"
-FSTAB_ENTRY="tmpfs   $MOUNT_POINT   tmpfs   defaults,size=$TMPFS_SIZE   0   0"
+TMPFS_SIZE="12G"
+FSTAB_ENTRY="tmpfs   $MOUNT_POINT   tmpfs   defaults,size=$TMPFS_SIZE,mode=1777   0   0"
 FSTAB_FILE="/etc/fstab"
 
 # --- Check current swappiness ---
@@ -44,12 +44,16 @@ if [ ! -d "$MOUNT_POINT" ]; then
     echo "Creating mount point directory: $MOUNT_POINT"
     if mkdir -p "$MOUNT_POINT"; then
         echo "Directory created successfully."
+        # Set permissions to 1777 (sticky bit with full permissions)
+        chmod 1777 "$MOUNT_POINT"
     else
         echo "Error: Failed to create directory $MOUNT_POINT. Exiting."
         exit 1
     fi
 else
     echo "Mount point directory '$MOUNT_POINT' already exists."
+    # Ensure permissions are set correctly on existing directory
+    chmod 1777 "$MOUNT_POINT"
 fi
 
 # --- Step 2: Unmount if already mounted ---
@@ -86,15 +90,19 @@ fi
 echo "Mounting all filesystems..."
 if mount -a; then
     echo "Mount operation successful."
+    # Ensure permissions are set correctly after mount
+    chmod 1777 "$MOUNT_POINT"
 else
     echo "Warning: 'mount -a' failed. Please check your /etc/fstab for errors."
 fi
 
-# --- Step 6: Verify the mount ---
-echo "Verifying the mount..."
+# --- Step 6: Verify the mount and permissions ---
+echo "Verifying the mount and permissions..."
 if df -h "$MOUNT_POINT" > /dev/null 2>&1; then
     echo "Verification successful: $MOUNT_POINT is mounted."
     df -h "$MOUNT_POINT"
+    echo -e "\nCurrent permissions:"
+    ls -ld "$MOUNT_POINT"
 else
     echo "Verification failed: $MOUNT_POINT is not mounted."
 fi
