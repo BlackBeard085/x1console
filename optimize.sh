@@ -2,7 +2,7 @@
 
 # --- Configuration ---
 MOUNT_POINT="/run/accounts"
-TMPFS_SIZE="12G"
+TMPFS_SIZE="14G"
 FSTAB_ENTRY="tmpfs   $MOUNT_POINT   tmpfs   defaults,size=$TMPFS_SIZE,mode=1777   0   0"
 FSTAB_FILE="/etc/fstab"
 
