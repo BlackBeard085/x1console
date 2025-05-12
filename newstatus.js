@@ -13,7 +13,7 @@ let isAutopingerActive = false;
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.28  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.29  -  The BlackPearl by BlackBeard_85');
 }
 
 // Check for specific cronjobs
