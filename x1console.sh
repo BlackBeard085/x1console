@@ -100,6 +100,10 @@ install() {
 	echo -e "\nRemoving old ledger if present."
 	rm -rf "$HOME/x1/ledger"
 
+        #Setup Passwordless Sudo for user
+        echo -e "\nSetting up Passwordless sudo configuration for user in /etc/sudoers.d/"
+        sudo ./setup_passwordless_sudo.sh
+
         #Running RAM disk and swap optimization
         echo -e "\nOptimizing swap to 1 and creating tmpfs RAM disk"
         sudo ./optimize.sh 

@@ -1,34 +1,73 @@
 #!/bin/bash
 
-CRON_JOB="*/30 * * * * cd ~/x1console/ && ./autopilot.sh"  # Example cron job
+# Existing cron jobs
+CRON_JOB="*/30 * * * * cd ~/x1console/ && ./autopilot.sh"
+CRON_JOB2="0 18 * * 1,3,6 cd ~/x1console/ && ./autostaker.sh"
+# New third cron job (every hour at minute 0)
+CRON_JOB3="0 * * * * cd ~/x1console/ && ./autopinger.sh"
+
 AUTOCONFIG_FILE="$HOME/x1console/autoconfig"  # Path to your autoconfig file
 LOG_FILE="$HOME/x1console/restart_times.log"  # Path to your log file
 
 function add_cron_job {
-    # Check if the cron job already exists
-    if crontab -l | grep -qF "$CRON_JOB"; then
-        # Cron job already exists, update autoconfig
-        echo "Autopilot already ON. No action needed."
+    # Check if all three cron jobs exist
+    local crontab_content
+    crontab_content=$(crontab -l 2>/dev/null)
+
+    local missing_jobs=0
+
+    # Check for each cron job
+    if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null; then
+        :
     else
-        # Add the cron job
-        (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
-        #echo "Cron job added: $CRON_JOB"
+        missing_jobs=1
+    fi
+
+    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then
+        :
+    else
+        missing_jobs=1
+    fi
+
+    if echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then
+        :
+    else
+        missing_jobs=1
+    fi
+
+    if [ "$missing_jobs" -eq 0 ]; then
+        echo "All cron jobs are already ON. No action needed."
+    else
+        # Append missing cron jobs
+        (crontab -l 2>/dev/null; 
+         echo "$CRON_JOB"
+         echo "$CRON_JOB2"
+         echo "$CRON_JOB3"
+        ) | crontab -
+        #echo "Cron jobs added."
     fi
     echo "ON" > "$AUTOCONFIG_FILE"
-    echo -e "\nAutopilot turned ON.\n"
+    echo -e "\nAutopilot, Autostaker, and Autopinger turned ON.\n"
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
 function remove_cron_job {
-    # Remove duplicates from the cron jobs
-    if crontab -l | grep -qF "$CRON_JOB"; then
-        crontab -l | grep -v -F "$CRON_JOB" | crontab -
-        #echo "Cron job removed: $CRON_JOB"
+    # Remove all three cron jobs if they exist
+    local crontab_content
+    crontab_content=$(crontab -l 2>/dev/null)
+
+    # Check if any of the jobs exist
+    if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null || \
+       echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null || \
+       echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then
+        # Remove each job
+        (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB" | grep -v -F "$CRON_JOB2" | grep -v -F "$CRON_JOB3") | crontab -
+        echo "Cron jobs removed."
     else
-        echo "Autopilot is already OFF "
+        echo "Autopilot, Autostaker, and Autopinger are already OFF."
     fi
     echo "OFF" > "$AUTOCONFIG_FILE"
-    echo -e "\nAutopilot turned OFF.\n"
+    echo -e "\nAutopilot, Autostaker, and Autopinger turned OFF.\n"
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
@@ -64,8 +103,8 @@ function show_menu {
     ensure_autoconfig_file # Ensure autoconfig file exists before displaying the menu
     while true; do
         echo -e "\nWhat would you like to do?"
-        echo "1. Turn On Autopilot"
-        echo "2. Turn Off Autopilot"
+        echo "1. Turn On Autopilot Tasks"
+        echo "2. Turn Off Autopilot Tasks"
         echo "3. View Autopilot Logs"
         echo "4. Exit"
         echo -n "Please enter your choice (1-4): "
