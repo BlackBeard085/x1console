@@ -3,77 +3,62 @@
 # Existing cron jobs
 CRON_JOB="*/30 * * * * cd ~/x1console/ && ./autopilot.sh"
 CRON_JOB2="0 18 * * 1,3,6 cd ~/x1console/ && ./autostaker.sh"
-# New third cron job (every hour at minute 0)
 CRON_JOB3="0 * * * * cd ~/x1console/ && ./autopinger.sh"
+# Fourth cron job
+CRON_JOB4="0 * * * * cd ~/x1console/ && ./autoupdater.sh"
 
-AUTOCONFIG_FILE="$HOME/x1console/autoconfig"  # Path to your autoconfig file
-LOG_FILE="$HOME/x1console/restart_times.log"  # Path to your log file
+# Paths
+AUTOCONFIG_FILE="$HOME/x1console/autoconfig"
+LOG_FILE="$HOME/x1console/restart_times.log"
+UPDATER_LOG_FILE="$HOME/x1console/validator_update.log"
 
+# Function to add all four cron jobs
 function add_cron_job {
-    # Check if all three cron jobs exist
     local crontab_content
     crontab_content=$(crontab -l 2>/dev/null)
-
     local missing_jobs=0
 
-    # Check for each cron job
-    if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null; then
-        :
-    else
-        missing_jobs=1
-    fi
-
-    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then
-        :
-    else
-        missing_jobs=1
-    fi
-
-    if echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then
-        :
-    else
-        missing_jobs=1
-    fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null; then :; else missing_jobs=1; fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then :; else missing_jobs=1; fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then :; else missing_jobs=1; fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB4" > /dev/null; then :; else missing_jobs=1; fi
 
     if [ "$missing_jobs" -eq 0 ]; then
         echo "All cron jobs are already ON. No action needed."
     else
-        # Append missing cron jobs
         (crontab -l 2>/dev/null; 
          echo "$CRON_JOB"
          echo "$CRON_JOB2"
          echo "$CRON_JOB3"
+         echo "$CRON_JOB4"
         ) | crontab -
-        #echo "Cron jobs added."
     fi
     echo "ON" > "$AUTOCONFIG_FILE"
-    echo -e "\nAutopilot, Autostaker, and Autopinger turned ON.\n"
+    echo -e "\nAutopilot, Autostaker, Autopinger, and Autoupdater turned ON.\n"
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
+# Function to remove all four cron jobs
 function remove_cron_job {
-    # Remove all three cron jobs if they exist
     local crontab_content
     crontab_content=$(crontab -l 2>/dev/null)
-
-    # Check if any of the jobs exist
     if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null || \
        echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null || \
-       echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then
-        # Remove each job
-        (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB" | grep -v -F "$CRON_JOB2" | grep -v -F "$CRON_JOB3") | crontab -
+       echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null || \
+       echo "$crontab_content" | grep -F "$CRON_JOB4" > /dev/null; then
+        (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB" | grep -v -F "$CRON_JOB2" | grep -v -F "$CRON_JOB3" | grep -v -F "$CRON_JOB4") | crontab -
         echo "Cron jobs removed."
     else
-        echo "Autopilot, Autostaker, and Autopinger are already OFF."
+        echo "Autopilot, Autostaker, Autopinger, and Autoupdater are already OFF."
     fi
     echo "OFF" > "$AUTOCONFIG_FILE"
-    echo -e "\nAutopilot, Autostaker, and Autopinger turned OFF.\n"
+    echo -e "\nAutopilot, Autostaker, Autopinger, and Autoupdater turned OFF.\n"
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
+# Function to view autopilot logs
 function view_autopilot_logs {
     if [[ -f "$LOG_FILE" ]]; then
-        #clear
         echo -e "\nAutopilot Logs:"
         cat "$LOG_FILE"
     else
@@ -83,31 +68,37 @@ function view_autopilot_logs {
     read -n 1 -s -r
 }
 
-function ensure_autoconfig_file {
-    # Ensure the directory exists
-    mkdir -p "$(dirname "$AUTOCONFIG_FILE")"
-    mkdir -p "$(dirname "$LOG_FILE")" # Ensure Log Directory Exists
-
-    # Ensure the autoconfig file exists
-    if [[ ! -f "$AUTOCONFIG_FILE" ]]; then
-        touch "$AUTOCONFIG_FILE"
+# Function to view updater logs
+function view_autoupdater_logs {
+    if [[ -f "$UPDATER_LOG_FILE" ]]; then
+        echo -e "\nAuto Updater Logs:"
+        cat "$UPDATER_LOG_FILE"
+    else
+        echo "No updater log file found."
     fi
-
-    # Ensure the log file exists
-    if [[ ! -f "$LOG_FILE" ]]; then
-        touch "$LOG_FILE"
-    fi
+    echo -e "\nPress any key to exit..."
+    read -n 1 -s -r
 }
 
+# Function to ensure config files exist
+function ensure_autoconfig_file {
+    mkdir -p "$(dirname "$AUTOCONFIG_FILE")"
+    mkdir -p "$(dirname "$LOG_FILE")"
+    [[ -f "$AUTOCONFIG_FILE" ]] || touch "$AUTOCONFIG_FILE"
+    [[ -f "$LOG_FILE" ]] || touch "$LOG_FILE"
+}
+
+# Main menu
 function show_menu {
-    ensure_autoconfig_file # Ensure autoconfig file exists before displaying the menu
+    ensure_autoconfig_file
     while true; do
         echo -e "\nWhat would you like to do?"
-        echo "1. Turn On Autopilot Tasks"
-        echo "2. Turn Off Autopilot Tasks"
+        echo "1. Turn On All Autopilot Tasks"
+        echo "2. Turn Off All Autopilot Tasks"
         echo "3. View Autopilot Logs"
-        echo "4. Exit"
-        echo -n "Please enter your choice (1-4): "
+        echo "4. View Auto Updater Logs"
+        echo "5. Exit"
+        echo -n "Please enter your choice (1-5): "
         read -r choice
         case "$choice" in
             1)
@@ -120,17 +111,20 @@ function show_menu {
                 view_autopilot_logs
                 ;;
             4)
+                view_autoupdater_logs
+                ;;
+            5)
                 echo "Exiting."
                 exit 0
                 ;;
             *)
-                echo -e "\nInvalid choice. Please choose 1, 2, 3, or 4.\n"
+                echo -e "\nInvalid choice. Please choose 1, 2, 3, 4, or 5.\n"
                 read -n 1 -s -r -p "Press any key to continue..."
                 ;;
         esac
-        echo ""  # Print a new line for better readability
+        echo ""
     done
 }
 
-# Start the script by showing the menu
+# Start the menu
 show_menu

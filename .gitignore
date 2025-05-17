@@ -11,3 +11,5 @@ restart_times.log
 update_lock.pid
 validator_update.log
 update_pause_time.txt
+autostaker.log
+autopinger.log

@@ -7,28 +7,33 @@ const autoConfigFilePath = path.join(process.env.HOME, 'x1console', 'autoconfig'
 const withdrawerConfigFilePath = path.join(process.env.HOME, 'x1console', 'withdrawerconfig.json'); // Path to the withdrawer config file
 const restartCountFilePath = path.join(process.env.HOME, 'x1console', 'restart_count.log'); // Path to the restart count log
 
-// Variable to store cronjob presence
+// Variables to store cronjob presence
 let isAutostakerActive = false;
+let isAutopingerActive = false;
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.27  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.30  -  The BlackPearl by BlackBeard_85');
 }
 
-// Check for specific cronjob
-function checkCronJob() {
+// Check for specific cronjobs
+function checkCronJobs() {
     exec('crontab -l', (error, stdout, stderr) => {
         if (error) {
-            // Likely no crontab exists or error, assume no
+            // Likely no crontab exists or error, assume none
             isAutostakerActive = false;
+            isAutopingerActive = false;
             return;
         }
-        // Search for the specific cron line
-        const cronLine = '0 18 * * 1,3,6 cd ~/x1console/ && ./autostaker.sh';
-        if (stdout.includes(cronLine)) {
+        // Search for the specific autostaker cron line
+        const autostakerLine = '0 18 * * 1,3,6 cd ~/x1console/ && ./autostaker.sh';
+        if (stdout.includes(autostakerLine)) {
             isAutostakerActive = true;
-        } else {
-            isAutostakerActive = false;
+        }
+        // Search for the specific autopinger cron line
+        const autopingerLine = '0 * * * * cd ~/x1console/ && ./autopinger.sh';
+        if (stdout.includes(autopingerLine)) {
+            isAutopingerActive = true;
         }
     });
 }
@@ -38,9 +43,8 @@ function checkLogFileModification() {
     fs.stat(logFilePath, (err, stats) => {
         if (err) {
             console.log('Active Status will show once Validator starts');
-            // Proceed to check validator status even if log not found
             checkValidatorStatus();
-            return; // Stop the script if the log file is not found
+            return;
         }
 
         const currentTime = Date.now();
@@ -53,7 +57,7 @@ function checkLogFileModification() {
             console.log('- Logs: Stopped');
         }
 
-        // Check for cronjob presence before validator status
+        // Proceed to check validator status
         checkValidatorStatus();
     });
 }
@@ -72,53 +76,55 @@ function checkValidatorStatus() {
             return;
         }
 
-        // Split the output into lines and look for the line with "Status:"
+        // Parse output for status
         const lines = stdout.split('\n');
         for (let line of lines) {
             if (line.includes('- Status:')) {
                 // Output the status line
                 console.log(line.trim());
 
-                // Check if the autoconfig file exists and read its content
-                let autoConfigContent = '-'; // Default value if the file does not exist
+                // Read autoconfig content
+                let autoConfigContent = '-';
                 try {
                     autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
                 } catch (err) {
-                    // Suppress error message and use default value
+                    // Use default if error
                 }
 
                 let autopilotOutput = `- Autopilot: ${autoConfigContent}`;
                 if (autoConfigContent === 'ON') {
-                    // If autoconfig is ON, read the restart count
-                    let restartCountContent = '-'; // Default value if the file does not exist
+                    // Read restart count
+                    let restartCountContent = '-';
                     try {
                         restartCountContent = fs.readFileSync(restartCountFilePath, 'utf8').trim();
                     } catch (err) {
-                        // Suppress error message and use default value
+                        // default
                     }
-
-                    // Append restart info
                     autopilotOutput += `       48Hrs auto-restarts: ${restartCountContent}`;
-                    
-                    // Append "Auto-staker active" if cronjob exists
+
+                    // Append 'Auto-staker active' if applicable
                     if (isAutostakerActive) {
                         autopilotOutput += `\n                      Auto-staker active`;
+                    }
+
+                    // Append 'Auto-pinger active' if applicable
+                    if (isAutopingerActive) {
+                        autopilotOutput += `\n                      Auto-pinger active`;
                     }
                 }
 
                 console.log(autopilotOutput);
 
-                // Read the withdrawer configuration
+                // Read and output withdrawer config
                 try {
                     const withdrawerConfigContent = fs.readFileSync(withdrawerConfigFilePath, 'utf8');
                     const withdrawerConfig = JSON.parse(withdrawerConfigContent);
                     const currentWithdrawer = withdrawerConfig.keypairPath;
-
                     console.log(`- Current set Withdrawer: ${currentWithdrawer}`);
                 } catch (err) {
-                    // Suppress error message for withdrawer config
+                    // ignore errors
                 }
-                break; // Exit loop once we find and output the status
+                break; // exit loop after output
             }
         }
     });
@@ -126,10 +132,9 @@ function checkValidatorStatus() {
 
 // Main execution
 printConsoleVersion();
-checkCronJob();
+checkCronJobs();
 
-// Delay the main check slightly to allow checkCronJob to finish
-// Since exec is asynchronous, we need to wait before proceeding
+// Delay to allow cron check to finish before proceeding
 setTimeout(() => {
     checkLogFileModification();
-}, 500); // 500ms delay to ensure cron check completes
+}, 500);

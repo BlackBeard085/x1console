@@ -11,6 +11,9 @@ CRON_JOB4="0 * * * * cd ~/x1console/ && ./autoupdater.sh"
 AUTOCONFIG_FILE="$HOME/x1console/autoconfig"
 LOG_FILE="$HOME/x1console/restart_times.log"
 UPDATER_LOG_FILE="$HOME/x1console/validator_update.log"
+# New log files for staker and pinger
+STAKER_LOG_FILE="$HOME/x1console/autostaker.log"
+PINGER_LOG_FILE="$HOME/x1console/autopinger.log"
 
 # Function to add all four cron jobs
 function add_cron_job {
@@ -80,12 +83,42 @@ function view_autoupdater_logs {
     read -n 1 -s -r
 }
 
+# New function to view autostaker logs
+function view_autostaker_logs {
+    if [[ -f "$STAKER_LOG_FILE" ]]; then
+        echo -e "\nAutostaker Logs:"
+        cat "$STAKER_LOG_FILE"
+    else
+        echo "No autostaker log file found."
+    fi
+    echo -e "\nPress any key to exit..."
+    read -n 1 -s -r
+}
+
+# New function to view autopinger logs
+function view_autopinger_logs {
+    if [[ -f "$PINGER_LOG_FILE" ]]; then
+        echo -e "\nAutopinger Logs:"
+        cat "$PINGER_LOG_FILE"
+    else
+        echo "No autopinger log file found."
+    fi
+    echo -e "\nPress any key to exit..."
+    read -n 1 -s -r
+}
+
 # Function to ensure config files exist
 function ensure_autoconfig_file {
     mkdir -p "$(dirname "$AUTOCONFIG_FILE")"
     mkdir -p "$(dirname "$LOG_FILE")"
+    mkdir -p "$(dirname "$UPDATER_LOG_FILE")"
+    mkdir -p "$(dirname "$STAKER_LOG_FILE")"
+    mkdir -p "$(dirname "$PINGER_LOG_FILE")"
     [[ -f "$AUTOCONFIG_FILE" ]] || touch "$AUTOCONFIG_FILE"
     [[ -f "$LOG_FILE" ]] || touch "$LOG_FILE"
+    [[ -f "$UPDATER_LOG_FILE" ]] || touch "$UPDATER_LOG_FILE"
+    [[ -f "$STAKER_LOG_FILE" ]] || touch "$STAKER_LOG_FILE"
+    [[ -f "$PINGER_LOG_FILE" ]] || touch "$PINGER_LOG_FILE"
 }
 
 # Main menu
@@ -97,8 +130,10 @@ function show_menu {
         echo "2. Turn Off All Autopilot Tasks"
         echo "3. View Autopilot Logs"
         echo "4. View Auto Updater Logs"
-        echo "5. Exit"
-        echo -n "Please enter your choice (1-5): "
+        echo "5. View Auto Staker Logs"
+        echo "6. View Auto Pinger Logs"
+        echo "7. Exit"
+        echo -n "Please enter your choice (1-7): "
         read -r choice
         case "$choice" in
             1)
@@ -114,11 +149,17 @@ function show_menu {
                 view_autoupdater_logs
                 ;;
             5)
+                view_autostaker_logs
+                ;;
+            6)
+                view_autopinger_logs
+                ;;
+            7)
                 echo "Exiting."
                 exit 0
                 ;;
             *)
-                echo -e "\nInvalid choice. Please choose 1, 2, 3, 4, or 5.\n"
+                echo -e "\nInvalid choice. Please choose 1-7.\n"
                 read -n 1 -s -r -p "Press any key to continue..."
                 ;;
         esac

@@ -36,8 +36,8 @@ fi
 # Ensure log file exists
 touch "$LOG_FILE"
 
-# Delete log if bigger than 1GB
-if [ "$(stat -c%s "$LOG_FILE")" -gt $((1*1024*1024*1024)) ]; then
+# Delete log if bigger than 50MB
+if [ "$(stat -c%s "$LOG_FILE")" -gt $((50*1024*1024)) ]; then
     > "$LOG_FILE"
 fi
 
