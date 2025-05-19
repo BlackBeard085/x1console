@@ -102,12 +102,13 @@ install() {
 
         #Setup Passwordless Sudo for user
         echo -e "\nSetting up Passwordless sudo configuration for user in /etc/sudoers.d/"
-        sudo ./setup_passwordless_sudo.sh
+        ./setup_passwordless_sudo.sh
 
         #Running RAM disk and swap optimization
         echo -e "\nOptimizing swap to 1 and creating tmpfs RAM disk"
         sudo ./optimize.sh 
- 
+        sudo ./optizations2.sh
+        ./add_reboot_cron.sh
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
         if [ -f ./1ststake.js ]; then
@@ -832,6 +833,7 @@ while true; do
     echo " "
     node connectednetwork.js
     node epoch.js
+    ./scheduled_update.sh
     echo -e "\nChoose an option:"
     echo -e "1. Health Check and Start Validator"
     echo -e "2. Validator"

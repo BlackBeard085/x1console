@@ -132,8 +132,9 @@ function show_menu {
         echo "4. View Auto Updater Logs"
         echo "5. View Auto Staker Logs"
         echo "6. View Auto Pinger Logs"
-        echo "7. Exit"
-        echo -n "Please enter your choice (1-7): "
+        echo "7. Remove Sceduled Update"
+        echo "8. Exit"
+        echo -n "Please enter your choice (1-8): "
         read -r choice
         case "$choice" in
             1)
@@ -155,6 +156,9 @@ function show_menu {
                 view_autopinger_logs
                 ;;
             7)
+                ./remove_update.sh
+                ;;
+            8)
                 echo "Exiting."
                 exit 0
                 ;;

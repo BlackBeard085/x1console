@@ -81,10 +81,11 @@ while true; do
     echo "2. Back up all wallets"
     echo "3. Current available wallets"
     echo "4. Add New Wallet"
-    echo "5. Import Wallet"
-    echo "6. Remove Wallet"
-    echo "7. Exit"
-    read -p "Enter your choice (1-7): " choice
+    echo "5. Import Wallet using Private Key"
+    echo "6. Import Wallet using Seed Phrase"
+    echo "7. Remove Wallet"
+    echo "8. Exit"
+    read -p "Enter your choice (1-8): " choice
 
     # Always gather wallet files before the options
     files=("$WALLET_DIR"/*.json)
@@ -153,13 +154,16 @@ while true; do
         5)
             ./import.sh
             ;;
-        6)  # Remove Wallet
+        6)
+            ./seed_phrase_import.sh
+            ;;
+        7)  # Remove Wallet
             remove_wallet
             ;;
         
-       7)  # Exit the script
-            echo -e "\nExiting the script."
-            exit 0
+        8) # Exit the script
+             echo -e "\nExiting the script."
+             exit 0
             ;;
         
         *)  # Invalid option

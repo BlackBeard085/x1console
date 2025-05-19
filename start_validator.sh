@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v20.0.0/bin:$PATH"
+
 # Script to start the tachyon validator
 
 # Path to the wallets.json file
