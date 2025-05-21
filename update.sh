@@ -1,8 +1,9 @@
 #!/bin/bash
 
-#export solana PATH
+#export solana node and cargo PATH
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 export PATH="$HOME/.nvm/versions/node/v20.0.0/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Script to update Solana CLI and the application
 

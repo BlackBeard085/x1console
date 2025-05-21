@@ -459,6 +459,7 @@ deactivate_stake() {
 
 # Function to display the menu
 show_menu() {
+    ./epoch_balances.sh
     echo "Please select an option:"
     echo "1. Activate Stake"
     echo "2. Deactivate Stake"
@@ -467,7 +468,8 @@ show_menu() {
     echo "5. Merge Stake"
     echo "6. Split Stake"
     echo "7. Repurpose Old Stake Account"
-    echo "8. Exit"
+    echo "8. Autostake"
+    echo "9. Exit"
 }
 
 # Function to pause and wait for user input
@@ -519,6 +521,9 @@ execute_option() {
             pause
             ;;
         8)
+           ./autostaker.sh
+           ;;
+        9)
             echo -e "\nExiting.\n"
             exit 0
             ;;
@@ -533,6 +538,6 @@ execute_option() {
 while true; do
     display_all_stake_info      # Display all stake account info at each loop
     show_menu
-    read -rp "Enter your choice [1-8]: " choice
+    read -rp "Enter your choice [1-9]: " choice
     execute_option "$choice"
 done

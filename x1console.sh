@@ -278,7 +278,8 @@ health_check() {
         echo -e "$STAKE_OUTPUT"
 
         if echo "$STAKE_OUTPUT" | grep -q "0 active stake"; then
-            echo -e "\n0 active stake found. Running activate stake..."
+            echo -e "\n0 active stake found. Restarting validator and activating stake..."
+            node "$HOME/x1console/restart.js"
             node "$HOME/x1console/activatestake.js"
 
             echo -e "\nChecking Epoch activation after activating stake..."
@@ -823,9 +824,16 @@ nvm install v20.0.0 > /dev/null 2>&1
 # Check for @solana/web3.js package
 check_npm_package "@solana/web3.js" > /dev/null 2>&1
 
+#local installation oackages
+sudo apt-get install -qq -y bc wget curl jq git build-essential tmux ufw
+
 # Print welcome message
 echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========AFTER FIRST INSTALL CLOSE YOUR TERMINAL WINDOW AND RELOGIN TO YOUR SERVER FOR ALL SYSTEM CHANGES TO TAKE EFFECT AND VALIDATOR STATUS TO UPDATE\n"
-
+echo ""
+echo "For further guidance on using the X1 Console features and functions please consult the README documents and video tutorials on the following links"
+echo "https://github.com/BlackBeard085/x1console"
+echo "https://www.youtube.com/@BlackBeardX1"
+echo ""
 # Interaction to execute install function or update, health check, or exit
 while true; do
     ./checkwithdrawer.sh

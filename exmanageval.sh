@@ -94,11 +94,6 @@ function delete_logs {
 
 # Main menu function
 function main_menu {
-    node newstatus.js
-    echo ""
-    node epoch.js
-    echo ""
-    ./slot_leader.sh
     echo -e "\nChoose an option:\n"
     echo "1. Start/Restart Validator"
     echo "2. Stop Validator"

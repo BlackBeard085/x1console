@@ -38,10 +38,23 @@ function fetchValidatorVersion(identity) {
             // Parse the output to extract version information
             const versionInfo = stdout.match(/\d+\.\d+\.\d+/); // Adjusted regex pattern to match version format
             if (versionInfo) {
-                resolve(`v${versionInfo[0]}`); // Return the version prefixed with 'v'
+                resolve(`v${versionInfo[0]}   `); // Return the version prefixed with 'v'
             } else {
                 resolve('N/A'); // Version info not found
             }
+        });
+    });
+}
+
+// Function to execute ./latency.sh and get its output
+function fetchLatencyScriptOutput() {
+    return new Promise((resolve, reject) => {
+        exec('./latency.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./latency.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim()); // Return the output trimmed
         });
     });
 }
@@ -185,11 +198,17 @@ async function fetchBlockProductionForLastEpochs() {
         
         // Fetch validator version
         const validatorVersion = await fetchValidatorVersion(identityAddress);
-        if (validatorVersion === 'N/A') {
-            console.error('Validator version not found.');
-        } else {
-            console.log(`${validatorVersion}`);
+
+        // Fetch latency script output
+        let latencyOutput = '';
+        try {
+            latencyOutput = await fetchLatencyScriptOutput();
+        } catch (latencyError) {
+            latencyOutput = 'Error fetching latency script';
         }
+
+        // Show version and latency output on the same line
+        process.stdout.write(`${validatorVersion} ${latencyOutput}\n`);
 
         // Prepare data for table formatting
         const tableRows = [];

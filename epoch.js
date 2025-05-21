@@ -59,6 +59,19 @@ function fetchLatencyScriptOutput() {
     });
 }
 
+// Function to execute ./epoch_remaining.sh and get its output
+function fetchEpochRemaining() {
+    return new Promise((resolve, reject) => {
+        exec('./epoch_remaining.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./epoch_remaining.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim()); // Return the output trimmed
+        });
+    });
+}
+
 function fetchCurrentEpoch() {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify({
@@ -193,6 +206,9 @@ async function fetchBlockProductionForLastEpochs() {
         const blockProduction = await fetchBlockProduction(identityAddress, firstSlotOfPreviousEpoch, lastSlotOfPreviousEpoch);
         blockProductions.push({ epoch: `Previous 5 Epochs`, data: blockProduction }); // Save data for previous epochs
 
+        // Fetch the output of ./epoch_remaining.sh
+        const epochRemainingOutput = await fetchEpochRemaining();
+
         // Log block production data for the last epochs
         console.log(`Performance metrics for Identity: ${identityAddress}`);
         
@@ -251,8 +267,8 @@ async function fetchBlockProductionForLastEpochs() {
             }
         }
 
-        // Print the table
-        console.log('\n| Epoch                | Assigned Slots | Skipped Slots | Percentage Skipped |');
+        // Print the table with dynamic header including epoch_remaining
+        console.log(`\n| Epoch  ${epochRemainingOutput} | Assigned Slots | Skipped Slots | Percentage Skipped |`);
         console.log('|----------------------|----------------|---------------|--------------------|');
         tableRows.forEach(row => {
             console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.assigned.toString().padEnd(14)} | ${row.skipped.toString().padEnd(13)} | ${row.percentage.toString().padEnd(18)} |`);
