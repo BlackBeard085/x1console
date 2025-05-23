@@ -824,6 +824,12 @@ nvm install v20.0.0 > /dev/null 2>&1
 # Check for @solana/web3.js package
 check_npm_package "@solana/web3.js" > /dev/null 2>&1
 
+#Install solana if not already installed
+if ! command -v solana &> /dev/null; then
+  sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" > /dev/null 2>&1
+  PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+fi
+
 #local installation oackages
 sudo apt-get install -qq -y bc wget curl jq git build-essential tmux ufw
 
