@@ -5,8 +5,12 @@ WALLET_DIR="$HOME/.config/solana"
 
 # Check if the directory exists
 if [ ! -d "$WALLET_DIR" ]; then
-    echo "The directory $WALLET_DIR does not exist."
-    exit 1
+    echo "The directory $WALLET_DIR does not exist. Creating it now."
+    mkdir -p "$WALLET_DIR"
+    if [ $? -ne 0 ]; then
+        echo "Failed to create directory $WALLET_DIR."
+        exit 1
+    fi
 fi
 
 # Function to display current wallets with their public addresses

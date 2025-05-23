@@ -13,7 +13,7 @@ get_total_stake() {
     # Run stakes command and parse all "Active Stake:" lines
     stakes_output=$(solana stakes "$vote_addr")
     # Sum all Active Stake amounts
-    sum=$(echo "$stakes_output" | grep "Active Stake:" | awk '{sum += $3} END {print sum}')
+    sum=$(echo "$stakes_output" | grep "Active Stake:" | awk '{sum += $3} END {printf "%.2f", sum}')
     echo "$sum"
 }
 
@@ -56,7 +56,7 @@ total_stake=$(get_total_stake "$vote_address")
 # Calculate total self delegated stake
 total_self_delegated=$(get_total_self_delegated)
 # Calculate delegated stake
-delegated_stake=$(awk "BEGIN {print $total_stake - $total_self_delegated}")
+delegated_stake=$(awk "BEGIN {printf \"%.2f\", $total_stake - $total_self_delegated}")
 
 # Format total stake and delegated stake for display
 # (formatted as per request)
