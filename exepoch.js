@@ -36,11 +36,11 @@ function fetchValidatorVersion(identity) {
             }
 
             // Parse the output to extract version information
-            const versionInfo = stdout.match(/\d+\.\d+\.\d+/); // Adjusted regex pattern to match version format
+            const versionInfo = stdout.match(/\d+\.\d+\.\d+/);
             if (versionInfo) {
-                resolve(`v${versionInfo[0]}   `); // Return the version prefixed with 'v'
+                resolve(`v${versionInfo[0]}   `);
             } else {
-                resolve('N/A'); // Version info not found
+                resolve('N/A');
             }
         });
     });
@@ -54,7 +54,59 @@ function fetchLatencyScriptOutput() {
                 reject(`Error executing ./latency.sh: ${stderr}`);
                 return;
             }
-            resolve(stdout.trim()); // Return the output trimmed
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./epoch_remaining.sh and get its output
+function fetchEpochRemaining() {
+    return new Promise((resolve, reject) => {
+        exec('./epoch_remaining.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./epoch_remaining.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./stakepercentage.sh and get its output
+function fetchStakePercentage() {
+    return new Promise((resolve, reject) => {
+        exec('./stakepercentage.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./stakepercentage.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./votesuccess.sh and get its output
+function fetchVoteSuccess() {
+    return new Promise((resolve, reject) => {
+        exec('./votesuccess.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./votesuccess.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./avgvotesuccess.sh and get its output
+function fetchAvgVoteSuccess() {
+    return new Promise((resolve, reject) => {
+        exec('./avgvotesuccess.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./avgvotesuccess.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
         });
     });
 }
@@ -115,7 +167,7 @@ function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
             params: [{
                 identity: walletAddress,
                 range: { firstSlot, lastSlot },
-                commitment: "confirmed" // Optional parameter for commitment
+                commitment: "confirmed"
             }]
         });
 
@@ -172,95 +224,116 @@ async function fetchBlockProductionForLastEpochs() {
         }
 
         const currentEpoch = currentEpochInfo.epoch;
-        const currentSlot = currentEpochInfo.absoluteSlot; // Get the current absolute slot
-        const slotIndex = currentEpochInfo.slotIndex; // Get the current slot index
+        const currentSlot = currentEpochInfo.absoluteSlot;
+        const slotIndex = currentEpochInfo.slotIndex;
 
         const blockProductions = [];
 
         // Fetch block production data for the current epoch
-        const firstSlotCurrentEpoch = currentSlot - slotIndex; // First slot of the current epoch
-        const lastSlotCurrentEpoch = currentSlot - 1; // Last slot of the current epoch
+        const firstSlotCurrentEpoch = currentSlot - slotIndex;
+        const lastSlotCurrentEpoch = currentSlot - 1;
 
         const currentEpochProduction = await fetchBlockProduction(identityAddress, firstSlotCurrentEpoch, lastSlotCurrentEpoch);
-        blockProductions.push({ epoch: "Current Epoch", data: currentEpochProduction }); // Save data for current epoch
+        blockProductions.push({ epoch: "Current Epoch", data: currentEpochProduction });
 
-        // Calculate first and last slots for previous epochs
-        const lastSlotOfCurrentEpoch = currentSlot - 1; // Last slot of current epoch
-        const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 2500 + 1; // First slot of the range for previous epochs
-        const lastSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1; // Last slot of the previous epoch
+        // Calculate previous epoch slot range
+        const lastSlotOfCurrentEpoch = currentSlot - 1;
+        const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 2500 + 1;
+        const lastSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1;
 
-        // Fetch block production data for the previous 5 epochs from 2500 slots back
+        // Fetch block production for previous 5 epochs range
         const blockProduction = await fetchBlockProduction(identityAddress, firstSlotOfPreviousEpoch, lastSlotOfPreviousEpoch);
-        blockProductions.push({ epoch: `Previous 5 Epochs`, data: blockProduction }); // Save data for previous epochs
+        blockProductions.push({ epoch: `Previous 5 Epochs`, data: blockProduction });
 
-        // Log block production data for the last epochs
+        // Fetch the output of ./epoch_remaining.sh
+        const epochRemainingOutput = await fetchEpochRemaining();
+
+        // Fetch the total stake percentage once
+        const totalStakePercent = await fetchStakePercentage();
+
+        // Fetch the vote success output once
+        const voteSuccessOutput = await fetchVoteSuccess();
+
+        // Fetch the avg vote success output once
+        const avgVoteSuccessOutput = await fetchAvgVoteSuccess();
+
+        // Log header info
         console.log(`Performance metrics for Identity: ${identityAddress}`);
-        
-        // Fetch validator version
         const validatorVersion = await fetchValidatorVersion(identityAddress);
-
-        // Fetch latency script output
         let latencyOutput = '';
         try {
             latencyOutput = await fetchLatencyScriptOutput();
         } catch (latencyError) {
             latencyOutput = 'Error fetching latency script';
         }
-
-        // Show version and latency output on the same line
         process.stdout.write(`${validatorVersion} ${latencyOutput}\n`);
 
-        // Prepare data for table formatting
+        // Prepare table rows
         const tableRows = [];
 
-        for (const entry of blockProductions) {
+        let showStakeInFirstRow = true; // Flag to only show in first row
+
+        for (const [index, entry] of blockProductions.entries()) {
             const { epoch, data } = entry;
 
             if (data && data.value && data.value.byIdentity) {
                 const identity = identityAddress;
 
-                // Unpack 'byIdentity' data
                 const productionData = data.value.byIdentity[identity];
 
                 let assignedLeaderSlots = 0;
                 let blocksProduced = 0;
                 let skippedSlots = 0;
-                let skippedPercentage = '0.00%';
+                let skippedPercentStr = '0.00%';
 
                 if (productionData && Array.isArray(productionData)) {
-                    assignedLeaderSlots = productionData[0] || 0; // First value
-                    blocksProduced = productionData[1] || 0;      // Second value
+                    assignedLeaderSlots = productionData[0] || 0;
+                    blocksProduced = productionData[1] || 0;
                     skippedSlots = assignedLeaderSlots - blocksProduced;
-                    skippedPercentage = assignedLeaderSlots > 0 ? ((skippedSlots / assignedLeaderSlots) * 100).toFixed(2) + '%' : '0.00%';
+                    skippedPercentStr = assignedLeaderSlots > 0 ? ((skippedSlots / assignedLeaderSlots) * 100).toFixed(2) + '%' : '0.00%';
                 }
 
-                // Push the results into the table format
+                // Formatted skipped slots / assigned slots (percentage)
+                const skippedDisplay = `${skippedSlots} / ${assignedLeaderSlots} (${skippedPercentStr})`;
+
+                // Show "Vote Success" only for first row
+                const voteSuccess = index === 0 ? voteSuccessOutput : index === 1 ? avgVoteSuccessOutput : '';
+
+                // Show "Total Stake" only in the first row
+                const totalStakeDisplay = showStakeInFirstRow ? totalStakePercent : '';
+
+                // After first row, set flag to false
+                if (showStakeInFirstRow) showStakeInFirstRow = false;
+
                 tableRows.push({
                     epoch: epoch === "Current Epoch" ? `Current ${currentEpoch}` : epoch,
-                    assigned: assignedLeaderSlots,
-                    skipped: skippedSlots,
-                    percentage: skippedPercentage
+                    skipped: skippedDisplay,
+                    voteSuccess: voteSuccess,
+                    totalStake: totalStakeDisplay
                 });
             } else {
+                // fallback if data missing
+                const totalStakeDisplay = showStakeInFirstRow ? totalStakePercent : '';
+                if (showStakeInFirstRow) showStakeInFirstRow = false;
                 tableRows.push({
                     epoch: entry.epoch,
-                    assigned: 0,
-                    skipped: 0,
-                    percentage: '0.00%'
+                    skipped: '0 / 0 (0.00%)',
+                    voteSuccess: '',
+                    totalStake: totalStakePercent
                 });
             }
         }
 
-        // Print the table
-        console.log('\n| Epoch                | Assigned Slots | Skipped Slots | Percentage Skipped |');
-        console.log('|----------------------|----------------|---------------|--------------------|');
+        // Print table with new "Vote Success" column
+        console.log(`\n| Epoch  ${epochRemainingOutput} | Skipped Slots (%) | Vote Success | Total Stake (%)    |`);
+        console.log('|----------------------|-------------------|--------------|--------------------|');
         tableRows.forEach(row => {
-            console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.assigned.toString().padEnd(14)} | ${row.skipped.toString().padEnd(13)} | ${row.percentage.toString().padEnd(18)} |`);
+            console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.skipped.padEnd(17)} | ${row.voteSuccess.toString().padEnd(12)} | ${row.totalStake.toString().padEnd(18)} |`);
         });
     } catch (error) {
         console.error('Error fetching epochs:', error.message);
     }
 }
 
-// Execute the function
+// Run the main function
 fetchBlockProductionForLastEpochs();

@@ -34,13 +34,11 @@ function fetchValidatorVersion(identity) {
                 reject(`Error executing command: ${stderr}`);
                 return;
             }
-
-            // Parse the output to extract version information
-            const versionInfo = stdout.match(/\d+\.\d+\.\d+/); // Adjusted regex pattern to match version format
+            const versionInfo = stdout.match(/\d+\.\d+\.\d+/);
             if (versionInfo) {
-                resolve(`v${versionInfo[0]}   `); // Return the version prefixed with 'v'
+                resolve(`v${versionInfo[0]}   `);
             } else {
-                resolve('N/A'); // Version info not found
+                resolve('N/A');
             }
         });
     });
@@ -54,7 +52,7 @@ function fetchLatencyScriptOutput() {
                 reject(`Error executing ./latency.sh: ${stderr}`);
                 return;
             }
-            resolve(stdout.trim()); // Return the output trimmed
+            resolve(stdout.trim());
         });
     });
 }
@@ -67,7 +65,46 @@ function fetchEpochRemaining() {
                 reject(`Error executing ./epoch_remaining.sh: ${stderr}`);
                 return;
             }
-            resolve(stdout.trim()); // Return the output trimmed
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./stakepercentage.sh and get its output
+function fetchStakePercentage() {
+    return new Promise((resolve, reject) => {
+        exec('./stakepercentage.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./stakepercentage.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./votesuccess.sh and get its output
+function fetchVoteSuccess() {
+    return new Promise((resolve, reject) => {
+        exec('./votesuccess.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./votesuccess.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
+        });
+    });
+}
+
+// Function to execute ./avgvotesuccess.sh and get its output
+function fetchAvgVoteSuccess() {
+    return new Promise((resolve, reject) => {
+        exec('./avgvotesuccess.sh', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Error executing ./avgvotesuccess.sh: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
         });
     });
 }
@@ -79,7 +116,6 @@ function fetchCurrentEpoch() {
             id: 1,
             method: 'getEpochInfo'
         });
-
         const options = {
             hostname: CLUSTER_URL.replace(/^https?:\/\//, ''),
             port: 443,
@@ -90,30 +126,19 @@ function fetchCurrentEpoch() {
                 'Content-Length': Buffer.byteLength(data)
             }
         };
-
         const req = https.request(options, (res) => {
             let responseData = '';
-
-            res.on('data', (chunk) => {
-                responseData += chunk;
-            });
-
+            res.on('data', (chunk) => { responseData += chunk; });
             res.on('end', () => {
                 try {
                     const jsonResponse = JSON.parse(responseData);
                     resolve(jsonResponse.result);
                 } catch (error) {
-                    console.error('Error parsing current epoch response:', error.message);
                     resolve(null);
                 }
             });
         });
-
-        req.on('error', (error) => {
-            console.error('Epoch data currently not available:', error.message);
-            reject(error);
-        });
-
+        req.on('error', () => { resolve(null); });
         req.write(data);
         req.end();
     });
@@ -128,10 +153,9 @@ function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
             params: [{
                 identity: walletAddress,
                 range: { firstSlot, lastSlot },
-                commitment: "confirmed" // Optional parameter for commitment
+                commitment: "confirmed"
             }]
         });
-
         const options = {
             hostname: CLUSTER_URL.replace(/^https?:\/\//, ''),
             port: 443,
@@ -142,141 +166,130 @@ function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
                 'Content-Length': Buffer.byteLength(data)
             }
         };
-
         const req = https.request(options, (res) => {
             let responseData = '';
-
-            res.on('data', (chunk) => {
-                responseData += chunk;
-            });
-
+            res.on('data', (chunk) => { responseData += chunk; });
             res.on('end', () => {
                 try {
                     const jsonResponse = JSON.parse(responseData);
                     resolve(jsonResponse.result || null);
                 } catch (error) {
-                    console.error('Error parsing block production response:', error.message);
                     resolve(null);
                 }
             });
         });
-
-        req.on('error', (error) => {
-            console.error('Error fetching block production:', error.message);
-            reject(error);
-        });
-
+        req.on('error', () => { resolve(null); });
         req.write(data);
         req.end();
     });
-}
-
-// Function to introduce a delay
-async function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function fetchBlockProductionForLastEpochs() {
     try {
         const currentEpochInfo = await fetchCurrentEpoch();
         if (!currentEpochInfo) {
-            console.error("Could not retrieve current epoch info.");
+            console.log('No data to show.');
             return;
         }
 
         const currentEpoch = currentEpochInfo.epoch;
-        const currentSlot = currentEpochInfo.absoluteSlot; // Get the current absolute slot
-        const slotIndex = currentEpochInfo.slotIndex; // Get the current slot index
+        const currentSlot = currentEpochInfo.absoluteSlot;
+        const slotIndex = currentEpochInfo.slotIndex;
 
         const blockProductions = [];
 
         // Fetch block production data for the current epoch
-        const firstSlotCurrentEpoch = currentSlot - slotIndex; // First slot of the current epoch
-        const lastSlotCurrentEpoch = currentSlot - 1; // Last slot of the current epoch
-
+        const firstSlotCurrentEpoch = currentSlot - slotIndex;
+        const lastSlotCurrentEpoch = currentSlot - 1;
         const currentEpochProduction = await fetchBlockProduction(identityAddress, firstSlotCurrentEpoch, lastSlotCurrentEpoch);
-        blockProductions.push({ epoch: "Current Epoch", data: currentEpochProduction }); // Save data for current epoch
+        if (!currentEpochProduction) {
+            console.log('No data to show.');
+            return;
+        }
+        blockProductions.push({ epoch: "Current Epoch", data: currentEpochProduction });
 
-        // Calculate first and last slots for previous epochs
-        const lastSlotOfCurrentEpoch = currentSlot - 1; // Last slot of current epoch
-        const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 2500 + 1; // First slot of the range for previous epochs
-        const lastSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1; // Last slot of the previous epoch
+        // Calculate previous epoch range
+        const lastSlotOfCurrentEpoch = currentSlot - 1;
+        const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 2500 + 1;
+        const lastSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1;
+        const prevEpochProduction = await fetchBlockProduction(identityAddress, firstSlotOfPreviousEpoch, lastSlotOfPreviousEpoch);
+        if (!prevEpochProduction) {
+            console.log('No data to show.');
+            return;
+        }
+        blockProductions.push({ epoch: `Previous 5 Epochs`, data: prevEpochProduction });
 
-        // Fetch block production data for the previous 5 epochs from 2500 slots back
-        const blockProduction = await fetchBlockProduction(identityAddress, firstSlotOfPreviousEpoch, lastSlotOfPreviousEpoch);
-        blockProductions.push({ epoch: `Previous 5 Epochs`, data: blockProduction }); // Save data for previous epochs
-
-        // Fetch the output of ./epoch_remaining.sh
+        // Fetch outputs
         const epochRemainingOutput = await fetchEpochRemaining();
+        const totalStakePercent = await fetchStakePercentage();
+        const voteSuccessOutput = await fetchVoteSuccess();
+        const avgVoteSuccessOutput = await fetchAvgVoteSuccess();
 
-        // Log block production data for the last epochs
+        // Log header info
         console.log(`Performance metrics for Identity: ${identityAddress}`);
-        
-        // Fetch validator version
         const validatorVersion = await fetchValidatorVersion(identityAddress);
-
-        // Fetch latency script output
         let latencyOutput = '';
         try {
             latencyOutput = await fetchLatencyScriptOutput();
-        } catch (latencyError) {
+        } catch {
             latencyOutput = 'Error fetching latency script';
         }
-
-        // Show version and latency output on the same line
         process.stdout.write(`${validatorVersion} ${latencyOutput}\n`);
 
-        // Prepare data for table formatting
-        const tableRows = [];
-
-        for (const entry of blockProductions) {
+        // Prepare table rows
+        const rows = [];
+        let showStakeInFirstRow = true;
+        for (const [index, entry] of blockProductions.entries()) {
             const { epoch, data } = entry;
-
             if (data && data.value && data.value.byIdentity) {
                 const identity = identityAddress;
+                const prodData = data.value.byIdentity[identity];
 
-                // Unpack 'byIdentity' data
-                const productionData = data.value.byIdentity[identity];
-
-                let assignedLeaderSlots = 0;
-                let blocksProduced = 0;
-                let skippedSlots = 0;
-                let skippedPercentage = '0.00%';
-
-                if (productionData && Array.isArray(productionData)) {
-                    assignedLeaderSlots = productionData[0] || 0; // First value
-                    blocksProduced = productionData[1] || 0;      // Second value
-                    skippedSlots = assignedLeaderSlots - blocksProduced;
-                    skippedPercentage = assignedLeaderSlots > 0 ? ((skippedSlots / assignedLeaderSlots) * 100).toFixed(2) + '%' : '0.00%';
+                let assignedSlots = 0, blocksProduced = 0;
+                if (prodData && Array.isArray(prodData)) {
+                    assignedSlots = prodData[0] || 0;
+                    blocksProduced = prodData[1] || 0;
                 }
+                const skippedSlots = assignedSlots - blocksProduced;
+                const skippedPercent = assignedSlots > 0 ? ((skippedSlots / assignedSlots) * 100).toFixed(2) + '%' : '0.00%';
+                const skippedDisplay = `${skippedSlots} / ${assignedSlots} (${skippedPercent})`;
 
-                // Push the results into the table format
-                tableRows.push({
+                const voteSuccess = index === 0 ? voteSuccessOutput : index === 1 ? avgVoteSuccessOutput : '';
+                const totalStake = showStakeInFirstRow ? totalStakePercent : '';
+                if (showStakeInFirstRow) showStakeInFirstRow = false;
+
+                rows.push({
                     epoch: epoch === "Current Epoch" ? `Current ${currentEpoch}` : epoch,
-                    assigned: assignedLeaderSlots,
-                    skipped: skippedSlots,
-                    percentage: skippedPercentage
+                    skipped: skippedDisplay,
+                    voteSuccess,
+                    totalStake
                 });
             } else {
-                tableRows.push({
+                const totalStake = showStakeInFirstRow ? totalStakePercent : '';
+                if (showStakeInFirstRow) showStakeInFirstRow = false;
+                rows.push({
                     epoch: entry.epoch,
-                    assigned: 0,
-                    skipped: 0,
-                    percentage: '0.00%'
+                    skipped: '0 / 0 (0.00%)',
+                    voteSuccess: '',
+                    totalStake
                 });
             }
         }
 
-        // Print the table with dynamic header including epoch_remaining
-        console.log(`\n| Epoch  ${epochRemainingOutput} | Assigned Slots | Skipped Slots | Percentage Skipped |`);
-        console.log('|----------------------|----------------|---------------|--------------------|');
-        tableRows.forEach(row => {
-            console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.assigned.toString().padEnd(14)} | ${row.skipped.toString().padEnd(13)} | ${row.percentage.toString().padEnd(18)} |`);
+        if (rows.length === 0) {
+            console.log('No data to show.');
+            return;
+        }
+
+        console.log(`\n| Epoch  ${epochRemainingOutput} | Skipped Slots (%) | Vote Success | Total Stake (%)    |`);
+        console.log('|----------------------|-------------------|--------------|--------------------|');
+        rows.forEach(row => {
+            console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.skipped.padEnd(17)} | ${row.voteSuccess.toString().padEnd(12)} | ${row.totalStake.toString().padEnd(18)} |`);
         });
-    } catch (error) {
-        console.error('Error fetching epochs:', error.message);
+    } catch {
+        console.log('No data to show.');
     }
 }
 
-// Execute the function
+// Run the main function
 fetchBlockProductionForLastEpochs();
