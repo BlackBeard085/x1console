@@ -25,7 +25,7 @@ check_tachyon_directory() {
         case $action in
             delete)
                 echo -e "\nDeleting $TACHYON_DIR..."
-                rm -rf "$TACHYON_DIR" && rm -rf $HOME/x1console/wallets.json && rm -rf $HOME/x1console/addressbook.json
+                rm -rf "$TACHYON_DIR"
                 echo -e "$TACHYON_DIR has been deleted.\n"
                 ;;
             archive)
@@ -81,8 +81,9 @@ install() {
         sudo cp "$HOME/x1/tachyon/target/release/tachyon-validator" /usr/local/bin
        export PATH=$PATH:~/x1/tachyon/target/release
        echo 'export PATH=$PATH:~/x1/tachyon/target/release' >> ~/.bashrc && source ~/.bashrc 
-       echo -e "\nCopying wallets.json to x1console directory..."
-        cp "$HOME/x1/tachyon/wallets.json" "$HOME/x1console"
+       echo -e "\nCopying wallets.json to tachyon directory..."
+       #cp "$HOME/x1/tachyon/wallets.json" "$HOME/x1console"
+        cp "$HOME/x1console/wallets.json" "$HOME/x1/tachyon/wallets.json"
 
         echo -e "\nIncreasing systemd and session file limits"
         ulimit -n 1000000
@@ -99,6 +100,15 @@ install() {
 	echo -e "\nRemoving old ledger if present."
 	rm -rf "$HOME/x1/ledger"
 
+        #Setup Passwordless Sudo for user
+        echo -e "\nSetting up Passwordless sudo configuration for user in /etc/sudoers.d/"
+        ./setup_passwordless_sudo.sh
+
+        #Running RAM disk and swap optimization
+        echo -e "\nOptimizing swap to 1 and creating tmpfs RAM disk"
+        sudo ./optimize.sh 
+        sudo ./optizations2.sh
+        ./add_reboot_cron.sh
         # New Addition: Attempt to execute 1ststake.js
         echo -e "\nAttempting to execute 1ststake.js..."
         if [ -f ./1ststake.js ]; then
@@ -119,12 +129,12 @@ install() {
         # Attempting to check stake activation epoch
         echo -e "\nAttempting to check validator status..."
         if [ -f ./activationepoch.sh ]; then
-            # Using spawn for executing 1strestart.js
+            # Using spawn for executing activationepoch.sh
             ./activationepoch.sh
             if [ $? -eq 0 ]; then
                 read -n 1 -s -r -p "stake status checked successfully.  If your validator status is still showing delinquent, please check logs for a slow snapshot download. Please wait for download to complete before confirming validator status and attempting validator restart.  Press any button to continue "
                 #echo -e "\nValidator status checked successfully."
-                # Run setpinger.js after restart is successful
+                # Run setpinger.js after stake activation is successful
                 if [ -f ./setpinger.js ]; then
                     echo -e "\nSetting up pinger..."
                     node ./setpinger.js
@@ -230,6 +240,9 @@ update_x1() {
 
 # Function to update the X1 console
 update_x1_console() {
+    echo -e "\nUpdating Packages.."
+    sudo apt install iputils-ping vnstat speedtest-cli bc fail2ban
+
     echo -e "\nStashing local changes..."
     git stash
 
@@ -265,11 +278,14 @@ health_check() {
         echo -e "$STAKE_OUTPUT"
 
         if echo "$STAKE_OUTPUT" | grep -q "0 active stake"; then
-            echo -e "\n0 active stake found. Running activate stake..."
+            echo -e "\n0 active stake found. Restarting validator and activating stake..."
+            node "$HOME/x1console/restart.js"
             node "$HOME/x1console/activatestake.js"
 
-            echo -e "\nAttempting restart after activating stake..."
-            node "$HOME/x1console/restart.js"
+            echo -e "\nChecking Epoch activation after activating stake..."
+            $HOME/x1console/./activationepoch.sh
+            echo -e "\nStake activated awaiting 30 seconds to sync"
+            sleep 30
         else
             echo -e "\nActive stake found. Attempting restart..."
             node "$HOME/x1console/restart.js"
@@ -496,6 +512,7 @@ set_commission() {
     node "$HOME/x1console/setwithdrawer.js"
 
     # Prompt user for the commission percentage
+    echo -e "\nCommission can only be changed in the first half of the epoch."
     read -p "What percent would you like to set your commission at? (0-100): " commission_percent
 
     # Validate the user input
@@ -530,9 +547,10 @@ other_options() {
         echo -e "4. Authority Manager"
         echo -e "5. Wallets Manager"
         echo -e "6. Pinger"
-        echo -e "7. Speed Test"
-        echo -e "8. Return to Main Menu"
-        read -p "Enter your choice [1-8]: " other_choice
+        echo -e "7. Server"
+        echo -e "8. Network"
+        echo -e "9. Return to Main Menu"
+        read -p "Enter your choice [1-9]: " other_choice
 
         case $other_choice in
             1)
@@ -550,7 +568,7 @@ other_options() {
             echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
             echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
             echo -e "\nexport PATH=\"$HOME/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-            echo -e "\nPLEASE LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
+            echo -e "\nIMPORTANT: PLEASE REBOOT YOUR SERVER FOR OPTIMIZED CHANGES TO TAKE EFFECTn"
            
             # Indicate that setup is complete
             echo -e "Setup is complete.\n"
@@ -612,30 +630,71 @@ other_options() {
                         echo -e "\nFailed to open Wallets Manager.\n"
                     fi
                 else
-                    echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
+                    echo -e "\nwalletsmanager.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
             6)  pinger
                 ;;
             7)
-                # Execute speedtest.sh when chosen
-                echo -e "\nExecuting speed test..."
-                if [ -f "$HOME/x1console/speedtest.sh" ]; then
-                    bash "$HOME/x1console/speedtest.sh"
-                    if [ $? -eq 0 ]; then
-                        echo -e "\nSpeed test completed successfully.\n"
+                echo -e "\nChoose a subcommand:"
+                echo -e "1. Security Manager"
+                echo -e "2. Performance Check"
+                read -p "Enter your choice [1-2]: " update_choice
+                case $update_choice in
+                    1)
+                        # Execute sshkeysetup.sh when chosen
+                        echo -e "\nOpening Server Security Manager"
+                        if [ -f "$HOME/x1console/sshkeysetup.sh" ]; then
+                        bash "$HOME/x1console/sshkeysetup.sh"
+                        if [ $? -eq 0 ]; then
+                            echo -e "\nServer Securoty configuration complete.\n"
+                        else
+                            echo -e "\nFailed to configure server.\n"
+                        fi
                     else
-                        echo -e "\nFailed to execute speed test.\n"
+                        echo -e "\nsetautopilot.sh does not exist. Please create it.\n"
                     fi
-                else
-                    echo -e "\nspeedtest.sh does not exist. Please create it in the x1console directory.\n"
-                fi
+                   ;;
+                    2)
+                       # Execute performance.sh when chosen
+                       sudo apt install iputils-ping vnstat speedtest-cli bc fail2ban sysstat
+		       echo -e "\nExecuting performance test..."
+                       if [ -f "$HOME/x1console/performance.sh" ]; then
+                             bash "$HOME/x1console/performance.sh"
+                             if [ $? -eq 0 ]; then
+                                  echo -e "\nPerformance test completed successfully.\n"
+                              else
+                                  echo -e "\nFailed to execute performance test.\n"
+                               fi
+                            else
+                                echo -e "\nperformance.sh does not exist. Please create it in x1console dirextory.\n"
+                           fi
+                       ;;
+                    *)
+                        echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
+                        ;;
+                esac
                 ;;
             8)
+                # Execute network.sh when chosen
+                echo -e "\nOpening Network Manager"
+                if [ -f "$HOME/x1console/network.sh" ]; then
+                    bash "$HOME/x1console/network.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\nNetwork Manager complete.\n"
+                    else
+                        echo -e "\nFailed to open Network Manager.\n"
+                    fi
+                else
+                    echo -e "\nnetwork.sh does not exist. Please create it in the x1console directory.\n"
+                fi
+                pause
+                ;;
+            9)
                 break
                 ;;
             *)
-                echo -e "\nInvalid choice. Please choose from 1 to 7.\n"
+                echo -e "\nInvalid choice. Please choose from 1 to 9.\n"
                 ;;
         esac
     done
@@ -765,14 +824,30 @@ nvm install v20.0.0 > /dev/null 2>&1
 # Check for @solana/web3.js package
 check_npm_package "@solana/web3.js" > /dev/null 2>&1
 
+#Install solana if not already installed
+if ! command -v solana &> /dev/null; then
+  sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" > /dev/null 2>&1
+  PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+fi
+
+#local installation oackages
+sudo apt-get install -qq -y bc wget curl jq git build-essential tmux ufw
+
 # Print welcome message
 echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========AFTER FIRST INSTALL CLOSE YOUR TERMINAL WINDOW AND RELOGIN TO YOUR SERVER FOR ALL SYSTEM CHANGES TO TAKE EFFECT AND VALIDATOR STATUS TO UPDATE\n"
-
+echo ""
+echo "For further guidance on using the X1 Console features and functions please consult the README documents and video tutorials on the following links"
+echo "https://github.com/BlackBeard085/x1console"
+echo "https://www.youtube.com/@BlackBeardX1"
+echo ""
 # Interaction to execute install function or update, health check, or exit
 while true; do
+    ./checkwithdrawer.sh
     node newstatus.js
     echo " "
+    node connectednetwork.js
     node epoch.js
+    ./scheduled_update.sh
     echo -e "\nChoose an option:"
     echo -e "1. Health Check and Start Validator"
     echo -e "2. Validator"

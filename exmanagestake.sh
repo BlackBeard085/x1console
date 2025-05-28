@@ -17,7 +17,7 @@ display_all_stake_info() {
     echo -e "\n--- Current Stake Account Info for All Stake Wallets ---"
     
     # Printing the table headers
-    printf "%-17s %-18s %-20s %-15s\n" "Wallet Name" "Balance" "Unstaked Balance" "Active Stake"
+    printf "%-20s %-15s %-20s %-15s\n" "Wallet Name" "Balance" "Unstaked Balance" "Active Stake"
     echo "---------------------------------------------------------------"
 
     # List all stake wallet files in ~/.config/solana/
@@ -53,7 +53,7 @@ display_all_stake_info() {
                 capitalized_name=$(echo "$wallet_name" | sed 's/^\(.\)/\U\1/')
 
                 # Printing the wallet information in formatted columns
-                printf "%-17s %-18s %-20s %-15s\n" "$capitalized_name" "$balance" "$unstaked_balance" "$active_stake"
+                printf "%-20s %-15s %-20s %-15s\n" "$capitalized_name" "$balance" "$unstaked_balance" "$active_stake"
                 
                 # Add the address to existing addresses
                 existing_addresses+=("$address")

@@ -187,6 +187,8 @@ update_x1() {
         git stash && git pull
 
         echo -e "\nCleaning up Cargo build..."
+        git fetch
+        git checkout dyn_fees_v2.2
         cargo clean
 
         echo -e "\nBuilding project in release mode..."
@@ -568,7 +570,7 @@ other_options() {
             echo -e "\nThese are your pubkeys for your validator wallets; the private keys are stored in the .config/solana directory; please keep them safe.\n"
             echo -e "If this was your first installation, please copy the following command and run it in your terminal to be able to run the CLI straight away:"
             echo -e "\nexport PATH=\"$HOME/.local/share/solana/install/active_release/bin:\$PATH\"\n"
-            echo -e "\nPLEASE LOG OUT AND BACK IN TO YOUR SERVER FOR CHANGES TO TAKE EFFECTn"
+            echo -e "\nIMPORTANT: PLEASE REBOOT YOUR SERVER FOR OPTIMIZED CHANGES TO TAKE EFFECTn"
            
             # Indicate that setup is complete
             echo -e "Setup is complete.\n"
@@ -834,12 +836,15 @@ fi
 sudo apt-get install -qq -y bc wget curl jq git build-essential tmux ufw
 
 # Print welcome message
-echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER==========AFTER FIRST INSTALL CLOSE YOUR TERMINAL WINDOW AND RELOGIN TO YOUR SERVER FOR ALL SYSTEM CHANGES TO TAKE EFFECT AND VALIDATOR STATUS TO UPDATE\n"
+echo -e "\nAHOY MI HEARTIES, WELCOME TO X1'S THE BLACK PEARL - THE INTERACTIVE, AUTOMATED X1 VALIDATOR MANAGER! YOUR DELEGATIONS ARE MUCH APPRECIATED! ==============FOR FIRST TIME USER NAVIGATE TO OTHER MENU, OPTION 10, THEN OPTION 1. INSTALL, START X1 AND PINGER"
+echo -e "=====IMPORTANT=====AFTER FIRST INSTALL REBOOT YOUR SERVER AND RELOGIN FOR ALL SYSTEM CHANGES TO TAKE EFFECT AND VALIDATOR STATUS TO UPDATE\n"
 echo ""
 echo "For further guidance on using the X1 Console features and functions please consult the README documents and video tutorials on the following links"
 echo "https://github.com/BlackBeard085/x1console"
 echo "https://www.youtube.com/@BlackBeardX1"
 echo ""
+
+pause 
 # Interaction to execute install function or update, health check, or exit
 while true; do
     ./checkwithdrawer.sh

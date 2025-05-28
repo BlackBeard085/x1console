@@ -124,6 +124,7 @@ function withdraw_from_identity() {
 
 # Main menu loop
 while true; do
+    ./epoch_balances.sh
     echo "What would you like to do?"
     echo "1. Withdraw Stake"
     echo "2. Withdraw from Vote account"

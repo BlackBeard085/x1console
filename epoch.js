@@ -188,7 +188,7 @@ async function fetchBlockProductionForLastEpochs() {
     try {
         const currentEpochInfo = await fetchCurrentEpoch();
         if (!currentEpochInfo) {
-            console.log('No data to show.');
+            console.log('Limited/No data to show.');
             return;
         }
 
@@ -252,7 +252,7 @@ async function fetchBlockProductionForLastEpochs() {
                 }
                 const skippedSlots = assignedSlots - blocksProduced;
                 const skippedPercent = assignedSlots > 0 ? ((skippedSlots / assignedSlots) * 100).toFixed(2) + '%' : '0.00%';
-                const skippedDisplay = `${skippedSlots} / ${assignedSlots} (${skippedPercent})`;
+                const skippedDisplay = `${skippedSlots}/${assignedSlots} (${skippedPercent})`;
 
                 const voteSuccess = index === 0 ? voteSuccessOutput : index === 1 ? avgVoteSuccessOutput : '';
                 const totalStake = showStakeInFirstRow ? totalStakePercent : '';
@@ -277,17 +277,17 @@ async function fetchBlockProductionForLastEpochs() {
         }
 
         if (rows.length === 0) {
-            console.log('No data to show.');
+            console.log('Limited/No data to show.');
             return;
         }
 
-        console.log(`\n| Epoch  ${epochRemainingOutput} | Skipped Slots (%) | Vote Success | Total Stake (%)    |`);
-        console.log('|----------------------|-------------------|--------------|--------------------|');
+        console.log(`\n| Epoch  ${epochRemainingOutput} | Skipped Slots   | Vote Success | Total Stake (%)      |`);
+        console.log('|----------------------|-----------------|--------------|----------------------|');
         rows.forEach(row => {
-            console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.skipped.padEnd(17)} | ${row.voteSuccess.toString().padEnd(12)} | ${row.totalStake.toString().padEnd(18)} |`);
+            console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.skipped.padEnd(15)} | ${row.voteSuccess.toString().padEnd(12)} | ${row.totalStake.toString().padEnd(20)} |`);
         });
     } catch {
-        console.log('No data to show.');
+        console.log('Limited/No data to show.');
     }
 }
 

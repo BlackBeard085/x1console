@@ -36,28 +36,6 @@ get_total_self_delegated() {
     echo "$total_self"
 }
 
-# Function to get total unstaked balance by summing 'Balance' from all stake accounts
-get_total_unstaked_balance() {
-    local total_balance=0
-    # Read all stake addresses from allstakes.json
-    addresses=$(jq -r '.[] | select(.name=="Stake" or .name=="Stake1") | .address' allstakes.json)
-    for addr in $addresses; do
-        # For each stake account, get "Balance" amount
-        stake_output=$(solana stake-account "$addr")
-        balance_line=$(echo "$stake_output" | grep "Balance:")
-        if [ -n "$balance_line" ]; then
-            # Extract the balance amount
-            amount=$(echo "$balance_line" | awk '{print $2}')
-            # Sum up
-            total_balance=$(awk "BEGIN {print $total_balance + $amount}")
-        fi
-    done
-    # Compute unstaked balance as total balance minus total self delegated stake
-    total_self=$(get_total_self_delegated)
-    unstaked=$(awk "BEGIN {print $total_balance - $total_self}")
-    echo "$unstaked"
-}
-
 # Read wallet addresses from wallets.json
 id_address=$(jq -r '.[] | select(.name=="Id") | .address' wallets.json)
 identity_address=$(jq -r '.[] | select(.name=="Identity") | .address' wallets.json)
@@ -80,17 +58,13 @@ total_self_delegated=$(get_total_self_delegated)
 # Calculate delegated stake
 delegated_stake=$(awk "BEGIN {printf \"%.2f\", $total_stake - $total_self_delegated}")
 
-# Calculate total unstaked balance
-total_unstaked=$(get_total_unstaked_balance)
-
 # Format total stake and delegated stake for display
 # (formatted as per request)
 # Output
-echo -e "Total Stake: $total_stake | Delegated Stake: $delegated_stake | Self Stake: $total_self_delegated"
-#echo "Total Unstaked Balance: $total_unstaked"
+echo -e "Total Stake: $total_stake | Delegated Stake: $delegated_stake | Self Stake $total_self_delegated"
 echo "Epoch: $epoch | Remaining Time: $remaining_time"
 echo ""
 echo "Balances:"
 echo "Id: $id_balance  |  Identity: $identity_balance  |  Vote: $vote_balance"
-echo "Total Unstaked Balance: $total_unstaked"
 echo ""
+
