@@ -83,18 +83,22 @@ function runCatchup(callback, timeoutDuration = 20000) {
             });
             console.log('Validator stopped.');
             // Wait a bit after stopping the validator
+            console.log('');
             console.log('Waiting 10 seconds before starting the validator...');
             await new Promise(res => setTimeout(res, 10000));
         } else {
             console.log('Validator is not currently running. Proceeding to start it.');
+            console.log('');
         }
 
         console.log('Starting the validator now...');
+        console.log('');
         exec(`${startCommand}`, { stdio: 'ignore' }, (error) => {
             if (error) {
                 console.error(`Error starting validator: ${error.message}`);
             } else {
                 console.log('Validator start command issued.');
+                console.log('');
             }
         });
 
@@ -108,9 +112,11 @@ function runCatchup(callback, timeoutDuration = 20000) {
             const isRunning = await isValidatorRunning();
 
             if (isRunning) {
+                console.log('');
                 console.log('Validator started successfully and is running on port 8899.');
 
                 console.log('allowing time for snapshot download to complete..');
+                console.log('');
                 await new Promise(res => setTimeout(res, 40000));
 
                 // Countdown for 10 seconds before running the catchup command
@@ -131,6 +137,7 @@ function runCatchup(callback, timeoutDuration = 20000) {
                     // Check if the validator is still running before attempting catchup
                     const isStillRunning = await isValidatorRunning();
                     if (!isStillRunning) {
+                        console.log('');
                         console.log('Validator has stopped running. Please check logs for errors and report them to the team. Remove ledger and start validator again.');
                         break; // Exit the loop if the validator is not running
                     }

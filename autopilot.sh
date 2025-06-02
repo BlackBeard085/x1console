@@ -9,6 +9,36 @@ RESTART_COUNT_LOG="$HOME/x1console/restart_count.log"
 TIMESTAMP_FILE="$HOME/x1console/last_reset_timestamp.txt"
 RESTART_TIMES_LOG="$HOME/x1console/restart_times.log"
 
+# Read token and chat ID
+#TOKEN=$(cat "$HOME/x1console/telegram_token.txt")
+#CHAT_ID=$(cat "$HOME/x1console/chat_id.txt")
+
+# Define paths
+TOKEN_FILE="$HOME/x1console/telegram_token.txt"
+CHAT_ID_FILE="$HOME/x1console/chat_id.txt"
+
+# Check if token file exists before reading
+if [ -f "$TOKEN_FILE" ]; then
+    # Read token and chat ID
+    TOKEN=$(cat "$TOKEN_FILE")
+    CHAT_ID=$(cat "$CHAT_ID_FILE")
+
+    # Define function after confirming files exist
+
+send_telegram_message() {
+    local message="$1"
+    curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
+        -d chat_id="$CHAT_ID" \
+        -d text="$message" \
+        -d parse_mode="Markdown"
+}
+
+else
+    # Token file does not exist; define an empty function or skip sending
+    send_telegram_message() {
+        echo "Telegram token not found. No message sent."
+    }
+fi
 # Function to reset logs
 reset_logs() {
     echo "0" > "$RESTART_COUNT_LOG"
@@ -42,7 +72,8 @@ echo -e "$HEALTH_OUTPUT"
 
 if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     echo -e "\nWARNING issued in health check."
-
+    BALANCE_OUTPUT=$($HOME/x1console/epoch_balances.sh)
+    send_telegram_message "$(echo -e "⚠️ Warning: Validator status delinquent. Restarting with Autopilot. \n\n$BALANCE_OUTPUT")"
     # Log the time of the warning
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Validator status Delinquent - Restarted with Autopilot" >> "$RESTART_TIMES_LOG"
 
@@ -69,15 +100,22 @@ if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
 
     if echo "$STAKE_OUTPUT" | grep -q "0 active stake"; then
         echo -e "\n0 active stake found. Running activate stake..."
-        node "$HOME/x1console/activatestake.js"
-
+        #node "$HOME/x1console/activatestake.js"
+        ACTIVATE_OUTPUT=$(node "$HOME/x1console/activatestake.js")
+        send_telegram_message "$(echo -e "Restart outcome:\n\n$ACTIVATE_OUTPUT")"
        #echo -e "\nAttempting restart after activating stake..."
         #node "$HOME/x1console/restart.js"
     else
         echo -e "\nActive stake found. Attempting restart..."
-        node "$HOME/x1console/restart.js"
+        #node "$HOME/x1console/restart.js"
+        RESTART_OUTPUT=$(node "$HOME/x1console/restart.js")
+        send_telegram_message "$(echo -e "Restart outcome:\n\n$RESTART_OUTPUT")"
     fi
 else
     echo -e "\nNo WARNING issued in health check. Exiting.\n"
+    BALANCE_OUTPUT=$($HOME/x1console/epoch_balances.sh)
+    send_telegram_message "$(echo -e "\U0001F7E2 Validator Active - No action required \n\n$BALANCE_OUTPUT")"
+    #send_telegram_message "✅ Validator Active - No action required \n $BALANCE_OUTPUT"
+    
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Validator status Active - No Action taken" >> "$RESTART_TIMES_LOG"
 fi

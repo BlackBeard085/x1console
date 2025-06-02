@@ -114,9 +114,9 @@ install() {
         if [ -f ./1ststake.js ]; then
             node ./1ststake.js
             if [ $? -eq 0 ]; then
-                echo -e "\nfirst stake executed successfully.\n"
+                echo -e "\n"
             else
-                echo -e "\nFailed to execute 1ststake.js.\n"
+                echo -e "\n"
             fi
         else
             echo -e "\n1ststake.js does not exist. Please create it in the directory.\n"
@@ -140,6 +140,7 @@ install() {
                     node ./setpinger.js
                     if [ $? -eq 0 ]; then
                         echo -e "\nPinger set up successfully.\n"
+                        pause
                     else
                         echo -e "\nFailed to set up pinger.\n"
                     fi
@@ -147,10 +148,10 @@ install() {
                     echo -e "\nsetpinger.js does not exist. Please create it in the directory.\n"
                 fi
             else
-                echo -e "\nFailed to restart the validator.\n"
+                echo -e "\nFailed to check the validator.\n"
             fi
         else
-            echo -e "\nrestart.js does not exist. Please create it.\n"
+            echo -e "\nactivationepoch.sh does not exist. Please create it.\n"
         fi
     else
         echo -e "\ninstall_run.sh does not exist. Please create it.\n"
@@ -227,10 +228,10 @@ update_x1() {
         node "$HOME/x1console/setpinger.js"
         node "$HOME/x1console/restart.js"
         if [ $? -eq 0 ]; then
-            echo -e "\nRestart executed successfully.\n"
+            echo -e "\n"
             cd ~/x1console
         else
-            echo -e "\nFailed to restart.\n"
+            echo -e "\n"
             cd ~/x1console
         fi
     else
@@ -551,8 +552,9 @@ other_options() {
         echo -e "6. Pinger"
         echo -e "7. Server"
         echo -e "8. Network"
-        echo -e "9. Return to Main Menu"
-        read -p "Enter your choice [1-9]: " other_choice
+        echo -e "9. Set up Telegram Bot"
+        echo -e "10. Return to Main Menu"
+        read -p "Enter your choice [1-10]: " other_choice
 
         case $other_choice in
             1)
@@ -649,7 +651,7 @@ other_options() {
                         if [ -f "$HOME/x1console/sshkeysetup.sh" ]; then
                         bash "$HOME/x1console/sshkeysetup.sh"
                         if [ $? -eq 0 ]; then
-                            echo -e "\nServer Securoty configuration complete.\n"
+                            echo -e "\nServer Security configuration complete.\n"
                         else
                             echo -e "\nFailed to configure server.\n"
                         fi
@@ -692,11 +694,26 @@ other_options() {
                 fi
                 pause
                 ;;
-            9)
+             9)                # Execute setup_telegram.sh when chosen
+                echo -e "\nStarting Telegram Setup"
+                if [ -f "$HOME/x1console/setup_telegram.sh" ]; then
+                    bash "$HOME/x1console/setup_telegram.sh"
+                    if [ $? -eq 0 ]; then
+                        echo -e "\n"
+                        pause
+                    else
+                        echo -e "\nFailed to integrate Telegram.\n"
+                        pause
+                    fi
+                else
+                    echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
+                fi
+                ;;
+            10)
                 break
                 ;;
             *)
-                echo -e "\nInvalid choice. Please choose from 1 to 9.\n"
+                echo -e "\nInvalid choice. Please choose from 1 to 10.\n"
                 ;;
         esac
     done

@@ -13,3 +13,5 @@ validator_update.log
 update_pause_time.txt
 autostaker.log
 autopinger.log
+telegram_token.txt
+chat_id.txt

@@ -3,7 +3,7 @@
 # --- Configuration ---
 MOUNT_POINT="/run/accounts"
 TMPFS_SIZE="14G"
-FSTAB_ENTRY="tmpfs   $MOUNT_POINT   tmpfs   defaults,size=$TMPFS_SIZE,mode=1777   0   0"
+FSTAB_ENTRY="tmpfs   $MOUNT_POINT   tmpfs   defaults,size=$TMPFS_SIZE,mode=777   0   0"
 FSTAB_FILE="/etc/fstab"
 
 # --- Check current swappiness ---
@@ -44,8 +44,8 @@ if [ ! -d "$MOUNT_POINT" ]; then
     echo "Creating mount point directory: $MOUNT_POINT"
     if mkdir -p "$MOUNT_POINT"; then
         echo "Directory created successfully."
-        # Set permissions to 1777 (sticky bit with full permissions)
-        chmod 1777 "$MOUNT_POINT"
+        # Set permissions to 777 (sticky bit with full permissions)
+        chmod 777 "$MOUNT_POINT"
     else
         echo "Error: Failed to create directory $MOUNT_POINT. Exiting."
         exit 1
@@ -53,7 +53,7 @@ if [ ! -d "$MOUNT_POINT" ]; then
 else
     echo "Mount point directory '$MOUNT_POINT' already exists."
     # Ensure permissions are set correctly on existing directory
-    chmod 1777 "$MOUNT_POINT"
+    chmod 777 "$MOUNT_POINT"
 fi
 
 # --- Step 2: Unmount if already mounted ---
@@ -91,7 +91,7 @@ echo "Mounting all filesystems..."
 if mount -a; then
     echo "Mount operation successful."
     # Ensure permissions are set correctly after mount
-    chmod 1777 "$MOUNT_POINT"
+    chmod 777 "$MOUNT_POINT"
 else
     echo "Warning: 'mount -a' failed. Please check your /etc/fstab for errors."
 fi

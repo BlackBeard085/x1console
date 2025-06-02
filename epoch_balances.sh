@@ -24,7 +24,7 @@ get_total_self_delegated() {
     addresses=$(jq -r '.[] | select(.name=="Stake" or .name=="Stake1") | .address' allstakes.json)
     for addr in $addresses; do
         # For each stake account, get "Active Stake" amount
-        stake_output=$(solana stake-account "$addr")
+        stake_output=$(solana stake-account "$addr" 2>/dev/null)
         active_stake_line=$(echo "$stake_output" | grep "Active Stake:")
         if [ -n "$active_stake_line" ]; then
             # Extract the active stake amount
@@ -43,7 +43,7 @@ get_total_unstaked_balance() {
     addresses=$(jq -r '.[] | select(.name=="Stake" or .name=="Stake1") | .address' allstakes.json)
     for addr in $addresses; do
         # For each stake account, get "Balance" amount
-        stake_output=$(solana stake-account "$addr")
+        stake_output=$(solana stake-account "$addr" 2>/dev/null)
         balance_line=$(echo "$stake_output" | grep "Balance:")
         if [ -n "$balance_line" ]; then
             # Extract the balance amount

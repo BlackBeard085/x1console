@@ -18,7 +18,7 @@ echo -e "\nUpdating package index..."
 sudo apt update && sudo apt upgrade || error_exit "Failed to update package index."
 sudo apt-get install bc || error_exit "Failed to install bc."
 sudo apt install fail2ban || error_exit "Failed to install fail2ban"
-sudo apt install iputils-ping vnstat speedtest-cli bc || error_exit "Failed to install fail2ban"
+sudo apt install lsof iputils-ping vnstat speedtest-cli bc || error_exit "Failed to install fail2ban"
 
 # Install logrotate
 echo -e "\nInstalling logrotate..."
@@ -214,7 +214,7 @@ id_address=$(solana-keygen pubkey "$SOLANA_DIR/id.json")
 
 # Funding instructions
 echo -e "\nYou will find your seed phrases for all four wallets above please back them up and follow instructions below"
-echo -e "\nBefore proceeding, you need to manually fund your id wallet using the faucet link and complete the CAPTCHA or transfer funds to the id wallet by other means."
+echo -e "\nBefore proceeding, you need to manually fund your id wallet with a minimum of 5 XNT using the faucet link and complete the CAPTCHA or transfer funds to the id wallet by other means."
 echo -e "\n$id_address, this is your id wallet address"
 echo -e "https://xolana.xen.network/faucet - this is the link to the faucet\n"
 

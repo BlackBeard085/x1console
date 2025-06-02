@@ -25,6 +25,29 @@ log() {
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 export PATH="$HOME/.nvm/versions/node/v20.0.0/bin:$PATH"
 
+# Define paths
+TOKEN_FILE="$HOME/x1console/telegram_token.txt"
+CHAT_ID_FILE="$HOME/x1console/chat_id.txt"
+# Check if token file exists before reading
+if [ -f "$TOKEN_FILE" ]; then
+    # Read token and chat ID
+    TOKEN=$(cat "$TOKEN_FILE")
+    CHAT_ID=$(cat "$CHAT_ID_FILE")
+    # Define function after confirming files exist
+send_telegram_message() {
+    local message="$1"
+    curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
+        -d chat_id="$CHAT_ID" \
+        -d text="$message" \
+        -d parse_mode="Markdown"
+}
+else
+    # Token file does not exist; define an empty function or skip sending
+    send_telegram_message() {
+        echo "Telegram token not found. No message sent."
+    }
+fi
+
 # Directory containing stake files
 STAKE_DIR="$HOME/.config/solana"
 # Main stake file
@@ -200,3 +223,6 @@ if [ -n "$created_stake_account" ]; then
 fi
 
 log "Auto-staker execution completed."
+    sleep 2
+    BALANCE_OUTPUT=$($HOME/x1console/epoch_balances.sh)
+    send_telegram_message "$(echo -e "\U0001F535 Auto-staker executed. \n\n$BALANCE_OUTPUT")"
