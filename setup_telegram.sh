@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define your directory
-DIR="/home/BlackBeard/x1console"
+DIR="$HOME/x1console"
 
 # Ask if you have sent a message to the bot
 echo -n "Have you sent a message to the Telegram bot you wish to connect to? (y/n): "
