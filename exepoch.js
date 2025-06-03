@@ -26,6 +26,11 @@ if (!identityAddress) {
     process.exit(1);
 }
 
+// Function to print the header before data collection
+function printPerformanceMetricsHeader() {
+    console.log(`Performance metrics for Identity: ${identityAddress}`);
+}
+
 // Function to fetch the validator version using the shell command
 function fetchValidatorVersion(identity) {
     return new Promise((resolve, reject) => {
@@ -225,8 +230,10 @@ async function fetchBlockProductionForLastEpochs() {
         const voteSuccessOutput = await fetchVoteSuccess();
         const avgVoteSuccessOutput = await fetchAvgVoteSuccess();
 
+        // *** REMOVE THIS LINE: ***
+        // printPerformanceMetricsHeader();
+
         // Log header info
-        console.log(`Performance metrics for Identity: ${identityAddress}`);
         const validatorVersion = await fetchValidatorVersion(identityAddress);
         let latencyOutput = '';
         try {
@@ -291,5 +298,6 @@ async function fetchBlockProductionForLastEpochs() {
     }
 }
 
-// Run the main function
+// *** Call the header once before starting data fetch ***
+printPerformanceMetricsHeader();
 fetchBlockProductionForLastEpochs();

@@ -10,10 +10,11 @@ const restartCountFilePath = path.join(process.env.HOME, 'x1console', 'restart_c
 // Variables to store cronjob presence
 let isAutostakerActive = false;
 let isAutopingerActive = false;
+let isAutoupdaterActive = false;
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.30  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.37  -  The BlackPearl by BlackBeard_85');
 }
 
 // Check for specific cronjobs
@@ -23,6 +24,7 @@ function checkCronJobs() {
             // Likely no crontab exists or error, assume none
             isAutostakerActive = false;
             isAutopingerActive = false;
+            isAutoupdaterActive = false;
             return;
         }
         // Search for the specific autostaker cron line
@@ -34,6 +36,11 @@ function checkCronJobs() {
         const autopingerLine = '0 * * * * cd ~/x1console/ && ./autopinger.sh';
         if (stdout.includes(autopingerLine)) {
             isAutopingerActive = true;
+        }
+        // Search for the specific autoupdater cron line
+        const autoupdaterLine = '0 * * * * cd ~/x1console/ && ./autoupdater.sh';
+        if (stdout.includes(autoupdaterLine)) {
+            isAutoupdaterActive = true;
         }
     });
 }
@@ -72,7 +79,7 @@ function checkValidatorStatus() {
         }
 
         if (stderr) {
-            console.error(`Error in health.js: ${stderr}`);
+            console.error(`${stderr}`);
             return;
         }
 
@@ -104,12 +111,16 @@ function checkValidatorStatus() {
 
                     // Append 'Auto-staker active' if applicable
                     if (isAutostakerActive) {
-                        autopilotOutput += `\n                      Auto-staker active`;
+                        autopilotOutput += `\nAuto-staker active`;
                     }
 
                     // Append 'Auto-pinger active' if applicable
                     if (isAutopingerActive) {
-                        autopilotOutput += `\n                      Auto-pinger active`;
+                        autopilotOutput += `\           Auto-pinger active`;
+                    }
+                    // Append 'Auto-pinger active' if applicable
+                    if (isAutoupdaterActive) {
+                        autopilotOutput += `\           Auto-updater active`;
                     }
                 }
 

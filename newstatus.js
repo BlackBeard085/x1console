@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const util = require('util');
+
+const execAsync = util.promisify(exec);
+const statAsync = util.promisify(fs.stat);
+const readFileAsync = util.promisify(fs.readFile);
 
 const logFilePath = path.join(process.env.HOME, 'x1', 'log.txt');
 const autoConfigFilePath = path.join(process.env.HOME, 'x1console', 'autoconfig'); // Path to the autoconfig file
@@ -14,19 +19,14 @@ let isAutoupdaterActive = false;
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.37  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.38  -  The BlackPearl by BlackBeard_85');
 }
 
-// Check for specific cronjobs
-function checkCronJobs() {
-    exec('crontab -l', (error, stdout, stderr) => {
-        if (error) {
-            // Likely no crontab exists or error, assume none
-            isAutostakerActive = false;
-            isAutopingerActive = false;
-            isAutoupdaterActive = false;
-            return;
-        }
+// Asynchronous function to check for specific cronjobs
+async function checkCronJobs() {
+    try {
+        const { stdout } = await execAsync('crontab -l');
+
         // Search for the specific autostaker cron line
         const autostakerLine = '0 18 * * 1,3,6 cd ~/x1console/ && ./autostaker.sh';
         if (stdout.includes(autostakerLine)) {
@@ -42,18 +42,18 @@ function checkCronJobs() {
         if (stdout.includes(autoupdaterLine)) {
             isAutoupdaterActive = true;
         }
-    });
+    } catch (error) {
+        // Likely no crontab exists or error, assume none
+        isAutostakerActive = false;
+        isAutopingerActive = false;
+        isAutoupdaterActive = false;
+    }
 }
 
-// Function to check if the log file is being modified
-function checkLogFileModification() {
-    fs.stat(logFilePath, (err, stats) => {
-        if (err) {
-            console.log('Active Status will show once Validator starts');
-            checkValidatorStatus();
-            return;
-        }
-
+// Asynchronous function to check if the log file is being modified
+async function checkLogFileModification() {
+    try {
+        const stats = await statAsync(logFilePath);
         const currentTime = Date.now();
         const fileModifiedTime = new Date(stats.mtime).getTime();
         const hasBeenModifiedRecently = (currentTime - fileModifiedTime < 3000); // 3 seconds threshold
@@ -63,27 +63,21 @@ function checkLogFileModification() {
         } else {
             console.log('- Logs: Stopped');
         }
-
-        // Proceed to check validator status
-        checkValidatorStatus();
-    });
+    } catch (err) {
+        console.log('Active Status will show once Validator starts');
+    }
 }
 
-// Function to check validator status
-function checkValidatorStatus() {
-    // Execute the health.js script
-    exec('node health.js', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing health.js: ${error.message}`);
-            return;
-        }
+// Asynchronous function to check validator/system status
+async function checkValidatorStatus() {
+    try {
+        const { stdout, stderr } = await execAsync('node health.js');
 
         if (stderr) {
             console.error(`${stderr}`);
             return;
         }
 
-        // Parse output for status
         const lines = stdout.split('\n');
         for (let line of lines) {
             if (line.includes('- Status:')) {
@@ -93,7 +87,7 @@ function checkValidatorStatus() {
                 // Read autoconfig content
                 let autoConfigContent = '-';
                 try {
-                    autoConfigContent = fs.readFileSync(autoConfigFilePath, 'utf8').trim();
+                    autoConfigContent = (await readFileAsync(autoConfigFilePath, 'utf8')).trim();
                 } catch (err) {
                     // Use default if error
                 }
@@ -103,7 +97,7 @@ function checkValidatorStatus() {
                     // Read restart count
                     let restartCountContent = '-';
                     try {
-                        restartCountContent = fs.readFileSync(restartCountFilePath, 'utf8').trim();
+                        restartCountContent = (await readFileAsync(restartCountFilePath, 'utf8')).trim();
                     } catch (err) {
                         // default
                     }
@@ -118,7 +112,7 @@ function checkValidatorStatus() {
                     if (isAutopingerActive) {
                         autopilotOutput += `\           Auto-pinger active`;
                     }
-                    // Append 'Auto-pinger active' if applicable
+                    // Append 'Auto-updater active' if applicable
                     if (isAutoupdaterActive) {
                         autopilotOutput += `\           Auto-updater active`;
                     }
@@ -128,7 +122,7 @@ function checkValidatorStatus() {
 
                 // Read and output withdrawer config
                 try {
-                    const withdrawerConfigContent = fs.readFileSync(withdrawerConfigFilePath, 'utf8');
+                    const withdrawerConfigContent = await readFileAsync(withdrawerConfigFilePath, 'utf8');
                     const withdrawerConfig = JSON.parse(withdrawerConfigContent);
                     const currentWithdrawer = withdrawerConfig.keypairPath;
                     console.log(`- Current set Withdrawer: ${currentWithdrawer}`);
@@ -138,14 +132,22 @@ function checkValidatorStatus() {
                 break; // exit loop after output
             }
         }
-    });
+    } catch (err) {
+        console.error(`Error executing health.js: ${err.message}`);
+    }
 }
 
 // Main execution
-printConsoleVersion();
-checkCronJobs();
+async function main() {
+    printConsoleVersion();
 
-// Delay to allow cron check to finish before proceeding
-setTimeout(() => {
-    checkLogFileModification();
-}, 500);
+    // Run checks concurrently
+    await Promise.all([
+        checkCronJobs(),
+        checkLogFileModification(),
+        checkValidatorStatus()
+    ]);
+}
+
+// Invoke main
+main();

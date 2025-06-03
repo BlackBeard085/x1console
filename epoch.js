@@ -191,7 +191,21 @@ function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
 
 async function fetchBlockProductionForLastEpochs() {
     try {
-        const currentEpochInfo = await fetchCurrentEpoch();
+        // Fetch current epoch info and related data in parallel
+        const currentEpochInfoPromise = fetchCurrentEpoch();
+        const [
+            epochRemainingOutput,
+            totalStakePercent,
+            voteSuccessOutput,
+            avgVoteSuccessOutput
+        ] = await Promise.all([
+            fetchEpochRemaining(),
+            fetchStakePercentage(),
+            fetchVoteSuccess(),
+            fetchAvgVoteSuccess()
+        ]);
+
+        const currentEpochInfo = await currentEpochInfoPromise;
         if (!currentEpochInfo) {
             console.log('Limited/No data to show.');
             return;
@@ -203,44 +217,45 @@ async function fetchBlockProductionForLastEpochs() {
 
         const blockProductions = [];
 
-        // Fetch block production data for the current epoch
+        // Fetch block production data for current epoch
         const firstSlotCurrentEpoch = currentSlot - slotIndex;
         const lastSlotCurrentEpoch = currentSlot - 1;
-        const currentEpochProduction = await fetchBlockProduction(identityAddress, firstSlotCurrentEpoch, lastSlotCurrentEpoch);
-        if (!currentEpochProduction) {
-            console.log('No data to show.');
-            return;
-        }
-        blockProductions.push({ epoch: "Current Epoch", data: currentEpochProduction });
+        const currentEpochProductionPromise = fetchBlockProduction(
+            identityAddress,
+            firstSlotCurrentEpoch,
+            lastSlotCurrentEpoch
+        );
 
         // Calculate previous epoch range
         const lastSlotOfCurrentEpoch = currentSlot - 1;
         const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 2500 + 1;
         const lastSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1;
-        const prevEpochProduction = await fetchBlockProduction(identityAddress, firstSlotOfPreviousEpoch, lastSlotOfPreviousEpoch);
-        if (!prevEpochProduction) {
-            console.log('No data to show.');
-            return;
+        const prevEpochProductionPromise = fetchBlockProduction(
+            identityAddress,
+            firstSlotOfPreviousEpoch,
+            lastSlotOfPreviousEpoch
+        );
+
+        // Run both block production fetches in parallel
+        const [currentEpochProduction, prevEpochProduction] = await Promise.all([
+            currentEpochProductionPromise,
+            prevEpochProductionPromise
+        ]);
+
+        if (currentEpochProduction) {
+            blockProductions.push({ epoch: "Current Epoch", data: currentEpochProduction });
         }
-        blockProductions.push({ epoch: `Previous 5 Epochs`, data: prevEpochProduction });
+        if (prevEpochProduction) {
+            blockProductions.push({ epoch: `Previous 5 Epochs`, data: prevEpochProduction });
+        }
 
-        // Fetch outputs
-        const epochRemainingOutput = await fetchEpochRemaining();
-        const totalStakePercent = await fetchStakePercentage();
-        const voteSuccessOutput = await fetchVoteSuccess();
-        const avgVoteSuccessOutput = await fetchAvgVoteSuccess();
-
-        // *** REMOVE THIS LINE: ***
-        // printPerformanceMetricsHeader();
+        // Fetch validator version and latency in parallel
+        const [validatorVersion, latencyOutput] = await Promise.all([
+            fetchValidatorVersion(identityAddress),
+            fetchLatencyScriptOutput().catch(() => 'Error fetching latency script')
+        ]);
 
         // Log header info
-        const validatorVersion = await fetchValidatorVersion(identityAddress);
-        let latencyOutput = '';
-        try {
-            latencyOutput = await fetchLatencyScriptOutput();
-        } catch {
-            latencyOutput = 'Error fetching latency script';
-        }
         process.stdout.write(`${validatorVersion} ${latencyOutput}\n`);
 
         // Prepare table rows
