@@ -341,7 +341,7 @@ publish_validator() {
     if [ -f "$HOME/x1console/publish.js" ]; then
         node "$HOME/x1console/publish.js"
         if [ $? -eq 0 ]; then
-            echo -e "\nValidator info published on X1.\n"
+            echo -e "\n"
         else
             echo -e "\nFailed to publish validator info.\n"
         fi
