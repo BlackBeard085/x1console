@@ -54,9 +54,11 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
    ./x1console.sh
    ```
 
-Once X1 Console starts you will see a screen that looks like this 
+Once X1 Console starts you will see a screen with a welcome message that looks like this, press any button to continue.
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0a.jpg)
+
 
 ### Installing X1
 
@@ -65,8 +67,7 @@ To install and start your X1 validator, Navigate to the 'Other' menu after start
 1. From the main menu, choose option **10. Other**.
 2. Next, select option **1. Install, Start X1 and Pinger**.
 
-If you have no Wallets you wish to use reply 'no' when asked if you have existing wallets.
-Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding your validator. Some details may require time to sync, pressing enter without choosing a selection will refresh your dash. At times a slow snapshot download after the 1st restart can also delay the update, check logs for slow downloads before attempting any fix.
+If you have no existing wallets you wish to use, reply 'no' when asked if you have existing wallets. The console will start building and installing your validator. You will be asked to choose either testnet or mainnet to connect to and be asked to fund your id.json wallet with a minimum of 5 XNT for the console to start your validator. Once the validator and all dependencies are installed you will see the following screen which shows a few details regarding your validator. Some details may require time to sync, pressing enter without choosing a selection will refresh your dash. At times a slow snapshot download after the 1st restart can also delay the update, check logs for slow downloads before attempting any fix.
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image1.jpg)
 
