@@ -66,7 +66,7 @@ function remove_cron_job {
        echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null || \
        echo "$crontab_content" | grep -F "$CRON_JOB4" > /dev/null; then
         (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB" | grep -v -F "$CRON_JOB2" | grep -v -F "$CRON_JOB3" | grep -v -F "$CRON_JOB4") | crontab -
-        echo "Cron jobs removed."
+        echo "Auto tasks turned OFF."
     else
         echo "Autopilot, Autostaker, Autopinger, and Autoupdater are already OFF."
     fi
