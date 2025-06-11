@@ -19,7 +19,7 @@ let isAutoupdaterActive = false;
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v0.1.38  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v0.1.39  -  The BlackPearl by BlackBeard_85');
 }
 
 // Asynchronous function to check for specific cronjobs
@@ -101,11 +101,11 @@ async function checkValidatorStatus() {
                     } catch (err) {
                         // default
                     }
-                    autopilotOutput += `       48Hrs auto-restarts: ${restartCountContent}`;
+                    autopilotOutput += `       48Hrs auto-restarts: ${restartCountContent}\n`;
 
                     // Append 'Auto-staker active' if applicable
-                    if (isAutostakerActive) {
-                        autopilotOutput += `\nAuto-staker active`;
+                    if (isAutoupdaterActive) {
+                        autopilotOutput += `Auto-updater active`;
                     }
 
                     // Append 'Auto-pinger active' if applicable
@@ -113,8 +113,8 @@ async function checkValidatorStatus() {
                         autopilotOutput += `\           Auto-pinger active`;
                     }
                     // Append 'Auto-updater active' if applicable
-                    if (isAutoupdaterActive) {
-                        autopilotOutput += `\           Auto-updater active`;
+                    if (isAutostakerActive) {
+                        autopilotOutput += `\           Auto-staker active`;
                     }
                 }
 

@@ -11,47 +11,31 @@ CRON_JOB4="0 * * * * cd ~/x1console/ && ./autoupdater.sh"
 AUTOCONFIG_FILE="$HOME/x1console/autoconfig"
 LOG_FILE="$HOME/x1console/restart_times.log"
 UPDATER_LOG_FILE="$HOME/x1console/validator_update.log"
-# Log files for staker and pinger
+# New log files for staker and pinger
 STAKER_LOG_FILE="$HOME/x1console/autostaker.log"
 PINGER_LOG_FILE="$HOME/x1console/autopinger.log"
 
-# Function to add all four cron jobs with duplication check
+# Function to add all four cron jobs
 function add_cron_job {
     local crontab_content
     crontab_content=$(crontab -l 2>/dev/null)
+    local missing_jobs=0
 
-    # Check and add autopilot
-    if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null; then
-        echo "Autopilot is already turned ON."
+    if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null; then :; else missing_jobs=1; fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then :; else missing_jobs=1; fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then :; else missing_jobs=1; fi
+    if echo "$crontab_content" | grep -F "$CRON_JOB4" > /dev/null; then :; else missing_jobs=1; fi
+
+    if [ "$missing_jobs" -eq 0 ]; then
+        echo "All cron jobs are already ON. No action needed."
     else
-        (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
-        echo "Autopilot turned ON."
+        (crontab -l 2>/dev/null; 
+         echo "$CRON_JOB"
+         echo "$CRON_JOB2"
+         echo "$CRON_JOB3"
+         echo "$CRON_JOB4"
+        ) | crontab -
     fi
-
-    # Check and add autostaker
-    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then
-        echo "Auto-Staker is already turned ON."
-    else
-        (crontab -l 2>/dev/null; echo "$CRON_JOB2") | crontab -
-        echo "Autostaker turned ON."
-    fi
-
-    # Check and add autopinger
-    if echo "$crontab_content" | grep -F "$CRON_JOB3" > /dev/null; then
-        echo "Auto-Pinger is already turned ON."
-    else
-        (crontab -l 2>/dev/null; echo "$CRON_JOB3") | crontab -
-        echo "Autopinger turned ON."
-    fi
-
-    # Check and add autoupdater
-    if echo "$crontab_content" | grep -F "$CRON_JOB4" > /dev/null; then
-        echo "Auto-Updater is already turned ON."
-    else
-        (crontab -l 2>/dev/null; echo "$CRON_JOB4") | crontab -
-        echo "Auto-Updater turned ON."
-    fi
-
     echo "ON" > "$AUTOCONFIG_FILE"
     echo -e "\nAutopilot, Autostaker, Autopinger, and Autoupdater turned ON.\n"
     read -n 1 -s -r -p "Press any key to continue..."
@@ -72,20 +56,6 @@ function remove_cron_job {
     fi
     echo "OFF" > "$AUTOCONFIG_FILE"
     echo -e "\nAutopilot, Autostaker, Autopinger, and Autoupdater turned OFF.\n"
-    read -n 1 -s -r -p "Press any key to continue..."
-}
-
-# Function to turn off only autostaker (remove CRON_JOB2)
-function turn_off_autostaker {
-    local crontab_content
-    crontab_content=$(crontab -l 2>/dev/null)
-    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then
-        (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB2") | crontab -
-        echo -e "\nAuto-Staker turned OFF."
-    else
-        echo -e "\nAuto-Staker is already OFF."
-    fi
-    echo
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
@@ -162,10 +132,9 @@ function show_menu {
         echo "4. View Auto Updater Logs"
         echo "5. View Auto Staker Logs"
         echo "6. View Auto Pinger Logs"
-        echo "7. Remove Scheduled Update"
-        echo "8. Turn Off Auto-staker"
-        echo "9. Exit"
-        echo -n "Please enter your choice (1-9): "
+        echo "7. Remove Sceduled Update"
+        echo "8. Exit"
+        echo -n "Please enter your choice (1-8): "
         read -r choice
         case "$choice" in
             1)
@@ -190,14 +159,11 @@ function show_menu {
                 ./remove_update.sh
                 ;;
             8)
-                turn_off_autostaker
-                ;;
-            9)
                 echo "Exiting."
                 exit 0
                 ;;
             *)
-                echo -e "\nInvalid choice. Please choose 1-9.\n"
+                echo -e "\nInvalid choice. Please choose 1-7.\n"
                 read -n 1 -s -r -p "Press any key to continue..."
                 ;;
         esac
