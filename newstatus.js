@@ -74,7 +74,7 @@ async function checkValidatorStatus() {
         const { stdout, stderr } = await execAsync('node health.js');
 
         if (stderr) {
-            console.error(`${stderr}`);
+            //console.error(`${stderr}`);
             return;
         }
 
