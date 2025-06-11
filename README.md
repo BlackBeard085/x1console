@@ -146,7 +146,18 @@ Option 4 is **Transfers**, which allows you to transfer funds between wallets an
 
 ### Manage Stake
 
-Option 5 allows you manage upto 5 stake wallets. Your stakes list will show you how many stake walletes you have. You can create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. **Merge** option allows you to merge two stake accounts into one, closing one of the stake accounts. The closed stake account will show "Account for repurposing" in your list of stakes. **Repurpose Old Stake Account** will allow you to repurpose the closed stake account into a new stake. Stake manager gives you the ability to activate or deactivate your any of your stakes and check the epoch when these changes will take effect. 
+Option 5, Stake manager has 10 sub-options designed to strealine the stake managing process. 
+
+1. **Activate Stake**
+2. **Deactivate Stake**
+3. **Epoch Info**
+4. **Add New Stake wallett**
+5. **Merge Stake**
+6. **Split Stake**
+7. **Repurpose Old Stake Wallets**
+
+
+allows you manage upto 5 stake wallets. Your stakes list will show you how many stake walletes you have. You can create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. **Merge** option allows you to merge two stake accounts into one, closing one of the stake accounts. The closed stake account will show "Account for repurposing" in your list of stakes. **Repurpose Old Stake Account** will allow you to repurpose the closed stake account into a new stake. Stake manager gives you the ability to activate or deactivate your any of your stakes and check the epoch when these changes will take effect. 
 The stakes list will show you each stake wallets balance breakdown, showimg staked and unstaked balance.
 
 
