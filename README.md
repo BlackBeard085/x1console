@@ -73,10 +73,10 @@ If you have no existing wallets you wish to use, reply 'no' when asked if you ha
 
 For first installs please do the following.
 
-3. IMPORTANT: Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
+3. IMPORTANT: Reboot your server after first installation for optimizations to take effect. Exit the X1 Console and run the following in your existing shell:
 
 ```bash
-export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+sudo reboot
 ```
 
 4. To relogin to X1Console after reopening the terminal enter the following commands.
