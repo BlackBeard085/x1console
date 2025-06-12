@@ -209,9 +209,9 @@ The **Other Menu** is reserved for functions that will be used rarely but have s
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image9.jpg)
 
 1. **Install, Start X1 and pinger or [RESET]**: This option serves as your initial installation shown at the beginning and also works as a reset oprion, while allowing you to keep your wallets.
-2. **Update**: has 2 sub options
-             1. Update X1 Validator - Updates the Tachyon Validator
-             2. Update X1 Console - Updates the X1 Console
+2. **Update**: has 2 sub options:
+   1. Update X1 Validator - Updates the Tachyon Validator
+   2. Update X1 Console - Updates the X1 Console
 
 ### -Update Console and Validator Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/tBlSDqFAGDE/0.jpg)](https://www.youtube.com/watch?v=tBlSDqFAGDE)
