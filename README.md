@@ -210,7 +210,7 @@ The console will then register your details on the X1 blockchain, making this in
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image6.jpg)
 
 
-## -Customize name and set Commission Video Tutorial/Demo
+### -Customize name and set Commission Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/K68uYbNFLDc/0.jpg)](https://www.youtube.com/watch?v=K68uYbNFLDc)
 
 
@@ -298,15 +298,29 @@ Check which wallets you have available, back up your private keys, create new wa
 
 
 ## Pinger
-This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
+Reset the pinger and check ping times.  To keep pinger running you must have funds in the id.json
 
 
 ## Server
+Divided into 2 Sub Commamnds
+1. Security Manager
+2. Performance Check
+   
 Use the server security manager to generate SSH keys on your local machine and export them to your server. Then use the server configure your ssh login to change login port and disable root login and disable password authentication to secure your server.
 
 ### -Secure Your Server Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/AQYFOae7SGQ/0.jpg)](https://www.youtube.com/watch?v=AQYFOae7SGQ)
-   
+
+Use the performance Check to diagnose any potential server issues related to CPU, RAM, I/O utilization, swap, load and network. Enter the duration of the test in seconds or press enter fr a default 60 seconds check.
+
+## Network
+Connect to mainnet or testnet.
+
+## Set up Telegram Bot
+Set up a Telegram notification Bot that will notify you on every autopilot check and autostaker execution. To set up create a new bot using 'botfather' on telegram. give a name and username to your bot and copy the telegram bot token. Open a chat with the newly created bot and send a message to it and then open X1 Console and launch **Set up Telegram Bot** Answer yes to having messaged the bot and paste the telegram bot token and choose the type of chat you messaged the bot with, personal or group. The console will complete the setup for you.
+
+### Set up Telegram Bot Video Tutorial/Demo
+
 
 ## Links
 
