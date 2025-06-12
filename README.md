@@ -57,6 +57,7 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
 Once X1 Console starts you will see a screen with a welcome message that looks like this, press any button to continue.
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0.jpg)
+After the opening message you come to the main dashboard
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0a.jpg)
 
 
