@@ -237,7 +237,7 @@ You can view logs for each automated task. The Auto-staker can be turned OFF ind
 ### -Setting up Autopilot Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/g0Q8o0rfKNM/0.jpg)](https://www.youtube.com/watch?v=g0Q8o0rfKNM)
 
-### 4.Authority Manager
+## Authority Manager
 Requirements: You will need an Ubuntu system locally.
    Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signature both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to a ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine. You can use X1 Console's Wallet Manager to do this, using the **Back up Wallets** and **Import Wallets...** function. More on Wallets manager in the next section. Copy all wallets over and continue.
 
@@ -273,13 +273,20 @@ Note: when you transfer the withdraw authority to a ledger or local.json locally
 ### -Authority Manager Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/MvkVH7gAd0s/0.jpg)](https://www.youtube.com/watch?v=MvkVH7gAd0s)
 
-5. **Wallets Manager** Check which wallets you have available and back up your keys
+## Wallets Manager
+Check which wallets you have available, back up your private keys, create new wallets, remove wallets and import existing wallets using the Wallets Manager.
 
 ### -Backup your wallets Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/YdI13qAWq7s/0.jpg)](https://www.youtube.com/watch?v=YdI13qAWq7s)
-   
-6. **Reset Pinger**: This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
-7. **Server**: Use the server security manager to generate SSH keys on your local machine and export them to your server. Then use the server configure your ssh login to change login port and disable root login and disable password authentication to secure your server.
+
+### -Import your wallets Video Tutorial/Demo
+[![Watch the video](https://img.youtube.com/vi/PnA6sF4VP0c/0.jpg)](https://www.youtube.com/watch?v=PnA6sF4VP0c)
+
+## Pinger
+This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
+
+## Server
+Use the server security manager to generate SSH keys on your local machine and export them to your server. Then use the server configure your ssh login to change login port and disable root login and disable password authentication to secure your server.
 
 ### -Secure Your Server Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/AQYFOae7SGQ/0.jpg)](https://www.youtube.com/watch?v=AQYFOae7SGQ)
