@@ -239,9 +239,7 @@ You can view logs for each automated task. The Auto-staker can be turned OFF ind
 
 ### 4.Authority Manager
 Requirements: You will need an Ubuntu system locally.
-   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signature both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to a ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine. You can use X1 Console's Wallet Manager to do this, using the **Back up Wallets** and **Import Wallets...** function. More on Wallets manager in the next section.
-
-.
+   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signature both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to a ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine. You can use X1 Console's Wallet Manager to do this, using the **Back up Wallets** and **Import Wallets...** function. More on Wallets manager in the next section. Copy all wallets over and continue.
 
 If you are planning to transfer withdraw authoriy to a ledger HW, connect it now. Make sure it is unlocked and the solana app is opened ready for use. Run the command to make sure your ledger is working. This command will show your pubkey.
 ```bash
