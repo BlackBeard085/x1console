@@ -211,10 +211,10 @@ The **Other Menu** is reserved for functions that will be used rarely but have s
 ## Install, Start X1 and pinger or [RESET]
 This option serves as your initial installation shown at the beginning and also works as a reset oprion, while allowing you to keep your wallets.
 
-## Update** 
-divided into two sub options:
-   1. Update X1 Validator - Updates the Tachyon Validator
-   2. Update X1 Console - Updates the X1 Console
+## Update
+Divided into two sub options:
+   1. **Update X1 Validator** - Updates the Tachyon Validator
+   2. **Update X1 Console** - Updates the X1 Console
 
 ### -Update Console and Validator Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/tBlSDqFAGDE/0.jpg)](https://www.youtube.com/watch?v=tBlSDqFAGDE)
@@ -222,13 +222,12 @@ divided into two sub options:
 
 ## Autopilot
 Turning ON Autopilot turns on a number of automated features
-1. Autopilot: Checks validator status every 30 minutes and attempts to restore active status to delinquemt validators.
-2. Auto-Pinger: maintains pinger functions to contribute to X1 network health
-3. Auto-Staker: Automates the staking of excess funds in the vote account as wel as merging active stakes and activating inactive stakes.
-4. Auto-Updater: Updates the Tachyon Validator within 48hrs of when X1-labs bootstrap node (X1 Labs Node 3) has updated to the latest version.
+1. **Autopilot**: Checks validator status every 30 minutes and attempts to restore active status to delinquemt validators.
+2. **Auto-Pinger**: maintains pinger functions to contribute to X1 network health
+3. **Auto-Staker**: Automates the staking of excess funds in the vote account as wel as merging active stakes and activating inactive stakes.
+4. **Auto-Updater**: Updates the Tachyon Validator within 48hrs of when X1-labs bootstrap node (X1 Labs Node 3) has updated to the latest version.
 
   
-6. The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 
 ### -Setting up Autopilot Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/g0Q8o0rfKNM/0.jpg)](https://www.youtube.com/watch?v=g0Q8o0rfKNM)
