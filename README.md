@@ -224,7 +224,7 @@ Divided into two sub options:
 ## Autopilot
 Turning ON Autopilot turns on a number of automated features and adds some information to the main dash.
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image7.png)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image10.png)
 
 1. **Autopilot**: Checks validator status every 30 minutes and attempts to restore active status to delinquemt validators. Also displays a 48hr restart counter showing the number of times the autopilot restarted the validator.
 2. **Auto-Pinger**: maintains pinger functions to contribute to X1 network health
