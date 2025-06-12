@@ -122,7 +122,7 @@ Once it has corrected any errors, it will restart the validator.
 
 Option 2 - **Validator**. This section provides five sub-options for more control over your X1 validator. along with displaying validator performance metrics and validator status it also shows the chains current slot and the validators next scheduled leader slots.
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image7.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image7.png)
 
 1. **Start or Restart the Validator**: Start and restart your validator without a health check.
 2. **Stop the Validator**: Temporarily halt your validator operations.
