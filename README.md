@@ -206,7 +206,7 @@ The console will then register your details on the X1 blockchain, making this in
 
 The **Other Menu** is reserved for functions that will be used rarely but have significant utility. It includes the following options:
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image9.png)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image9.jpg)
 
 1. **Install, Start X1 and pinger or [RESET]**: This option serves as your initial installation shown at the beginning and also works as a reset oprion, while allowing you to keep your wallets.
 2. **Update**: has 2 sub options
