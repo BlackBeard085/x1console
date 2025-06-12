@@ -186,7 +186,7 @@ Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of
 
 Option 8 allows you to **Set Commission**, with the default commission set at 10%. You can easily adjust this by entering your desired commission rate, and it will automatically be set once a value has been entered. NOTE: This can only be done in the first half of the current epoch.
 
-## Publish Validator
+## Publish Validator - Change your Validator Name and Icon
 
 Option 9 allows you to customize your validator seen on x1val.online. You can create a custom name, set an icon/image and also link any webpage to your validator. The console will prompt you for:
 - The name you wish to give to your validator.
