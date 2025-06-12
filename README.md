@@ -18,10 +18,10 @@ To run an X1 Validator you will need a dedicated server with the following minim
 
 To get started with X1's The Black Pearl (or **X1 Console**), follow these steps:
 
-## Create a new user
+### Create a new user
 
 1. Create a new user for your Ubuntu system and give that user 'sudo' rights.
-   ## Important: Please do not use usernames 'root' or 'admin'
+   ### Important: Please do not use usernames 'root' or 'admin'
 
    You should replace username with any username you like apart from root or admin.
 
@@ -60,7 +60,7 @@ Once X1 Console starts you will see a screen with a welcome message that looks l
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0a.jpg)
 
 
-### Installing X1
+## Installing X1
 
 To install and start your X1 validator, Navigate to the 'Other' menu after starting the console:
 
@@ -94,7 +94,7 @@ This option also works as your reset. By keeping your original wallets, this wil
 ### -Validator setup Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/5Vnx9NoTV08/0.jpg)](https://www.youtube.com/watch?v=5Vnx9NoTV08)
 
-### Troubleshoot Delinquent Validator
+## Troubleshoot Delinquent Validator
 
 At times your validator will become delinquent for one reason or another and it becomes vital that you bring your validator back online. Here are some solutions to bring your validator back to active status
 
@@ -105,7 +105,7 @@ At times your validator will become delinquent for one reason or another and it 
 ### -Troubleshooting Video Tutorial/Demo
   [![Watch the video](https://img.youtube.com/vi/W9TXi0pJh9k/0.jpg)](https://www.youtube.com/watch?v=W9TXi0pJh9k)
   
-### Health Check
+## Health Check
 
 Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
 
@@ -118,7 +118,7 @@ Option 1 from the main menu is **Health Check and Start**. This acts as your val
 
 Once it has corrected any errors, it will restart the validator.
 
-### Validator
+## Validator
 
 Option 2 - **Validator**. This section provides five sub-options for more control over your X1 validator. along with displaying validator performance metrics and validator status it also shows the chains current slot and the validators next scheduled leader slots.
 
@@ -130,13 +130,13 @@ Option 2 - **Validator**. This section provides five sub-options for more contro
 4. **Delete Validator Logs**: Remove the existing logs to free up space or for privacy concerns.
 5. **Exit**: Return to main menu
 
-### Check Balances
+## Check Balances
 
 Option 3 from the main menu is **Check Balances**. This option allows you to check your balances in all four wallets: **id.json**, **identity.json**, **vote.json**, and **stake.json**. 
 
 - It also includes an added function that automatically funds underfunded identity or stake accounts if their funds drop under 1 XN.
 
-### Transfers
+## Transfers
  
 Option 4 is **Transfers**, which allows you to transfer funds between wallets and manage an address book, adding or removing addresses from your address book.
 
@@ -144,7 +144,7 @@ Option 4 is **Transfers**, which allows you to transfer funds between wallets an
 [![Watch the video](https://img.youtube.com/vi/31dHFoneCg8/0.jpg)](https://www.youtube.com/watch?v=31dHFoneCg8)
 
 
-### Manage Stake
+## Manage Stake
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.jpg)
 Option 5, Stake manager has 10 sub-options designed to strealine the stake managing process. 
@@ -168,7 +168,7 @@ Have a look at the Video tutorials and demo of the stake manager here
 ### -AutoStake Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/w6i6X997-fE/0.jpg)](https://www.youtube.com/watch?v=w6i6X997-fE)
 
-### Withdraw Stake/Vote/Identity
+## Withdraw Stake/Vote/Identity
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image8.jpg)
 
@@ -177,15 +177,15 @@ Option 6 **Withdraw Stake/Vote/Identity**, enabling you to withdraw any unstaked
 ### -Withdrawing from Vote, Stake, Identity Video tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/yFN_IOUKmo8/0.jpg)](https://www.youtube.com/watch?v=yFN_IOUKmo8)
 
-### Ledger
+## Ledger
 
 Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of fatal crashes or ledger failures, this option enables you to remove the ledger for a smoother restart. You can also create a backup of the ledger if required
 
-### Set Commission
+## Set Commission
 
 Option 8 allows you to **Set Commission**, with the default commission set at 10%. You can easily adjust this by entering your desired commission rate, and it will automatically be set once a value has been entered. NOTE: This can only be done in the first half of the current epoch.
 
-### Publish Validator
+## Publish Validator
 
 Option 9 allows you to customize your validator seen on x1val.online. You can create a custom name, set an icon/image and also link any webpage to your validator. The console will prompt you for:
 - The name you wish to give to your validator.
@@ -198,11 +198,11 @@ The console will then register your details on the X1 blockchain, making this in
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image6.jpg)
 
-### -Customize name and set Commission Video Tutorial/Demo
+## -Customize name and set Commission Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/K68uYbNFLDc/0.jpg)](https://www.youtube.com/watch?v=K68uYbNFLDc)
 
 
-### Other Menu
+## Other Menu
 
 The **Other Menu** is reserved for functions that will be used rarely. It includes the following options:
 
