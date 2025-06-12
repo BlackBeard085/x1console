@@ -170,7 +170,9 @@ Have a look at the Video tutorials and demo of the stake manager here
 
 ### Withdraw Stake/Vote/Identity
 
-Option 6 allows you to **Withdraw Stake/Vote/Identity**, enabling you to withdraw any unstaked balance in your stake account and any balance in your vote and identity accounts.
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image8.jpg)
+
+Option 6 **Withdraw Stake/Vote/Identity**, enabling you to withdraw any unstaked balance in your stake account and any balance in your vote and identity accounts.
 
 ### -Withdrawing from Vote, Stake, Identity Video tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/yFN_IOUKmo8/0.jpg)](https://www.youtube.com/watch?v=yFN_IOUKmo8)
