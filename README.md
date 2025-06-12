@@ -146,22 +146,26 @@ Option 4 is **Transfers**, which allows you to transfer funds between wallets an
 
 ### Manage Stake
 
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.jpg)
 Option 5, Stake manager has 10 sub-options designed to strealine the stake managing process. 
 
-1. **Activate Stake**
-2. **Deactivate Stake**
-3. **Epoch Info**
-4. **Add New Stake wallett**
-5. **Merge Stake**
-6. **Split Stake**
-7. **Repurpose Old Stake Wallets**
+1. **Activate Stake** Any inactive stake account can be activated and staked to the validator
+2. **Deactivate Stake** Any active stake account can be deactivated and unstaked in time when you wish to withdraw or transfer funds.
+3. **Epoch Info** Will give you detail breakdown of current Epoch.
+4. **Add New Stake wallett** Will create additional stake accounts. You can create 5 stake accounts at a time.
+5. **Merge Stake** If you have multiple active stakes you can merge them into a single stake dor easy management.
+6. **Split Stake** If you have a single active stake and wish to withdraw a small amount from the stake you can split the stake into two stakes and deactivate the one you wish to withdraw.
+7. **Repurpose Old Stake Wallets** Stake accounts are closed once merged, this will reopen them as stake accounts.
+8. **Autostake** Automate the staking of excess funds from the vote account, merges active stakes and activates inactive stakes in a single seamless process
+9. **Withdraw Stake** Withdraw any unstaked balances from any stake wallet.
+10. **Exit** Return to main menu.
 
 
 allows you manage upto 5 stake wallets. Your stakes list will show you how many stake walletes you have. You can create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. **Merge** option allows you to merge two stake accounts into one, closing one of the stake accounts. The closed stake account will show "Account for repurposing" in your list of stakes. **Repurpose Old Stake Account** will allow you to repurpose the closed stake account into a new stake. Stake manager gives you the ability to activate or deactivate your any of your stakes and check the epoch when these changes will take effect. 
 The stakes list will show you each stake wallets balance breakdown, showimg staked and unstaked balance.
 
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.jpg)
+
 
 ### -Increasing Stake Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/l0hNvch2yPo/0.jpg)](https://www.youtube.com/watch?v=l0hNvch2yPo)
