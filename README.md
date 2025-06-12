@@ -146,7 +146,7 @@ Option 4 is **Transfers**, which allows you to transfer funds between wallets an
 
 ## Manage Stake
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image2.png)
 Option 5, Stake manager has 10 sub-options designed to strealine the stake managing process. 
 
 1. **Activate Stake** Any inactive stake account can be activated and staked to the validator
