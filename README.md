@@ -166,6 +166,7 @@ Have a look at the Video tutorials and demo of the stake manager here
 [![Watch the video](https://img.youtube.com/vi/l0hNvch2yPo/0.jpg)](https://www.youtube.com/watch?v=l0hNvch2yPo)
 
 ### -AutoStake Video Tutorial/Demo
+[![Watch the video](https://img.youtube.com/vi/w6i6X997-fE/0.jpg)](https://www.youtube.com/watch?v=w6i6X997-fE)
 
 ### Withdraw Stake/Vote/Identity
 
