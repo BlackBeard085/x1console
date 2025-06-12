@@ -60,7 +60,7 @@ Once X1 Console starts you will see a screen with a welcome message that looks l
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0a.jpg)
 
 
-## Installing X1
+## Installing and Starting X1 Validator
 
 To install and start your X1 validator, Navigate to the 'Other' menu after starting the console:
 
@@ -204,7 +204,7 @@ The console will then register your details on the X1 blockchain, making this in
 
 ## Other Menu
 
-The **Other Menu** is reserved for functions that will be used rarely. It includes the following options:
+The **Other Menu** is reserved for functions that will be used rarely but have significant utility. It includes the following options:
 
 1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
 2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
