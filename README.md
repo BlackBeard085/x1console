@@ -206,14 +206,18 @@ The console will then register your details on the X1 blockchain, making this in
 
 The **Other Menu** is reserved for functions that will be used rarely but have significant utility. It includes the following options:
 
-1. **First Install and Reset**: This option serves as your initial installation and reset while allowing you to keep your wallets.
-2. **Update Server and Rebuild Validator**: This option allows you to update your server and rebuild your validator, also providing the option to update the X1 console.
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image9.png)
+
+1. **Install, Start X1 and pinger or [RESET]**: This option serves as your initial installation shown at the beginning and also works as a reset oprion, while allowing you to keep your wallets.
+2. **Update**: has 2 sub options
+             1. Update X1 Validator - Updates the Tachyon Validator
+             2. Update X1 Console - Updates the X1 Console
 
 ### -Update Console and Validator Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/tBlSDqFAGDE/0.jpg)](https://www.youtube.com/watch?v=tBlSDqFAGDE)
 
 
-3. **Autopilot** (beta) The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
+3. **Autopilot**  The autopilot is a modified automated validator health check. When turned on it checks validator health every 30 minutes. If your validator is active no action is taken. If your validator is found delinquent then similar checks are made like the health check, any processes in the backgroumd a forced closed, the blockchain ledger is removed and valdiator restarted.
 
 ### -Setting up Autopilot Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/g0Q8o0rfKNM/0.jpg)](https://www.youtube.com/watch?v=g0Q8o0rfKNM)
@@ -253,7 +257,7 @@ In order to change the withdraw authority of any wallet your 'Current set Withdr
 
 Choose the wallet you wish to change the withdraw authority for, you can also choose all wallets which will be processed one after the other. You will be shown a list of possible new withdraw authorities.
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image4.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image4.png)
 
 The options include
 1. id.json - which can be left on the server with minimal funds to run the pinger after transfering withdraw authorities.
