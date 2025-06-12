@@ -7,6 +7,7 @@ Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctiona
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/TheBlackPearl.jpg)
 
 
+The following are guides and videos on how to use the X1 console and it's many features.
 ## Requirements
 To run an X1 Validator you will need a dedicated server with the following minimum specs;
 
