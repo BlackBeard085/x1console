@@ -6,6 +6,7 @@ Welcome aboard *X1's The Black Pearl*, the interactive, automated multifunctiona
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/TheBlackPearl.jpg)
 
+
 ## Requirements
 To run an X1 Validator you will need a dedicated server with the following minimum specs;
 
@@ -13,6 +14,7 @@ To run an X1 Validator you will need a dedicated server with the following minim
 - RAM: 128G or more 
 - DISK: 4TB NVME
 - OS: Ubuntu 22.04.5 LTS
+
 
 ## Getting Started
 
@@ -39,7 +41,6 @@ To get started with X1's The Black Pearl (or **X1 Console**), follow these steps
    su - username
    ```
 
-   
 ### Console Installation
 
 1. Clone the repository and navigate to the directory:
@@ -59,6 +60,7 @@ Once X1 Console starts you will see a screen with a welcome message that looks l
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0.jpg)
 After the opening message you come to the main dashboard
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image0a.jpg)
+
 
 
 ## Installing and Starting X1 Validator
@@ -95,6 +97,7 @@ This option also works as your reset. By keeping your original wallets, this wil
 ### -Validator setup Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/5Vnx9NoTV08/0.jpg)](https://www.youtube.com/watch?v=5Vnx9NoTV08)
 
+
 ## Troubleshoot ALL issues causing a Delinquent Validator
 
 At times your validator will become delinquent for one reason or another and it becomes vital that you bring your validator back online. Here are some solutions to bring your validator back to active status that are not server related.
@@ -106,6 +109,7 @@ At times your validator will become delinquent for one reason or another and it 
 ### -Troubleshooting Video Tutorial/Demo
   [![Watch the video](https://img.youtube.com/vi/W9TXi0pJh9k/0.jpg)](https://www.youtube.com/watch?v=W9TXi0pJh9k)
   
+
 ## Health Check
 
 Option 1 from the main menu is **Health Check and Start**. This acts as your validator monitor. It checks the status of your validator, informing you if it is 'Active' or 'Delinquent'.
@@ -118,6 +122,7 @@ Option 1 from the main menu is **Health Check and Start**. This acts as your val
   - If you have 0 delegated stake, it will delegate your stake.
 
 Once it has corrected any errors, it will restart the validator.
+
 
 ## Validator
 
@@ -136,6 +141,7 @@ Option 2 - **Validator**. This section provides five sub-options for more contro
 Option 3 from the main menu is **Check Balances**. This option allows you to check your balances in all four wallets: **id.json**, **identity.json**, **vote.json**, and **stake.json**. 
 
 - It also includes an added function that automatically funds underfunded identity or stake accounts if their funds drop under 1 XN.
+
 
 ## Transfers
  
@@ -169,6 +175,7 @@ Have a look at the Video tutorials and demo of the stake manager here
 ### -AutoStake Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/w6i6X997-fE/0.jpg)](https://www.youtube.com/watch?v=w6i6X997-fE)
 
+
 ## Withdraw Stake/Vote/Identity
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image8.jpg)
@@ -178,13 +185,16 @@ Option 6 **Withdraw Stake/Vote/Identity**, enabling you to withdraw any unstaked
 ### -Withdrawing from Vote, Stake, Identity Video tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/yFN_IOUKmo8/0.jpg)](https://www.youtube.com/watch?v=yFN_IOUKmo8)
 
+
 ## Ledger
 
 Option 7 allows you to **Monitor Ledger**, checking if it is active. In cases of fatal crashes or ledger failures, this option enables you to remove the ledger for a smoother restart. You can also create a backup of the ledger if required
 
+
 ## Set Commission
 
 Option 8 allows you to **Set Commission**, with the default commission set at 10%. You can easily adjust this by entering your desired commission rate, and it will automatically be set once a value has been entered. NOTE: This can only be done in the first half of the current epoch.
+
 
 ## Publish Validator - Change your Validator Name and Icon
 
@@ -199,6 +209,7 @@ The console will then register your details on the X1 blockchain, making this in
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image6.jpg)
 
+
 ## -Customize name and set Commission Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/K68uYbNFLDc/0.jpg)](https://www.youtube.com/watch?v=K68uYbNFLDc)
 
@@ -209,8 +220,10 @@ The **Other Menu** is reserved for functions that will be used rarely but have s
 
 ![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image9.jpg)
 
+
 ## Install, Start X1 and pinger or [RESET]
 This option serves as your initial installation shown at the beginning and also works as a reset oprion, while allowing you to keep your wallets.
+
 
 ## Update
 Divided into two sub options:
@@ -233,9 +246,9 @@ Turning ON Autopilot turns on a number of automated features and adds some infor
 
 You can view logs for each automated task. The Auto-staker can be turned OFF independently as stake wallets may be stored on local machines.
 
-
 ### -Setting up Autopilot Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/g0Q8o0rfKNM/0.jpg)](https://www.youtube.com/watch?v=g0Q8o0rfKNM)
+
 
 ## Authority Manager
 Requirements: You will need an Ubuntu system locally.
@@ -273,6 +286,7 @@ Note: when you transfer the withdraw authority to a ledger or local.json locally
 ### -Authority Manager Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/MvkVH7gAd0s/0.jpg)](https://www.youtube.com/watch?v=MvkVH7gAd0s)
 
+
 ## Wallets Manager
 Check which wallets you have available, back up your private keys, create new wallets, remove wallets and import existing wallets using the Wallets Manager.
 
@@ -282,8 +296,10 @@ Check which wallets you have available, back up your private keys, create new wa
 ### -Import your wallets Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/PnA6sF4VP0c/0.jpg)](https://www.youtube.com/watch?v=PnA6sF4VP0c)
 
+
 ## Pinger
 This option resets your Pinger settings. To keep pinger running you must have funds in the id.json
+
 
 ## Server
 Use the server security manager to generate SSH keys on your local machine and export them to your server. Then use the server configure your ssh login to change login port and disable root login and disable password authentication to secure your server.
