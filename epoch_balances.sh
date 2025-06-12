@@ -30,7 +30,7 @@ get_total_self_delegated() {
             # Extract the active stake amount
             amount=$(echo "$active_stake_line" | awk '{print $3}')
             # Sum up
-            total_self=$(awk "BEGIN {print $total_self + $amount}")
+            total_self=$(awk "BEGIN {printf \"%.2f\", $total_self + $amount}")
         fi
     done
     echo "$total_self"
