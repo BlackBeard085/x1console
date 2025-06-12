@@ -160,15 +160,12 @@ Option 5, Stake manager has 10 sub-options designed to strealine the stake manag
 9. **Withdraw Stake** Withdraw any unstaked balances from any stake wallet.
 10. **Exit** Return to main menu.
 
-
-allows you manage upto 5 stake wallets. Your stakes list will show you how many stake walletes you have. You can create new stake wallets in your .config/solana directory if you have less than 5 using **Add New Stake Account** option. **Merge** option allows you to merge two stake accounts into one, closing one of the stake accounts. The closed stake account will show "Account for repurposing" in your list of stakes. **Repurpose Old Stake Account** will allow you to repurpose the closed stake account into a new stake. Stake manager gives you the ability to activate or deactivate your any of your stakes and check the epoch when these changes will take effect. 
-The stakes list will show you each stake wallets balance breakdown, showimg staked and unstaked balance.
-
-
-
+Have a look at the Video tutorials and demo of the stake manager here
 
 ### -Increasing Stake Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/l0hNvch2yPo/0.jpg)](https://www.youtube.com/watch?v=l0hNvch2yPo)
+
+### -AutoStake Video Tutorial/Demo
 
 ### Withdraw Stake/Vote/Identity
 
