@@ -222,13 +222,19 @@ Divided into two sub options:
 
 
 ## Autopilot
-Turning ON Autopilot turns on a number of automated features
-1. **Autopilot**: Checks validator status every 30 minutes and attempts to restore active status to delinquemt validators.
+Turning ON Autopilot turns on a number of automated features and adds some information to the main dash.
+
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image7.png)
+
+1. **Autopilot**: Checks validator status every 30 minutes and attempts to restore active status to delinquemt validators. Also displays a 48hr restart counter showing the number of times the autopilot restarted the validator.
 2. **Auto-Pinger**: maintains pinger functions to contribute to X1 network health
 3. **Auto-Staker**: Automates the staking of excess funds in the vote account as wel as merging active stakes and activating inactive stakes.
 4. **Auto-Updater**: Updates the Tachyon Validator within 48hrs of when X1-labs bootstrap node (X1 Labs Node 3) has updated to the latest version.
 
-  
+You can view logs for each automated task. The Auto-staker can be turned OFF independently as stake wallets may be stored on local machines.
+
+When the Auto-Updater schedules an update with 48hrs of noting bottstrap node update this will show on the main dash and can be removed using the **Remove Scheduled Update** through Autopilot menu.
+
 
 ### -Setting up Autopilot Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/g0Q8o0rfKNM/0.jpg)](https://www.youtube.com/watch?v=g0Q8o0rfKNM)
