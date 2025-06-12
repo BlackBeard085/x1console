@@ -317,10 +317,10 @@ Use the performance Check to diagnose any potential server issues related to CPU
 Connect to mainnet or testnet.
 
 ## Set up Telegram Bot
-Set up a Telegram notification Bot that will notify you on every autopilot check and autostaker execution. To set up create a new bot using 'botfather' on telegram. give a name and username to your bot and copy the telegram bot token. Open a chat with the newly created bot and send a message to it and then open X1 Console and launch **Set up Telegram Bot** Answer yes to having messaged the bot and paste the telegram bot token and choose the type of chat you messaged the bot with, personal or group. The console will complete the setup for you.
+Set up a Telegram notification Bot that will notify you on every autopilot check and autostaker execution provided they are turned on under autopilot settings. To set up create a new bot using 'botfather' on telegram. give a name and username to your bot and copy the telegram bot token. Open a chat with the newly created bot and send a message to it and then open X1 Console and launch **Set up Telegram Bot** Answer yes to having messaged the bot and paste the telegram bot token and choose the type of chat you messaged the bot with, personal or group. The console will complete the setup for you.
 
 ### Set up Telegram Bot Video Tutorial/Demo
-
+[![Watch the video](https://img.youtube.com/vi/gUd93KZGNkM/0.jpg)](https://www.youtube.com/watch?v=gUd93KZGNkM)
 
 ## Links
 
