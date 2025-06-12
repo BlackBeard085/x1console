@@ -229,11 +229,9 @@ Turning ON Autopilot turns on a number of automated features and adds some infor
 1. **Autopilot**: Checks validator status every 30 minutes and attempts to restore active status to delinquemt validators. Also displays a 48hr restart counter showing the number of times the autopilot restarted the validator.
 2. **Auto-Pinger**: maintains pinger functions to contribute to X1 network health
 3. **Auto-Staker**: Automates the staking of excess funds in the vote account as wel as merging active stakes and activating inactive stakes.
-4. **Auto-Updater**: Updates the Tachyon Validator within 48hrs of when X1-labs bootstrap node (X1 Labs Node 3) has updated to the latest version.
+4. **Auto-Updater**: Updates the Tachyon Validator within 48hrs of X1-labs bootstrap node (X1 Labs Node 3) updating to the latest version. A random time is scheduled and shown on main dashboard. This can be removed using the **Remove Scheduled Update** through Autopilot menu if you choose to manually update or want to generate a new schedule on the next check.
 
 You can view logs for each automated task. The Auto-staker can be turned OFF independently as stake wallets may be stored on local machines.
-
-When the Auto-Updater schedules an update with 48hrs of noting bottstrap node update this will show on the main dash and can be removed using the **Remove Scheduled Update** through Autopilot menu.
 
 
 ### -Setting up Autopilot Video Tutorial/Demo
@@ -241,7 +239,7 @@ When the Auto-Updater schedules an update with 48hrs of noting bottstrap node up
 
 ### 4.Authority Manager
 Requirements: You will need an Ubuntu system locally.
-   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signature both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
+   Although part of the other menu Authority Manager is one of the more important security measures of X1 Console. The current setup delegates the id.json wallet as the withdraw authority of the stake and vote wallets. Without the id.json signature both the vote and stake wallet cannot be withdrawn. Ideally the id.json must be kept off the server and used when needed. Authority manager allows you to transfer the withdraw authority to a ledger HW or a locally x1console generated wallet, local.json. For this You must clone X1 Console on your local machine and copy all your wallets from your server to the .config/solana directory on your local machine.
 
 first create and open the directory on your local machine
 ```bash
