@@ -249,7 +249,7 @@ Launch the Athority Manager through the other menu option 4 on your local machin
 
 In order to change the withdraw authority of any wallet your 'Current set Withdrawer' MUST match the withdraw authority of the wallet you wish to change the withdraw authority for.
 
-![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image3.jpg)
+![Alt text](https://raw.githubusercontent.com/BlackBeard085/Images/refs/heads/main/Image3.png)
 
 Choose the wallet you wish to change the withdraw authority for, you can also choose all wallets which will be processed one after the other. You will be shown a list of possible new withdraw authorities.
 
