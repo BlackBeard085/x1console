@@ -75,9 +75,9 @@ For first installs please do the following.
 
 3. IMPORTANT: Reboot your server after first installation for optimizations to take effect. Exit the X1 Console and run the following in your existing shell:
 
-```bash
-sudo reboot
-```
+   ```bash
+   sudo reboot
+   ```
 
 4. To relogin to X1Console after reopening the terminal enter the following commands.
    ```bash
