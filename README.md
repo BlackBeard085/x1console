@@ -312,7 +312,7 @@ Use the server security manager to generate SSH keys on your local machine and e
 ### -Secure Your Server Video Tutorial/Demo
 [![Watch the video](https://img.youtube.com/vi/AQYFOae7SGQ/0.jpg)](https://www.youtube.com/watch?v=AQYFOae7SGQ)
 
-Use the performance Check to diagnose any potential server issues related to CPU, RAM, I/O utilization, swap, load and network. Enter the duration of the test in seconds or press enter fr a default 60 seconds check.
+Use the performance Check to diagnose any potential server issues related to CPU, RAM, I/O utilization, swap, load and network. Enter the duration of the test in seconds or press enter for a default 60 seconds check.
 
 ## Network
 Connect to mainnet or testnet.
