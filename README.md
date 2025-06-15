@@ -330,7 +330,7 @@ Set up a Telegram notification Bot that will notify you on every autopilot check
 - [Founder Jack Levin](https://x.com/mrJackLevin)
 - [Validators Portal](https://x1val.online/)
 - [X1 Console Dev BlackBeard](https://x.com/BlackBeard_X1)
-- [Video Tutorials](https://www.youtube.com/@BlackBeardX1)
+- [Video Tutorials by BlackBeard](https://www.youtube.com/@BlackBeardX1)
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
