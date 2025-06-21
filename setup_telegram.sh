@@ -9,7 +9,7 @@ read RESPONSE
 
 # Check user's response
 if [[ "$RESPONSE" != [Yy] ]]; then
-    echo "Please send a message to the bot first, then rerun the script."
+    echo "Please send a message to the bot first, then return to set up Telegram bot."
     exit 1
 fi
 
