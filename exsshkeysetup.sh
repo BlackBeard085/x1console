@@ -118,21 +118,8 @@ configure_ssh() {
     sudo ufw allow "$new_port"/tcp
     echo "UFW configured to allow SSH traffic on port $new_port."
 
-    # Determine the correct command to restart SSH service
-    if systemctl list-units --type=service | grep -i -q 'ssh'; then
-        sudo systemctl daemon-reload
-        if systemctl list-units --type=service | grep -i -q 'sshd'; then
-            sudo systemctl restart sshd
-        else
-            sudo systemctl restart ssh
-        fi
-        # Restart the SSH socket if it exists
-        if systemctl list-units --type=socket | grep -i -q 'ssh'; then
-            sudo systemctl restart ssh.socket
-        fi
-    else
-        echo "systemctl not available or SSH service not found."
-    fi
+    # Restart SSH service to apply changes
+    sudo systemctl restart sshd
 
     echo "SSH configuration updated successfully. Password authentication disabled, root login disabled."
 }
