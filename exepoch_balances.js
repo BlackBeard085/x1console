@@ -4,31 +4,22 @@ const util = require('util');
 
 const execPromise = util.promisify(exec);
 
-async function runCommand(cmd, retries = 3, delayMs = 1000) {
-    for (let attempt = 1; attempt <= retries; attempt++) {
-        try {
-            const { stdout } = await execPromise(cmd);
-            return stdout;
-        } catch (err) {
-            console.error(`Attempt ${attempt} failed for command: ${cmd}`);
-            if (attempt < retries) {
-                await new Promise(res => setTimeout(res, delayMs));
-            } else {
-                console.error(`All retries failed for command: ${cmd}`);
-                return ''; // or throw error if desired
-            }
-        }
+async function runCommand(cmd) {
+    try {
+        const { stdout } = await execPromise(cmd);
+        return stdout;
+    } catch (err) {
+        console.error(`Error executing command: ${cmd}\n`, err);
+        return '';
     }
 }
 
-// Fetch the balance of an address
 async function getBalance(address) {
     const output = await runCommand(`solana balance ${address}`);
     const balance = output.trim().split(' ')[0]; // first token is balance
     return balance;
 }
 
-// Fetch epoch info
 async function getEpochInfo() {
     const output = await runCommand(`solana epoch-info`);
     const epochLine = output.split('\n').find(line => line.includes('Epoch:'));
@@ -41,15 +32,14 @@ async function getEpochInfo() {
     return { epoch, remainingTime };
 }
 
-// Get all stake account addresses where name starts with 'Stake'
 async function getStakeAccounts() {
     const allstakesData = await fs.readFile('allstakes.json', 'utf8');
     const allstakes = JSON.parse(allstakesData);
+    // Filter names starting with 'Stake'
     const stakeEntries = allstakes.filter(entry => /^Stake/.test(entry.name));
     return stakeEntries.map(entry => entry.address);
 }
 
-// Get total active stake for a vote address
 async function getTotalStake(voteAddress) {
     const output = await runCommand(`solana stakes ${voteAddress}`);
     const lines = output.split('\n');
@@ -57,14 +47,13 @@ async function getTotalStake(voteAddress) {
     lines.forEach(line => {
         if (line.includes('Active Stake:')) {
             const parts = line.trim().split(/\s+/);
-            const amountStr = parts[2];
+            const amountStr = parts[2]; // e.g., '123.45'
             total += parseFloat(amountStr);
         }
     });
     return total.toFixed(2);
 }
 
-// Get total self delegated stake
 async function getTotalSelfDelegated() {
     const addresses = await getStakeAccounts();
     let totalSelf = 0;
@@ -78,7 +67,6 @@ async function getTotalSelfDelegated() {
     return totalSelf.toFixed(2);
 }
 
-// Get total unstaked balance
 async function getTotalUnstakedBalance() {
     const addresses = await getStakeAccounts();
     let totalBalance = 0;
