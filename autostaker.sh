@@ -224,5 +224,5 @@ fi
 
 log "Auto-staker execution completed."
     sleep 2
-    BALANCE_OUTPUT=$($HOME/x1console/epoch_balances.sh)
+    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js)
     send_telegram_message "$(echo -e "\U0001F4B0 Auto-staker executed. \n\n$BALANCE_OUTPUT")"

@@ -459,7 +459,7 @@ deactivate_stake() {
 
 # Function to display the menu
 show_menu() {
-    ./epoch_balances.sh
+    node epoch_balances.js
     echo "Please select an option:"
     echo "1. Activate Stake"
     echo "2. Deactivate Stake"

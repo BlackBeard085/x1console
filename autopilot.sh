@@ -72,8 +72,8 @@ echo -e "$HEALTH_OUTPUT"
 
 if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     echo -e "\nWARNING issued in health check."
-    BALANCE_OUTPUT=$($HOME/x1console/epoch_balances.sh)
-    sleep 3
+    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js && sleep 1)
+#    sleep 3
     send_telegram_message "$(echo -e "⚠️ Warning: Validator status delinquent. Restarting with Autopilot. \n\n$BALANCE_OUTPUT")"
     # Log the time of the warning
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Validator status Delinquent - Restarted with Autopilot" >> "$RESTART_TIMES_LOG"
@@ -114,8 +114,8 @@ if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     fi
 else
     echo -e "\nNo WARNING issued in health check. Exiting.\n"
-    BALANCE_OUTPUT=$($HOME/x1console/epoch_balances.sh)
-    sleep 3
+    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js && sleep 1)
+#    sleep 3
     send_telegram_message "$(echo -e "✅ Validator Active - No action required \n\n$BALANCE_OUTPUT")"
     #send_telegram_message "✅ Validator Active - No action required \n $BALANCE_OUTPUT"
     
