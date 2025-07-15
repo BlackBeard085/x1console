@@ -124,7 +124,7 @@ function withdraw_from_identity() {
 
 # Main menu loop
 while true; do
-    node epoch_balances.js
+    node epoch_balances.js 2>/dev/null
     echo -e "\nWhat would you like to do?"
     echo "1. Withdraw Stake"
     echo "2. Withdraw from Vote account"
