@@ -12,9 +12,9 @@ if [ ! -f "$CONFIG_FILE" ]; then
 fi
 
 if [ ! -f "$X1CONSOLE_DIR/ledger.json" ]; then
-        echo "[]" > "$X1CONSOLE_DIR/ledger.json"  # Create an empty JSON array if the file doesn't exist
-    fi
-    
+    echo "[]" > "$X1CONSOLE_DIR/ledger.json"  # Create an empty JSON array if the file doesn't exist
+fi
+
 # Function to read and parse the withdrawer key pair path from the JSON file
 get_withdrawer_keypair() {
     jq -r '.keypairPath' "$CONFIG_FILE"
@@ -24,7 +24,6 @@ get_withdrawer_keypair() {
 print_current_withdrawer() {
     local keypair_path
     keypair_path=$(get_withdrawer_keypair)
-    # Replace ~ with the user's home directory if necessary
     keypair_path=${keypair_path/#\~/$HOME}
     echo -e "\nCurrent Set Withdrawer: $keypair_path\n"
 }
@@ -34,19 +33,14 @@ display_wallets() {
     printf "%-5s %-30s %-30s\n" "No." "File Name" "Withdraw Authority"
     printf "%-5s %-30s %-30s\n" "---" "--------- " "----------------"
 
-    # Initialize an array to hold file paths for the stake and vote wallets
     local files=()
-
-    # Find and add all stake*.json and vote.json files to the array
     if compgen -G "$SOLANA_CONFIG_DIR/stake*.json" > /dev/null; then
         files+=("$SOLANA_CONFIG_DIR/stake*.json")
     fi
-
     if [ -f "$SOLANA_CONFIG_DIR/vote.json" ]; then
         files+=("$SOLANA_CONFIG_DIR/vote.json")
     fi
 
-    # Loop through the files array and print each file's name and withdraw authority
     local index=1
     for file in "${files[@]}"; do
         for f in $file; do
@@ -55,7 +49,6 @@ display_wallets() {
                 file_name=$(basename "$f")
                 local withdraw_authority=""
 
-                # Determine if it's a stake or vote account file
                 if [[ $file_name == stake*.json ]]; then
                     withdraw_authority=$(solana stake-account "$f" 2>&1)
                     if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
@@ -67,15 +60,13 @@ display_wallets() {
                     withdraw_authority=$(solana vote-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
                 fi
 
-                # Get the wallet name associated with the withdraw authority
                 local wallet_name
                 if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
                     wallet_name="no withdraw authority, requires repurposing"
                 elif [ -n "$withdraw_authority" ]; then
                     wallet_name=$(get_wallet_name "$withdraw_authority")
-                    # Check if the wallet name is empty or "Unknown"
                     if [[ "$wallet_name" == "Unknown" ]]; then
-                        wallet_name="$withdraw_authority"  # Display the pubkey if no matching name is found
+                        wallet_name="$withdraw_authority"
                     fi
                 else
                     wallet_name="Unknown"
@@ -88,29 +79,22 @@ display_wallets() {
     done
 }
 
-# Function to display the wallet list and withdraw authority specifically for the Change Withdraw Authority option
+# Function to display wallets specifically for changing withdraw authority
 display_wallets_for_change() {
     echo -e "\nCurrent Stake and Vote Wallets (excluding those needing repurposing):\n"
     printf "%-5s %-30s %-30s\n" "No." "File Name" "Withdraw Authority"
     printf "%-5s %-30s %-30s\n" "---" "--------- " "----------------"
 
-    # Initialize an array to hold file paths for the stake and vote wallets
     local files=()
-
-    # Find and add all stake*.json and vote.json files to the array
     if compgen -G "$SOLANA_CONFIG_DIR/stake*.json" > /dev/null; then
         files+=("$SOLANA_CONFIG_DIR/stake*.json")
     fi
-
     if [ -f "$SOLANA_CONFIG_DIR/vote.json" ]; then
         files+=("$SOLANA_CONFIG_DIR/vote.json")
     fi
 
-    # Initialize an array to hold the files to be displayed
     local display_files=()
     local index=1
-
-    # Loop through the files array and print each file's name and withdraw authority
     for file in "${files[@]}"; do
         for f in $file; do
             if [[ -e $f ]]; then
@@ -118,7 +102,6 @@ display_wallets_for_change() {
                 file_name=$(basename "$f")
                 local withdraw_authority=""
 
-                # Determine if it's a stake or vote account file
                 if [[ $file_name == stake*.json ]]; then
                     withdraw_authority=$(solana stake-account "$f" 2>&1)
                     if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
@@ -130,17 +113,13 @@ display_wallets_for_change() {
                     withdraw_authority=$(solana vote-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
                 fi
 
-                # Skip wallets that require repurposing and add to display
                 if [[ $withdraw_authority != "no withdraw authority, requires repurposing" ]]; then
                     display_files+=("$f")
-
-                    # Get the wallet name associated with the withdraw authority
                     local wallet_name
                     if [ -n "$withdraw_authority" ]; then
                         wallet_name=$(get_wallet_name "$withdraw_authority")
-                        # Check if the wallet name is empty or "Unknown"
                         if [[ "$wallet_name" == "Unknown" ]]; then
-                            wallet_name="$withdraw_authority"  # Display the pubkey if no matching name is found
+                            wallet_name="$withdraw_authority"
                         fi
                     else
                         wallet_name="Unknown"
@@ -152,7 +131,6 @@ display_wallets_for_change() {
         done
     done
 
-    # Adding the "All Wallets" option at the end
     local all_wallets_choice=$((index))
     printf "%-5s %-30s %-30s\n" "$all_wallets_choice" "All Wallets" ""
 }
@@ -171,10 +149,9 @@ get_wallet_name() {
     echo "Unknown"
 }
 
-# Function to show the menu and handle user input
+# Function to show menu
 show_menu() {
     while true; do
-        # Refresh current withdrawer
         print_current_withdrawer
         display_wallets
 
@@ -209,50 +186,42 @@ changewithdrawer() {
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
-# Function to add a wallet to ledger.json if it doesn't exist
+# Function to add wallet to ledger.json
 add_wallet_to_ledger() {
     local new_wallet_name="$1"
     local new_wallet_pubkey="$2"
 
     if [ ! -f "$X1CONSOLE_DIR/ledger.json" ]; then
-        echo "[]" > "$X1CONSOLE_DIR/ledger.json"  # Create an empty JSON array if the file doesn't exist
+        echo "[]" > "$X1CONSOLE_DIR/ledger.json"
     fi
 
-    # Use the full name with usb:// for ledger.json
     jq --arg name "$new_wallet_name" --arg address "$new_wallet_pubkey" \
        '. += [{"name": $name, "address": $address}]' "$X1CONSOLE_DIR/ledger.json" > temp.json && mv temp.json "$X1CONSOLE_DIR/ledger.json"
     echo -e "Added new withdraw authority to ledger.json: $new_wallet_name with address $new_wallet_pubkey"
 }
 
-# Function to change the Withdraw Authority
+# Function to change withdraw authority
 change_withdraw_authority() {
-    # Display the wallets specifically for this option
     display_wallets_for_change
-
     echo " "
     read -rp "Which wallet would you like to change Withdraw Authority for? (Enter number): " wallet_choice
 
     local selected_file
-    local single_choice
-
-    # Initialize files array
+    local single_choice=true
     local files=()
     if compgen -G "$SOLANA_CONFIG_DIR/stake*.json" > /dev/null; then
         files+=("$SOLANA_CONFIG_DIR/stake*.json")
     fi
-
     if [ -f "$SOLANA_CONFIG_DIR/vote.json" ]; then
         files+=("$SOLANA_CONFIG_DIR/vote.json")
     fi
 
-    # Build array of files to change.
     local display_files=()
     for file in "${files[@]}"; do
         for f in $file; do
             if [[ -e $f ]]; then
                 local file_name=$(basename "$f")
                 local withdraw_authority=""
-
                 if [[ $file_name == stake*.json ]]; then
                     withdraw_authority=$(solana stake-account "$f" 2>&1)
                     if [[ $withdraw_authority == *"AccountNotFound"* ]]; then
@@ -263,7 +232,6 @@ change_withdraw_authority() {
                 elif [[ $file_name == vote.json ]]; then
                     withdraw_authority=$(solana vote-account "$f" | grep "Withdraw Authority:" | awk '{print $3}')
                 fi
-
                 if [[ $withdraw_authority != "no withdraw authority, requires repurposing" ]]; then
                     display_files+=("$f")
                 fi
@@ -271,10 +239,9 @@ change_withdraw_authority() {
         done
     done
 
-    # Determine wallet choice
     local total_wallets=${#display_files[@]}
     if [[ "$wallet_choice" -ge 1 ]] && [[ "$wallet_choice" -le $total_wallets ]]; then
-        selected_file="${display_files[$((wallet_choice - 1))]}"  # Use the filtered list
+        selected_file="${display_files[$((wallet_choice - 1))]}"
         echo -e "\nYou have chosen: $(basename "$selected_file")"
         echo "Public Key: $(solana-keygen pubkey "$selected_file")"
         single_choice=true
@@ -286,7 +253,7 @@ change_withdraw_authority() {
         return
     fi
 
-    # Listing potential new withdraw authorities
+    # Listing potential new withdraw authorities including custom option
     echo -e "\nPotential New Withdraw Authorities:"
     echo "1. $HOME/.config/solana/id.json"
     echo "2. $HOME/.config/solana/local.json"
@@ -295,12 +262,12 @@ change_withdraw_authority() {
     echo "5. usb://ledger?key=1"
     echo "6. usb://ledger?key=2"
     echo "7. usb://ledger?key=3"
+    echo "8. Custom"
 
     echo " "
     read -rp "Which account would you like to give the Withdraw Authority to? (Enter number): " new_authority_choice
 
-    local new_author
-    # Validate choice for new authority
+    local new_author=""
     case "$new_authority_choice" in
         1) new_author="$HOME/.config/solana/id.json" ;;
         2)
@@ -325,14 +292,18 @@ change_withdraw_authority() {
         5) new_author="usb://ledger?key=1" ;;
         6) new_author="usb://ledger?key=2" ;;
         7) new_author="usb://ledger?key=3" ;;
+        8)
+            read -rp "Enter the full path to the custom withdraw authority: " custom_path
+            new_author="$custom_path"
+            ;;
         *)
             echo "Invalid choice for new withdraw authority."
             return
             ;;
     esac
 
-    # Get the public key of the selected new authority
-    local new_author_pubkey
+    # Retrieve the public key for the new authority
+    local new_author_pubkey=""
     if [[ $new_author == "usb://ledger"* ]]; then
         new_author_pubkey=$(solana-keygen pubkey "$new_author" 2>/dev/null || echo "Could not retrieve public key")
     else
@@ -344,40 +315,32 @@ change_withdraw_authority() {
         return
     fi
 
-    # Check if the public key exists in wallets.json
+    # Check if the new pubkey exists in wallets.json or ledger.json
     if jq -e ".[] | select(.address == \"$new_author_pubkey\")" "$X1CONSOLE_DIR/wallets.json" > /dev/null; then
         echo "Withdraw authority exists in wallets.json: $new_author_pubkey"
-    # If not found in wallets.json, check in ledger.json
     elif jq -e ".[] | select(.address == \"$new_author_pubkey\")" "$X1CONSOLE_DIR/ledger.json" > /dev/null; then
         echo "Withdraw authority exists in ledger.json: $new_author_pubkey"
     else
-        # If not found in either, add it to ledger.json
         add_wallet_to_ledger "$new_author" "$new_author_pubkey"
     fi
 
-    # Display the chosen new withdraw authority
     echo "You have chosen the new withdraw authority: $(basename "$new_author")"
     echo "Public Key: $new_author_pubkey"
 
-    # Get the current withdrawer keypair from the config
     local current_withdraw_authority_keypair
     current_withdraw_authority_keypair=$(get_withdrawer_keypair)
     current_withdraw_authority_keypair=${current_withdraw_authority_keypair/#\~/$HOME}
 
-    # If single wallet choice is true, only change that specific wallet's authority
     if [ "$single_choice" = true ]; then
         if [[ $selected_file == *"vote.json" ]]; then
-            # Run the solana command for changing the withdraw authority
-            echo -e "\nChanging withdraw authority for vote account: $wallet"
+            echo -e "\nChanging withdraw authority for vote account: $selected_file"
             solana vote-authorize-withdrawer "$selected_file" "$current_withdraw_authority_keypair" "$new_author"
         else
             process_wallet "$selected_file" "$new_author"
         fi
     else
-        # Loop through all wallets and process each one
-        for wallet in "${display_files[@]}"; do # Use the filtered display list
+        for wallet in "${display_files[@]}"; do
             if [[ $wallet == *"vote.json" ]]; then
-                # Run the solana command for each vote wallet using the current withdraw authority keypair
                 echo -e "\nChanging withdraw authority for vote account: $wallet"
                 solana vote-authorize-withdrawer "$wallet" "$current_withdraw_authority_keypair" "$new_author"
             else
@@ -405,7 +368,6 @@ process_wallet() {
         withdraw_authority=$(solana vote-account "$wallet_file" | grep "Withdraw Authority:" | awk '{print $3}')
     fi
 
-    # Skip wallets that require repurposing
     if [[ $withdraw_authority == "no withdraw authority, requires repurposing" ]]; then
         echo "Skipping wallet $wallet_file (requires repurposing)"
         return
@@ -417,5 +379,5 @@ process_wallet() {
     fi
 }
 
-# Main script execution
+# Start the menu
 show_menu
