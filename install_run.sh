@@ -248,11 +248,11 @@ if (( $(echo "$current_balance >= 4" | bc -l) )); then
     solana transfer "$identity_address" 1 --allow-unfunded-recipient
 
     echo "Creating stake account..."
-    stake_creation_response=$(solana create-stake-account "$stake_address" 2)
+    stake_creation_response=$(solana create-stake-account "$stake_address" 1)
     echo -e "Stake account creation response:\n$stake_creation_response\n"
 
     echo "Creating vote account..."
-    vote_creation_response=$(solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 10)
+    vote_creation_response=$(solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 5)
     echo -e "Vote account creation response:\n$vote_creation_response\n"
 
     echo "Stake and vote accounts created successfully."

@@ -6,7 +6,7 @@ const path = require('path'); // for handling file paths
 const os = require('os'); // for getting home directory
 const SOLANA_CLUSTER = 'https://rpc.testnet.x1.xyz'; // Change to your desired cluster (mainnet, testnet, etc.)
 const CONFIG_FILE = 'wallets.json'; // JSON file to store wallet addresses
-const TRANSFER_AMOUNT = 2; // Amount in XNT to transfer when funding
+const TRANSFER_AMOUNT = 1; // Amount in XNT to transfer when funding
 
 // Set up readline to get user input
 const rl = readline.createInterface({
@@ -124,7 +124,7 @@ async function main() {
     if (needsFunding.length > 0) {
         // Check if the Id wallet has enough balance for the transfers
         if (idWallet.balance >= needsFunding.length * TRANSFER_AMOUNT) {
-            // Loop through the wallets that need funding and transfer 2 XNT to each
+            // Loop through the wallets that need funding and transfer 1 XNT to each
             for (const wallet of needsFunding) {
                 console.log(`\nSending ${TRANSFER_AMOUNT} XNT to ${wallet.address}`);
                 await transferSOL(idWallet.address, wallet.address, TRANSFER_AMOUNT);

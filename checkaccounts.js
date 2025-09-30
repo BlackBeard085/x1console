@@ -124,7 +124,7 @@ function moveAndCreateStakeAccount() {
                 console.log(`Created new stake account: ${stakePath}`);
                 newWalletsCreated = true;
 
-                exec(`solana create-stake-account ${stakePath} 2`, (createError) => {
+                exec(`solana create-stake-account ${stakePath} 1`, (createError) => {
                     if (createError) {
                         reject(`Error creating stake account: ${createError}`);
                         return;
@@ -170,7 +170,7 @@ function moveAndCreateVoteAccount() {
                 console.log(`Created new vote account: ${votePath}`);
                 newWalletsCreated = true;
 
-                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createError) => {
+                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 5`, (createError) => {
                     if (createError) {
                         reject(`Error creating vote account: ${createError}`);
                         return;
@@ -209,7 +209,7 @@ function checkStakeAccount() {
 
         exec(`solana stake-account ${publicKey}`, (error, stdout, stderr) => {
             if (stderr.includes("AccountNotFound")) {
-                exec(`solana create-stake-account ${stakePath} 2`, (createErr) => {
+                exec(`solana create-stake-account ${stakePath} 1`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
                     } else {
@@ -250,7 +250,7 @@ function checkVoteAccount() {
 
         exec(`solana vote-account ${publicKey}`, (error, stdout, stderr) => {
             if (stderr.includes("account does not exist")) {
-                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr) => {
+                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 5`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
                     } else {
