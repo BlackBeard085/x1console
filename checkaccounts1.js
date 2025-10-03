@@ -308,13 +308,15 @@ async function main() {
     updateWallets(); // Update wallets.json with existing public keys
 
     try {
+        // First, check or create the stake account
         const stakeResult = await checkStakeAccount();
         console.log(stakeResult);
 
+        // Then, check or create the vote account
         const voteResult = await checkVoteAccount();
         console.log(voteResult);
 
-        // Create wallets.json after checking accounts
+        // After all, create or update wallets.json if needed
         createWalletsJSON();
     } catch (error) {
         console.error(`Error occurred: ${error}`);
