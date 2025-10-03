@@ -8,8 +8,8 @@ while true; do
     echo " "
     case $option in
         1)
-            solana config set -u https://rpc.testnet.x1.xyz
-            echo -e "\nMainnet is TBA connected to testnet."
+            solana config set -u https://rpc.mainnet.x1.xyz/
+            echo -e "\nConnected to Mainnet."
             break
             ;;
         2)
