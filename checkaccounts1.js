@@ -18,7 +18,7 @@ const homeDir = process.env.HOME || process.env.HOMEPATH;
 const stakePath = path.join(homeDir, '.config/solana/stake.json');
 const votePath = path.join(homeDir, '.config/solana/vote.json');
 const identityPath = path.join(homeDir, '.config/solana/identity.json');
-// withdrawerPath is now from config
+// withdrawerPath is from config
 // const withdrawerPath = path.join(homeDir, '.config/solana/id.json');
 
 const archivePath = path.join(homeDir, '.config/solana/archive');
@@ -303,16 +303,15 @@ function createWalletsJSON() {
     writeWallets(wallets);
 }
 
-// Main function to execute the checks
+// Main function to execute the checks sequentially
 async function main() {
     updateWallets(); // Update wallets.json with existing public keys
 
     try {
-        const [stakeResult, voteResult] = await Promise.all([
-            checkStakeAccount(),
-            checkVoteAccount(),
-        ]);
+        const stakeResult = await checkStakeAccount();
         console.log(stakeResult);
+
+        const voteResult = await checkVoteAccount();
         console.log(voteResult);
 
         // Create wallets.json after checking accounts
