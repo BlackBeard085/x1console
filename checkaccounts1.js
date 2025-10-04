@@ -203,7 +203,7 @@ function moveAndCreateVoteAccount() {
 }
 
 // Function to check stake account
-function checkStakeAccount() {
+async function checkStakeAccount() {
     return new Promise((resolve, reject) => {
         let publicKey;
         if (fs.existsSync(stakePath)) {
@@ -224,9 +224,17 @@ function checkStakeAccount() {
                 exec(`solana create-stake-account ${stakePath} 1`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
-                    } else {
-                        //resolve('Stake account created and copied to tachyon.');
+                        return;
                     }
+                    // After creation, verify again
+                    exec(`solana stake-account ${stakePath}`, (checkErr, checkStdout) => {
+                        if (checkErr) {
+                            reject(`Error checking stake account after creation: ${checkErr}`);
+                            return;
+                        }
+                        const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
+                        resolve(`Stake account created and exists:\n${outputLines}`);
+                    });
                 });
             } else if (stderr.includes("is not a stake account")) {
                 moveAndCreateStakeAccount()
@@ -244,7 +252,7 @@ function checkStakeAccount() {
 }
 
 // Function to check vote account
-function checkVoteAccount() {
+async function checkVoteAccount() {
     return new Promise((resolve, reject) => {
         let publicKey;
         if (fs.existsSync(votePath)) {
@@ -265,9 +273,17 @@ function checkVoteAccount() {
                 exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 5`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
-                    } else {
-                        //resolve('Vote account created and copied to tachyon.');
+                        return;
                     }
+                    // After creation, verify again
+                    exec(`solana vote-account ${votePath}`, (checkErr, checkStdout) => {
+                        if (checkErr) {
+                            reject(`Error checking vote account after creation: ${checkErr}`);
+                            return;
+                        }
+                        const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
+                        resolve(`Vote account created and exists:\n${outputLines}`);
+                    });
                 });
             } else if (stderr.includes("is not a vote account")) {
                 moveAndCreateVoteAccount()
@@ -306,11 +322,10 @@ async function main() {
     updateWallets(); // Update wallets.json with existing public keys
 
     try {
-        // Run stake check first
+        // Check and create stake account first
         const stakeResult = await checkStakeAccount();
         console.log(stakeResult);
-
-        // Then run vote check
+        // Then check and create vote account
         const voteResult = await checkVoteAccount();
         console.log(voteResult);
 
