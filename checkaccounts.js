@@ -2,11 +2,25 @@ const { exec, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// Load withdrawerconfig.json to get the keypairPath
+const configPath = path.join(__dirname, 'withdrawerconfig.json');
+let withdrawerPath = '';
+
+try {
+    const configData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    withdrawerPath = configData.keypairPath;
+} catch (err) {
+    console.error(`Failed to read or parse withdrawerconfig.json at ${configPath}:`, err);
+    process.exit(1);
+}
+
 const homeDir = process.env.HOME || process.env.HOMEPATH;
 const stakePath = path.join(homeDir, '.config/solana/stake.json');
 const votePath = path.join(homeDir, '.config/solana/vote.json');
 const identityPath = path.join(homeDir, '.config/solana/identity.json');
-const withdrawerPath = path.join(homeDir, '.config/solana/id.json');
+// withdrawerPath is from config
+// const withdrawerPath = path.join(homeDir, '.config/solana/id.json');
+
 const archivePath = path.join(homeDir, '.config/solana/archive');
 
 // Paths for wallets.json
@@ -105,7 +119,6 @@ function moveAndCreateStakeAccount() {
             fs.mkdirSync(archivePath);
         }
 
-        // Create a timestamped filename for the archived stake file
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const newStakePath = path.join(archivePath, `stake-${timestamp}.json`);
 
@@ -151,7 +164,6 @@ function moveAndCreateVoteAccount() {
             fs.mkdirSync(archivePath);
         }
 
-        // Create a timestamped filename for the archived vote file
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const newVotePath = path.join(archivePath, `vote-${timestamp}.json`);
 
@@ -170,7 +182,7 @@ function moveAndCreateVoteAccount() {
                 console.log(`Created new vote account: ${votePath}`);
                 newWalletsCreated = true;
 
-                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 5`, (createError) => {
+                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createError) => {
                     if (createError) {
                         reject(`Error creating vote account: ${createError}`);
                         return;
@@ -191,7 +203,7 @@ function moveAndCreateVoteAccount() {
 }
 
 // Function to check stake account
-function checkStakeAccount() {
+async function checkStakeAccount() {
     return new Promise((resolve, reject) => {
         let publicKey;
         if (fs.existsSync(stakePath)) {
@@ -212,9 +224,17 @@ function checkStakeAccount() {
                 exec(`solana create-stake-account ${stakePath} 1`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating stake account: ${stderr}`);
-                    } else {
-                        //resolve('Stake account created and copied to tachyon.');
+                        return;
                     }
+                    // After creation, verify again
+                    exec(`solana stake-account ${stakePath}`, (checkErr, checkStdout) => {
+                        if (checkErr) {
+                            reject(`Error checking stake account after creation: ${checkErr}`);
+                            return;
+                        }
+                        const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
+                        resolve(`Stake account created and exists:\n${outputLines}`);
+                    });
                 });
             } else if (stderr.includes("is not a stake account")) {
                 moveAndCreateStakeAccount()
@@ -232,7 +252,7 @@ function checkStakeAccount() {
 }
 
 // Function to check vote account
-function checkVoteAccount() {
+async function checkVoteAccount() {
     return new Promise((resolve, reject) => {
         let publicKey;
         if (fs.existsSync(votePath)) {
@@ -250,12 +270,20 @@ function checkVoteAccount() {
 
         exec(`solana vote-account ${publicKey}`, (error, stdout, stderr) => {
             if (stderr.includes("account does not exist")) {
-                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 5`, (createErr) => {
+                exec(`solana create-vote-account ${votePath} ${identityPath} ${withdrawerPath} --commission 10`, (createErr) => {
                     if (createErr) {
                         reject(`Error creating vote account: ${stderr}`);
-                    } else {
-                        //resolve('Vote account created and copied to tachyon.');
+                        return;
                     }
+                    // After creation, verify again
+                    exec(`solana vote-account ${votePath}`, (checkErr, checkStdout) => {
+                        if (checkErr) {
+                            reject(`Error checking vote account after creation: ${checkErr}`);
+                            return;
+                        }
+                        const outputLines = checkStdout.split('\n').slice(0, 10).join('\n');
+                        resolve(`Vote account created and exists:\n${outputLines}`);
+                    });
                 });
             } else if (stderr.includes("is not a vote account")) {
                 moveAndCreateVoteAccount()
@@ -289,16 +317,16 @@ function createWalletsJSON() {
     writeWallets(wallets);
 }
 
-// Main function to execute the checks
+// Main function to execute the checks sequentially
 async function main() {
     updateWallets(); // Update wallets.json with existing public keys
 
     try {
-        const [stakeResult, voteResult] = await Promise.all([
-            checkStakeAccount(),
-            checkVoteAccount(),
-        ]);
+        // Check and create stake account first
+        const stakeResult = await checkStakeAccount();
         console.log(stakeResult);
+        // Then check and create vote account
+        const voteResult = await checkVoteAccount();
         console.log(voteResult);
 
         // Create wallets.json after checking accounts

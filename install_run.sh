@@ -252,7 +252,7 @@ if (( $(echo "$current_balance >= 4" | bc -l) )); then
     echo -e "Stake account creation response:\n$stake_creation_response\n"
 
     echo "Creating vote account..."
-    vote_creation_response=$(solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 5)
+    vote_creation_response=$(solana create-vote-account "$vote_address" "$identity_address" "$withdrawer_address" --commission 10)
     echo -e "Vote account creation response:\n$vote_creation_response\n"
 
     echo "Stake and vote accounts created successfully."
