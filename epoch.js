@@ -1,10 +1,24 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process'); // Import exec to run shell commands
+const { execSync, exec } = require('child_process'); // Import execSync for synchronous command execution
 
-// Change this URL to your specific cluster API URL
-const CLUSTER_URL = 'https://rpc.testnet.x1.xyz';
+// Function to get the network URL dynamically by running connectednetwork.js
+function getNetworkUrl() {
+    const output = execSync('node connectednetwork.js', { encoding: 'utf8' });
+    // Output example: "RPC URL: https://rpc.mainnet.x1.xyz/"
+    const urlMatch = output.match(/RPC URL:\s*(https:\/\/\S+)/);
+    if (urlMatch && urlMatch[1]) {
+        return urlMatch[1];
+    } else {
+        throw new Error('Failed to parse network URL from connectednetwork.js output.');
+    }
+}
+
+// Get the network URL dynamically
+const CLUSTER_URL = getNetworkUrl();
+
+//console.log(`Using network URL: ${CLUSTER_URL}`);
 
 // Check if wallets.json exists
 const walletsFilePath = path.join(__dirname, 'wallets.json');

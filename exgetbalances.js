@@ -1,27 +1,10 @@
 const fs = require('fs');
-const { execSync, exec } = require('child_process'); // for executing shell commands
+const { exec } = require('child_process'); // for executing shell commands
 const { Connection, PublicKey } = require('@solana/web3.js');
 const readline = require('readline');
 const path = require('path'); // for handling file paths
 const os = require('os'); // for getting home directory
-
-// Function to get the network URL dynamically by running connectednetwork.js
-function getNetworkUrl() {
-    const output = execSync('node connectednetwork.js', { encoding: 'utf8' });
-    // Output example: "RPC URL: https://rpc.mainnet.x1.xyz/"
-    const urlMatch = output.match(/RPC URL:\s*(https:\/\/\S+)/);
-    if (urlMatch && urlMatch[1]) {
-        return urlMatch[1];
-    } else {
-        throw new Error('Failed to parse network URL from connectednetwork.js output.');
-    }
-}
-
-// Get the network URL dynamically
-const SOLANA_CLUSTER = getNetworkUrl();
-
-//console.log(`Using network URL: ${SOLANA_CLUSTER}`);
-
+const SOLANA_CLUSTER = 'https://rpc.testnet.x1.xyz'; // Change to your desired cluster (mainnet, testnet, etc.)
 const CONFIG_FILE = 'wallets.json'; // JSON file to store wallet addresses
 const TRANSFER_AMOUNT = 1; // Amount in XNT to transfer when funding
 
