@@ -21,9 +21,10 @@ fi
 nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --identity ~/.config/solana/identity.json \
     --vote-account "$VOTE_ACCOUNT" \
-    --known-validator Abt4r6uhFs7yPwR3jT5qbnLjBtasgHkRVAd1W6H5yonT \
-    --known-validator FcrZRBfVk2h634L9yvkysJdmvdAprq1NM4u263NuR6LC \
-    --known-validator Tpsu5EYTJAXAat19VEh54zuauHvUBuryivSFRC3RiFk \
+    --known-validator 7ufaUVtQKzGu5tpFtii9Cg8kR4jcpjQSXwsF3oVPSMZA \
+    --known-validator 5Rzytnub9yGTFHqSmauFLsAbdXFbehMwPBLiuEgKajUN \
+    --known-validator 4V2QkkWce8bwTzvvwPiNRNQ4W433ZsGQi9aWU12Q8uBF \
+    --known-validator CkMwg4TM6jaSC5rJALQjvLc51XFY5pJ1H9f1Tmu5Qdxs \
     --accounts /run/accounts \
     --accounts-db-cache-limit-mb 10000 \
     --only-known-rpc \
@@ -33,9 +34,10 @@ nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --rpc-port 8899 \
     --full-rpc-api \
     --dynamic-port-range 8000-8020 \
-    --entrypoint entrypoint1.testnet.x1.xyz:8001 \
-    --entrypoint entrypoint2.testnet.x1.xyz:8000 \
-    --entrypoint entrypoint3.testnet.x1.xyz:8000 \
+    --entrypoint entrypoint0.mainnet.x1.xyz:8000 \
+    --entrypoint entrypoint1.mainnet.x1.xyz:8000 \
+    --entrypoint entrypoint2.mainnet.x1.xyz:8000 \
+    --entrypoint entrypoint3.mainnet.x1.xyz:8000 \
     --wal-recovery-mode skip_any_corrupted_record \
     --limit-ledger-size 50000000 \
     --enable-rpc-transaction-history \
