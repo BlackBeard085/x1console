@@ -19,7 +19,7 @@ const stakePath = path.join(homeDir, '.config/solana/stake.json');
 const votePath = path.join(homeDir, '.config/solana/vote.json');
 const identityPath = path.join(homeDir, '.config/solana/identity.json');
 // withdrawerPath is from config
-// const withdrawerPath = path.join(homeDir, '.config/solana/id.json');
+const idPath = path.join(homeDir, '.config/solana/id.json');
 
 const archivePath = path.join(homeDir, '.config/solana/archive');
 
@@ -70,7 +70,7 @@ function writeWallets(wallets) {
 
 // Function to update wallets.json with public keys from existing files
 function updateWallets() {
-    const files = [withdrawerPath, identityPath, stakePath, votePath];
+    const files = [idPath, identityPath, stakePath, votePath];
     const wallets = readWallets();
 
     try {
@@ -308,7 +308,7 @@ function createWalletsJSON() {
     }
 
     const wallets = [
-        { name: capitalizeFirstLetter("id"), address: execSync(`solana-keygen pubkey ${withdrawerPath}`).toString().trim() },
+        { name: capitalizeFirstLetter("id"), address: execSync(`solana-keygen pubkey ${idPath}`).toString().trim() },
         { name: capitalizeFirstLetter("identity"), address: execSync(`solana-keygen pubkey ${identityPath}`).toString().trim() },
         { name: capitalizeFirstLetter("stake"), address: execSync(`solana-keygen pubkey ${stakePath}`).toString().trim() },
         { name: capitalizeFirstLetter("vote"), address: execSync(`solana-keygen pubkey ${votePath}`).toString().trim() },
