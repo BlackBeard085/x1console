@@ -9,7 +9,7 @@ const os = require('os'); // for getting home directory
 function getNetworkUrl() {
     const output = execSync('node connectednetwork.js', { encoding: 'utf8' });
     // Output example: "RPC URL: https://rpc.mainnet.x1.xyz/"
-    const urlMatch = output.match(/RPC URL:\s*(https:\/\/\S+)/);
+    const urlMatch = output.match(/RPC URL:\s*(https?:\/\/\S+)/);
     if (urlMatch && urlMatch[1]) {
         return urlMatch[1];
     } else {
