@@ -25,6 +25,7 @@ nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --known-validator 5Rzytnub9yGTFHqSmauFLsAbdXFbehMwPBLiuEgKajUN \
     --known-validator 4V2QkkWce8bwTzvvwPiNRNQ4W433ZsGQi9aWU12Q8uBF \
     --known-validator CkMwg4TM6jaSC5rJALQjvLc51XFY5pJ1H9f1Tmu5Qdxs \
+    --known-validator 7J5wJaH55ZYjCCmCMt7Gb3QL6FGFmjz5U8b6NcbzfoTy \
     --accounts /run/accounts \
     --accounts-db-cache-limit-mb 10000 \
     --only-known-rpc \
@@ -34,10 +35,10 @@ nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --rpc-port 8899 \
     --full-rpc-api \
     --dynamic-port-range 8000-8020 \
-    --entrypoint entrypoint0.mainnet.x1.xyz:8000 \
-    --entrypoint entrypoint1.mainnet.x1.xyz:8000 \
-    --entrypoint entrypoint2.mainnet.x1.xyz:8000 \
-    --entrypoint entrypoint3.mainnet.x1.xyz:8000 \
+    --entrypoint entrypoint0.mainnet.x1.xyz:8001 \
+    --entrypoint entrypoint1.mainnet.x1.xyz:8001 \
+    --entrypoint entrypoint2.mainnet.x1.xyz:8001 \
+    --entrypoint entrypoint3.mainnet.x1.xyz:8001 \
     --wal-recovery-mode skip_any_corrupted_record \
     --limit-ledger-size 50000000 \
     --enable-rpc-transaction-history \
