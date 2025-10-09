@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export LC_ALL=C
 # Function to display the formatted wallet addresses with indexed options
 function display_wallets() {
     echo -e "\nAvailable wallets:"
