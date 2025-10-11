@@ -4,7 +4,7 @@
 WALLETS_FILE="wallets.json"
 
 # Maximum credits (assumed constant as per your example)
-MAX_CREDITS=8000
+MAX_CREDITS=3456000
 
 # Extract the vote address from wallets.json
 VOTE_ADDRESS=$(jq -r '.[] | select(.name=="Vote") | .address' "$WALLETS_FILE")
