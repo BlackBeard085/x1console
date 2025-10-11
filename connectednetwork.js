@@ -28,7 +28,7 @@ exec('solana config get', (error, stdout, stderr) => {
             if (err) {
                 console.error(`Error writing to file: ${err.message}`);
             } else {
-                console.log('RPC URL saved to connectednetwork.json');
+            //    console.log('RPC URL saved to connectednetwork.json');
             }
         });
     } else {
