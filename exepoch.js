@@ -1,26 +1,25 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const { execSync, exec } = require('child_process'); // Import execSync for synchronous command execution
+const { exec } = require('child_process'); // Import exec to run shell commands
 
-// Function to get the network URL dynamically by running connectednetwork.js
-function getNetworkUrl() {
-    const output = execSync('node connectednetwork.js', { encoding: 'utf8' });
-    // Output example: "RPC URL: https://rpc.mainnet.x1.xyz/"
-    const urlMatch = output.match(/RPC URL:\s*(https?:\/\/\S+)/);
-    if (urlMatch && urlMatch[1]) {
-        return urlMatch[1];
-    } else {
-        throw new Error('Failed to parse network URL from connectednetwork.js output.');
+// --- Load connected network configuration ---
+const networkConfigPath = path.join(__dirname, 'connectednetwork.json');
+let rpcUrl;
+
+try {
+    const networkConfig = JSON.parse(fs.readFileSync(networkConfigPath, 'utf8'));
+    rpcUrl = networkConfig.rpcUrl.trim();
+    if (!rpcUrl) {
+        console.error('RPC URL is missing in connectednetwork.json');
+        process.exit(1);
     }
+} catch (error) {
+    console.error('Error reading connectednetwork.json:', error.message);
+    process.exit(1);
 }
 
-// Get the network URL dynamically
-const CLUSTER_URL = getNetworkUrl();
-
-//console.log(`Using network URL: ${CLUSTER_URL}`);
-
-// Check if wallets.json exists
+// --- Load wallets.json ---
 const walletsFilePath = path.join(__dirname, 'wallets.json');
 let wallets;
 
@@ -55,7 +54,7 @@ function fetchValidatorVersion(identity) {
             }
             const versionInfo = stdout.match(/\d+\.\d+\.\d+/);
             if (versionInfo) {
-                resolve(`v${versionInfo[0]}   `);
+                resolve(`v${versionInfo[0]} `);
             } else {
                 resolve('N/A');
             }
@@ -128,6 +127,7 @@ function fetchAvgVoteSuccess() {
     });
 }
 
+// Fetch current epoch info
 function fetchCurrentEpoch() {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify({
@@ -136,7 +136,7 @@ function fetchCurrentEpoch() {
             method: 'getEpochInfo'
         });
         const options = {
-            hostname: CLUSTER_URL.replace(/^https?:\/\//, ''),
+            hostname: rpcUrl.replace(/^https?:\/\//, '').replace(/\/$/, ''), // Remove protocol and trailing slash
             port: 443,
             path: '/',
             method: 'POST',
@@ -163,6 +163,7 @@ function fetchCurrentEpoch() {
     });
 }
 
+// Fetch block production data
 function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify({
@@ -176,7 +177,7 @@ function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
             }]
         });
         const options = {
-            hostname: CLUSTER_URL.replace(/^https?:\/\//, ''),
+            hostname: rpcUrl.replace(/^https?:\/\//, '').replace(/\/$/, ''),
             port: 443,
             path: '/',
             method: 'POST',
@@ -317,7 +318,7 @@ async function fetchBlockProductionForLastEpochs() {
             return;
         }
 
-        console.log(`\n| Epoch  ${epochRemainingOutput} | Skipped Slots   | Vote Success | Total Stake (%)      |`);
+        console.log(`\n| Epoch  ${epochRemainingOutput}   | Skipped Slots   | Vote Success | Total Stake (%)      |`);
         console.log('|----------------------|-----------------|--------------|----------------------|');
         rows.forEach(row => {
             console.log(`| ${row.epoch.toString().padEnd(20)} | ${row.skipped.padEnd(15)} | ${row.voteSuccess.toString().padEnd(12)} | ${row.totalStake.toString().padEnd(20)} |`);
