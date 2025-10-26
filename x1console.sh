@@ -419,7 +419,7 @@ ledger() {
     echo -e "2. Remove Ledger"
     echo -e "3. Backup Ledger"
     echo -e "4. Exit"
-    read -p "Enter your choice [1-3]: " ledger_choice
+    read -p "Enter your choice [1-4]: " ledger_choice
     case $ledger_choice in
         1)
             ledger_monitor

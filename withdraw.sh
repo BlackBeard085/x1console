@@ -113,7 +113,7 @@ function withdraw_from_identity() {
         if (( $(echo "$withdraw_amount <= $identity_balance && $withdraw_amount >= 0" | bc -l) )); then
             # Withdraw funds from Identity account
             solana transfer --from ~/.config/solana/identity.json "$withdraw_to_address" "$withdraw_amount"
-            echo "Withdrawn $withdraw_amount XNT from Identity account to $withdraw_to_address."
+            #echo "Withdrawn $withdraw_amount XNT from Identity account to $withdraw_to_address."
             break
         else
             echo "Invalid withdrawal amount. Please try again."
@@ -211,7 +211,7 @@ while true; do
             
             if (( $(echo "$withdraw_amount <= $unstaked_balance && $withdraw_amount >= 0" | bc -l) )); then
                 solana withdraw-stake "$stake_address" "$withdraw_to_address" "$withdraw_amount"
-                echo "Withdrawn $withdraw_amount XNT to $withdraw_to_address."
+                #echo "Withdrawn $withdraw_amount XNT to $withdraw_to_address."
                 break
             else
                 echo "Invalid withdrawal amount. Please try again."
@@ -268,7 +268,7 @@ while true; do
             
             if (( $(echo "$withdraw_amount <= $vote_balance && $withdraw_amount >= 0" | bc -l) )); then
                 solana withdraw-from-vote-account "$vote_address" "$withdraw_to_address" "$withdraw_amount"
-                echo "Withdrawn $withdraw_amount XNT from Vote account to $withdraw_to_address."
+                #echo "Withdrawn $withdraw_amount XNT from Vote account to $withdraw_to_address."
                 break
             else
                 echo "Invalid withdrawal amount. Please try again."

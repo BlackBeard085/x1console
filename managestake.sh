@@ -145,10 +145,10 @@ add_new_stake_account() {
         read -rp "How much XNT would you like to stake in $capitalized_name (2 - 1000000): " stake_amount
 
         # Validate the input
-        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 2 ] && [ "$stake_amount" -le 1000000 ]; then
+        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 1 ] && [ "$stake_amount" -le 1000000 ]; then
             break
         else
-            echo "Invalid input. Please enter a number between 2 and 1,000,000."
+            echo "Invalid input. Please enter a number between 1 and 1,000,000."
         fi
     done
 
@@ -293,10 +293,10 @@ create_stake_account() {
         read -rp "How much XNT would you like to stake in the new account (2 - 1000000): " stake_amount
 
         # Validate the input
-        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 2 ] && [ "$stake_amount" -le 1000000 ]; then
+        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 1 ] && [ "$stake_amount" -le 1000000 ]; then
             break
         else
-            echo "Invalid input. Please enter a number between 2 and 1,000,000."
+            echo "Invalid input. Please enter a number between 1 and 1,000,000."
         fi
     done
 

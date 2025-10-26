@@ -7,7 +7,7 @@ WALLETS_JSON="wallets.json"
 total_credits=0
 latencies=()
 
-# Arrays for credits and max credits
+# Arrays for credits/max credits lines
 credits_list=()
 max_credits_list=()
 
@@ -19,6 +19,9 @@ if [ ${#vote_addresses[@]} -eq 0 ]; then
   echo "No vote addresses found in wallets.json."
   exit 1
 fi
+
+# Flags to skip first 'credits/max credits' entry
+skip_first_credit=true
 
 # Loop through each vote address
 for vote in "${vote_addresses[@]}"; do
@@ -45,29 +48,22 @@ for vote in "${vote_addresses[@]}"; do
     fi
   done <<< "$recent_votes"
 
-  # Get only the first "credits/max credits" line
-  credits_max_line=$(echo "$output" | grep "credits/max credits:" | head -n 1)
-  if [ -n "$credits_max_line" ]; then
-    # Extract current credits
-    c=$(echo "$credits_max_line" | grep -oP "credits/max credits:\s*\K[0-9]+")
-    credits_list+=("$c")
-  fi
-
-  # Compute max credits from 'solana epoch-info'
-  epoch_info=$(solana epoch-info 2>/dev/null)
-  if [ $? -ne 0 ]; then
-    echo "Failed to fetch epoch info."
-    continue
-  fi
-
-  # Extract 'Epoch Completed Slots:'
-  slots_line=$(echo "$epoch_info" | grep "Epoch Completed Slots:")
-  if [ -n "$slots_line" ]; then
-    numerator=$(echo "$slots_line" | grep -oP "Epoch Completed Slots:\s*\K[0-9]+")
-    # Calculate max credits
-    max_credits=$((numerator * 16))
-    max_credits_list+=("$max_credits")
-  fi
+  # Collect all lines with 'credits/max credits: ', skip the first occurrence
+  while IFS= read -r line; do
+    if echo "$line" | grep -q "credits/max credits:"; then
+      if $skip_first_credit; then
+        # Skip the first occurrence
+        skip_first_credit=false
+        continue
+      fi
+      credits_max_line="$line"
+      # Extract credits and max credits
+      c=$(echo "$credits_max_line" | grep -oP "credits/max credits:\s*\K[0-9]+")
+      m=$(echo "$credits_max_line" | grep -oP "credits/max credits:\s*[0-9]+/\K[0-9]+")
+      credits_list+=("$c")
+      max_credits_list+=("$m")
+    fi
+  done <<< "$output"
 done
 
 # Calculate average latency of last 31 entries
@@ -84,21 +80,31 @@ else
   avg_latency="N/A"
 fi
 
-# Assume only one reading, so take the first element if exists
-if [ ${#credits_list[@]} -gt 0 ]; then
-  current_credits="${credits_list[0]}"
+# Calculate averages for credits and max credits (excluding first line)
+credits_sum=0
+max_credits_sum=0
+credits_count=${#credits_list[@]}
+max_credits_count=${#max_credits_list[@]}
+
+if [ "$credits_count" -gt 0 ]; then
+  for c in "${credits_list[@]}"; do
+    credits_sum=$((credits_sum + c))
+  done
+  # Integer division truncates
+  avg_credits=$(echo "$credits_sum / $credits_count" | bc)
 else
-  current_credits=0
+  avg_credits="N/A"
 fi
 
-if [ ${#max_credits_list[@]} -gt 0 ]; then
-  current_max_credits="${max_credits_list[0]}"
+if [ "$max_credits_count" -gt 0 ]; then
+  for m in "${max_credits_list[@]}"; do
+    max_credits_sum=$((max_credits_sum + m))
+  done
+  # Integer division truncates
+  avg_max_credits=$(echo "$max_credits_sum / $max_credits_count" | bc)
 else
-  current_max_credits=1  # avoid division by zero
+  avg_max_credits="N/A"
 fi
 
-# Calculate percentage
-percentage=$(echo "scale=2; ($current_credits / $current_max_credits) * 100" | bc)
-
-# Output total credits, current credits/max credits with percentage, and average latency
-echo "T.Credits:$total_credits    C.Credits: ${current_credits}/${current_max_credits} (${percentage}%)    Avg Latency:$avg_latency"
+# Output total credits, and average credits/max credits (without decimals)
+echo "Credits:$total_credits    Avg Credits/Epoch:${avg_credits}/${avg_max_credits}    Avg Latency:$avg_latency"

@@ -72,7 +72,7 @@ echo -e "$HEALTH_OUTPUT"
 
 if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     echo -e "\nWARNING issued in health check."
-    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js && echo "" && ~/x1console/pinger-status.sh && echo "" && echo "Performance:" && $HOME/x1console/latency.sh  && echo "" && echo "Skipped slots" && node $HOME/x1console/skips.js)
+    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js && sleep 1)
 #    sleep 3
     send_telegram_message "$(echo -e "⚠️ Warning: Validator status delinquent. Restarting with Autopilot. \n\n$BALANCE_OUTPUT")"
     # Log the time of the warning
@@ -114,7 +114,7 @@ if echo "$HEALTH_OUTPUT" | grep -q "WARNING"; then
     fi
 else
     echo -e "\nNo WARNING issued in health check. Exiting.\n"
-    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js && echo "" && $HOME/x1console/pinger-status.sh && echo "" && echo "Performance:" && $HOME/x1console/latency.sh && echo "" && echo "Skipped slots" && node $HOME/x1console/skips.js)
+    BALANCE_OUTPUT=$(node $HOME/x1console/epoch_balances.js && sleep 1)
 #    sleep 3
     send_telegram_message "$(echo -e "✅ Validator Active - No action required \n\n$BALANCE_OUTPUT")"
     #send_telegram_message "✅ Validator Active - No action required \n $BALANCE_OUTPUT"
