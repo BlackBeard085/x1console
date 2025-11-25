@@ -144,7 +144,7 @@ main_menu() {
         echo "1. Generate SSH Keys"
         echo "2. Export SSH Public Key"
         echo "3. Configure Server for ssh Keys Login Only"
-        echo "4. Exit"
+        echo "0. Exit"
         read -p "Please enter your choice: " choice
 
         case $choice in
@@ -157,7 +157,7 @@ main_menu() {
             3)
                 configure_ssh
                 ;;
-            4)
+            0)
                 echo "Exiting."
                 exit 0
                 ;;

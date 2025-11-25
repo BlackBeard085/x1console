@@ -104,8 +104,8 @@ function main_menu {
     echo "2. Stop Validator"
     echo "3. Show Logs"
     echo "4. Delete Logs"
-    echo "5. Exit"
-    read -p "Enter your choice [1-5]: " option
+    echo "0. Exit"
+    read -p "Enter your choice [0-4]: " option
     echo
 
     echo  # Adding a new line after option selection for readability
@@ -123,7 +123,7 @@ function main_menu {
         4)
             delete_logs
             ;;
-        5)
+        0)
             echo -e "\nExiting...\n"
             exit 0
             ;;

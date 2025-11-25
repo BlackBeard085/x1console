@@ -73,40 +73,18 @@ function withdraw_from_identity() {
     display_wallets
 
     # Ask the user which wallet they want to withdraw to
-    while true; do
-        read -p "Choose the wallet number to withdraw to (or 'c' to cancel): " wallet_choice
-        
-        # Check if user wants to cancel
-        if [[ "$wallet_choice" == "c" || "$wallet_choice" == "C" ]]; then
-            echo "Withdrawal canceled."
-            return
-        fi
-        
-        # Check if input is a number
-        if ! [[ "$wallet_choice" =~ ^[0-9]+$ ]]; then
-            echo "Please select a wallet number or 'c' to cancel."
-            continue
-        fi
-        
-        wallets_count=$(jq '. | length' wallets.json)
-        if [[ "$wallet_choice" -le "$wallets_count" ]]; then
-            withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
-            break
-        elif [ -f ledger.json ]; then
-            ledger_count=$(jq '. | length' ledger.json)
-            ledger_index=$((wallet_choice - wallets_count - 1))
-            if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
-                withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
-                break
-            else
-                echo "Invalid wallet choice."
-            fi
-        else
-            echo "Invalid wallet choice."
-        fi
-    done
-
-    echo "You have chosen to withdraw to: $withdraw_to_address"
+    read -p "Choose the wallet number to withdraw to: " wallet_choice
+    
+    wallets_count=$(jq '. | length' wallets.json)
+    if [[ "$wallet_choice" -le "$wallets_count" ]]; then
+        withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+    elif [ -f ledger.json ]; then
+        ledger_index=$((wallet_choice - wallets_count - 1))
+        withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
+    else
+        echo "Invalid wallet choice."
+        return
+    fi
 
     # Get the balance of the Identity account
     identity_balance_output=$(solana balance ~/.config/solana/identity.json)
@@ -117,14 +95,9 @@ function withdraw_from_identity() {
 
     # Prompt for withdrawal amount
     while true; do
-        read -p "How much funds would you like to withdraw from the Identity account (0 - $identity_balance) or 'c' to cancel? " withdraw_amount
+        read -p "How much funds would you like to withdraw from the Identity account (0 - $identity_balance)? " withdraw_amount
         
         # Check if the user wants to cancel
-        if [[ "$withdraw_amount" == "c" || "$withdraw_amount" == "C" ]]; then
-            echo "Withdrawal canceled."
-            break
-        fi
-        
         if [ -z "$withdraw_amount" ]; then
             echo "Withdrawal canceled."
             break
@@ -156,87 +129,40 @@ while true; do
     echo "1. Withdraw Stake"
     echo "2. Withdraw from Vote account"
     echo "3. Withdraw from Identity"
-    echo -e "0. Exit Withdrawal\n"
-    read -p "Please select an option (0-3): " option
+    echo -e "4. Exit Withdrawal\n"
+    read -p "Please select an option (1-4): " option
 
     if [[ "$option" -eq 1 ]]; then
         # Display available stake accounts
         display_stake_accounts
 
-        while true; do
-            read -p "Choose the stake account number to withdraw from (1-5) or 'c' to cancel: " choice
-            
-            # Check if user wants to cancel
-            if [[ "$choice" == "c" || "$choice" == "C" ]]; then
-                echo "Withdrawal canceled."
-                break
-            fi
-            
-            # Validate stake account choice
-            if ! [[ "$choice" =~ ^[0-9]+$ ]]; then
-                echo "Please select a stake account number or 'c' to cancel."
-                continue
-            fi
-            
-            stake_count=$(jq '. | length' allstakes.json)
-            if [[ "$choice" -ge 1 && "$choice" -le "$stake_count" ]]; then
-                stake_address=$(jq -r ".[$((choice - 1))].address" allstakes.json)
-                stake_name=$(jq -r ".[$((choice - 1))].name" allstakes.json)
-                break
-            else
-                echo "Invalid stake account choice. Please select between 1 and $stake_count."
-            fi
-        done
+        read -p "Choose the stake account number to withdraw from (1-5): " choice
         
-        # If user canceled stake account selection, return to main menu
-        if [[ "$choice" == "c" || "$choice" == "C" ]]; then
-            continue
-        fi
+        stake_address=$(jq -r ".[$((choice - 1))].address" allstakes.json)
+        stake_name=$(jq -r ".[$((choice - 1))].name" allstakes.json)
 
         display_wallets
         
-        # Ask the user which wallet they want to withdraw to with validation
-        while true; do
-            read -p "Choose the wallet number to withdraw to (or 'c' to cancel): " wallet_choice
-            
-            # Check if user wants to cancel
-            if [[ "$wallet_choice" == "c" || "$wallet_choice" == "C" ]]; then
-                echo "Withdrawal canceled."
-                break
-            fi
-            
-            # Check if input is a number
-            if ! [[ "$wallet_choice" =~ ^[0-9]+$ ]]; then
-                echo "Please select a wallet number or 'c' to cancel."
-                continue
-            fi
-            
-            wallets_count=$(jq '. | length' wallets.json)
-            if [[ "$wallet_choice" -le "$wallets_count" ]]; then
-                withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
-                break
-            else
-               if [ -f ledger.json ]; then
-                    ledger_count=$(jq '. | length' ledger.json)
-                    ledger_index=$((wallet_choice - wallets_count - 1))
-                    if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
-                        withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
-                        break
-                    else
-                        echo "Invalid wallet choice."
-                    fi
+        read -p "Choose the wallet number to withdraw to: " wallet_choice
+        
+        wallets_count=$(jq '. | length' wallets.json)
+        if [[ "$wallet_choice" -le "$wallets_count" ]]; then
+            withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+        else
+           if [ -f ledger.json ]; then
+                ledger_count=$(jq '. | length' ledger.json)
+                ledger_index=$((wallet_choice - wallets_count - 1))
+                if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
+                    withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
                 else
                     echo "Invalid wallet choice."
+                    continue
                 fi
+            else
+                echo "Invalid wallet choice."
+                continue
             fi
-        done
-        
-        # If user canceled wallet selection, return to main menu
-        if [[ "$wallet_choice" == "c" || "$wallet_choice" == "C" ]]; then
-            continue
         fi
-
-        echo "You have chosen to withdraw to: $withdraw_to_address"
 
         echo -e "\nRetrieving details for the selected stake account \"$stake_name\"..."
         output=$(solana stake-account "$stake_address")
@@ -271,12 +197,7 @@ while true; do
         echo "---------------------------------"
 
         while true; do
-            read -p "How much unstaked balance would you like to withdraw (0 - $unstaked_balance) or 'c' to cancel? " withdraw_amount
-            
-            if [[ "$withdraw_amount" == "c" || "$withdraw_amount" == "C" ]]; then
-                echo "Withdrawal canceled."
-                break
-            fi
+            read -p "How much unstaked balance would you like to withdraw (0 - $unstaked_balance)? " withdraw_amount
             
             if [ -z "$withdraw_amount" ]; then
                 echo "Withdrawal canceled."
@@ -303,48 +224,26 @@ while true; do
         echo -e "\nWithdraw from Vote Account:"
         display_wallets
 
-        # Ask the user which wallet they want to withdraw to with validation
-        while true; do
-            read -p "Choose the wallet number to withdraw Vote funds to (or 'c' to cancel): " wallet_choice
-            
-            # Check if user wants to cancel
-            if [[ "$wallet_choice" == "c" || "$wallet_choice" == "C" ]]; then
-                echo "Withdrawal canceled."
-                break
-            fi
-            
-            # Check if input is a number
-            if ! [[ "$wallet_choice" =~ ^[0-9]+$ ]]; then
-                echo "Please select a wallet number or 'c' to cancel."
-                continue
-            fi
-            
-            wallets_count=$(jq '. | length' wallets.json)
-            if [[ "$wallet_choice" -le "$wallets_count" ]]; then
-                withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
-                break
-            else
-               if [ -f ledger.json ]; then
-                    ledger_count=$(jq '. | length' ledger.json)
-                    ledger_index=$((wallet_choice - wallets_count - 1))
-                    if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
-                        withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
-                        break
-                    else
-                        echo "Invalid wallet choice."
-                    fi
+        read -p "Choose the wallet number to withdraw Vote funds to: " wallet_choice
+        
+        wallets_count=$(jq '. | length' wallets.json)
+        if [[ "$wallet_choice" -le "$wallets_count" ]]; then
+            withdraw_to_address=$(jq -r ".[$((wallet_choice - 1))].address" wallets.json)
+        else
+           if [ -f ledger.json ]; then
+                ledger_count=$(jq '. | length' ledger.json)
+                ledger_index=$((wallet_choice - wallets_count - 1))
+                if [[ "$ledger_index" -ge 0 && "$ledger_index" -lt "$ledger_count" ]]; then
+                    withdraw_to_address=$(jq -r ".[$ledger_index].address" ledger.json)
                 else
                     echo "Invalid wallet choice."
+                    continue
                 fi
+            else
+                echo "Invalid wallet choice."
+                continue
             fi
-        done
-        
-        # If user canceled wallet selection, return to main menu
-        if [[ "$wallet_choice" == "c" || "$wallet_choice" == "C" ]]; then
-            continue
         fi
-
-        echo "You have chosen to withdraw to: $withdraw_to_address"
 
         vote_address=$(jq -r '.[] | select(.name=="Vote") | .address' wallets.json)
 
@@ -355,12 +254,7 @@ while true; do
         echo "---------------------------------"
 
         while true; do
-            read -p "How much funds would you like to withdraw from the Vote account (0 - $vote_balance) or 'c' to cancel? " withdraw_amount
-            
-            if [[ "$withdraw_amount" == "c" || "$withdraw_amount" == "C" ]]; then
-                echo "Withdrawal canceled."
-                break
-            fi
+            read -p "How much funds would you like to withdraw from the Vote account (0 - $vote_balance)? " withdraw_amount
             
             if [ -z "$withdraw_amount" ]; then
                 echo "Withdrawal canceled."
@@ -386,7 +280,7 @@ while true; do
         # Withdraw from Identity account
         withdraw_from_identity
 
-    elif [[ "$option" -eq 0 ]]; then
+    elif [[ "$option" -eq 4 ]]; then
         echo "Exiting withdrawal process."
         exit 0
     else

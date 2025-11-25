@@ -2,7 +2,7 @@
 
 # Existing cron jobs
 CRON_JOB="*/30 * * * * cd ~/x1console/ && ./autopilot.sh"
-CRON_JOB2="0 18 * * 1,3,6 cd ~/x1console/ && ./autostaker.sh"
+CRON_JOB2="0 18 * * * cd ~/x1console/ && ./autostaker.sh"  # Changed to daily at 6:00 PM
 CRON_JOB3="0 * * * * cd ~/x1console/ && ./autopinger.sh"
 # Fourth cron job
 CRON_JOB4="0 * * * * cd ~/x1console/ && ./autoupdater.sh"
@@ -15,10 +15,25 @@ UPDATER_LOG_FILE="$HOME/x1console/validator_update.log"
 STAKER_LOG_FILE="$HOME/x1console/autostaker.log"
 PINGER_LOG_FILE="$HOME/x1console/autopinger.log"
 
+# Function to remove any existing autostaker cron job
+function remove_existing_autostaker {
+    local crontab_content
+    crontab_content=$(crontab -l 2>/dev/null)
+    
+    # Remove any cron job that contains the autostaker.sh path
+    if echo "$crontab_content" | grep -F "~/x1console/ && ./autostaker.sh" > /dev/null; then
+        (crontab -l 2>/dev/null | grep -v -F "~/x1console/ && ./autostaker.sh") | crontab -
+        #echo "Removed existing autostaker cron job."
+    fi
+}
+
 # Function to add all four cron jobs with duplication check
 function add_cron_job {
     local crontab_content
     crontab_content=$(crontab -l 2>/dev/null)
+
+    # First remove any existing autostaker cron job
+    remove_existing_autostaker
 
     # Check and add autopilot
     if echo "$crontab_content" | grep -F "$CRON_JOB" > /dev/null; then
@@ -28,7 +43,7 @@ function add_cron_job {
         echo "Autopilot turned ON."
     fi
 
-    # Check and add autostaker
+    # Check and add autostaker (will be added fresh after removal)
     if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then
         echo "Auto-Staker is already turned ON."
     else
@@ -75,12 +90,12 @@ function remove_cron_job {
     read -n 1 -s -r -p "Press any key to continue..."
 }
 
-# Function to turn off only autostaker (remove CRON_JOB2)
+# Function to turn off only autostaker (remove any autostaker cron job)
 function turn_off_autostaker {
     local crontab_content
     crontab_content=$(crontab -l 2>/dev/null)
-    if echo "$crontab_content" | grep -F "$CRON_JOB2" > /dev/null; then
-        (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB2") | crontab -
+    if echo "$crontab_content" | grep -F "~/x1console/ && ./autostaker.sh" > /dev/null; then
+        (crontab -l 2>/dev/null | grep -v -F "~/x1console/ && ./autostaker.sh") | crontab -
         echo -e "\nAuto-Staker turned OFF."
     else
         echo -e "\nAuto-Staker is already OFF."
@@ -164,8 +179,8 @@ function show_menu {
         echo "6. View Auto Pinger Logs"
         echo "7. Remove Scheduled Update"
         echo "8. Turn Off Auto-staker"
-        echo "9. Exit"
-        echo -n "Please enter your choice (1-9): "
+        echo "0. Exit"
+        echo -n "Please enter your choice (0-8): "
         read -r choice
         case "$choice" in
             1)
@@ -192,7 +207,7 @@ function show_menu {
             8)
                 turn_off_autostaker
                 ;;
-            9)
+            0)
                 echo "Exiting."
                 exit 0
                 ;;

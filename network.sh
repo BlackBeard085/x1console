@@ -5,8 +5,8 @@ while true; do
     echo "1. X1 Mainnet"
     echo "2. X1 Testnet"
     echo "3. Custom RPC"
-    echo "4. Cancel"
-    read -p "Please choose an option (1-4): " option
+    echo "0. Cancel"
+    read -p "Please choose an option (0-3): " option
     echo " "
     case $option in
         1)
@@ -29,7 +29,7 @@ while true; do
                 break
             fi
             ;;
-        4)
+        0)
             echo "Operation canceled. Exiting."
             exit 0
             ;;

@@ -142,7 +142,7 @@ add_new_stake_account() {
     stake_amount=""
     while true; do
         echo
-        read -rp "How much XNT would you like to stake in $capitalized_name (2 - 1000000): " stake_amount
+        read -rp "How much XNT would you like to stake in $capitalized_name (1 - 1000000): " stake_amount
 
         # Validate the input
         if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 1 ] && [ "$stake_amount" -le 1000000 ]; then
@@ -256,7 +256,15 @@ create_stake_account() {
     available_accounts=()
 
     for wallet in "${stake_wallets[@]}"; do
+        # Check if wallet file exists
+        if [[ ! -f "$wallet" ]]; then
+            continue  # Skip non-existent wallets
+        fi
         address=$(solana-keygen pubkey "$wallet")
+        # Additional check if address retrieval failed
+        if [[ $? -ne 0 || -z "$address" ]]; then
+            continue
+        fi
         stake_info=$(solana stake-account "$address" 2>/dev/null)
 
         # Check if there's no stake information
@@ -290,7 +298,7 @@ create_stake_account() {
     stake_amount=""
     while true; do
         echo
-        read -rp "How much XNT would you like to stake in the new account (2 - 1000000): " stake_amount
+        read -rp "How much XNT would you like to stake in the new account (1 - 1000000): " stake_amount
 
         # Validate the input
         if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 1 ] && [ "$stake_amount" -le 1000000 ]; then
@@ -481,7 +489,7 @@ show_menu() {
     echo "7. Repurpose Old Stake Account"
     echo "8. Autostake"
     echo "9. Withdraw Stake"
-    echo "10. Exit"
+    echo "0. Exit"
 }
 
 # Function to pause
@@ -538,7 +546,7 @@ execute_option() {
         9)
             ./withdrawstake.sh
             ;;
-        10)
+        0)
             echo -e "\nExiting.\n"
             exit 0
             ;;

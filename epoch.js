@@ -248,7 +248,7 @@ async function fetchBlockProductionForLastEpochs() {
 
     // Calculate previous epoch range
     const lastSlotOfCurrentEpoch = currentSlot - 1;
-    const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 2500 + 1;
+    const firstSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1048500 + 1;
     const lastSlotOfPreviousEpoch = lastSlotOfCurrentEpoch - 1;
 
     const prevEpochProductionPromise = fetchBlockProduction(

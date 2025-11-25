@@ -88,8 +88,8 @@ while true; do
     echo "5. Import Wallet using Private Key"
     echo "6. Import Wallet using Seed Phrase"
     echo "7. Remove Wallet"
-    echo "8. Exit"
-    read -p "Enter your choice (1-8): " choice
+    echo "0. Exit"
+    read -p "Enter your choice (0-7): " choice
 
     # Always gather wallet files before the options
     files=("$WALLET_DIR"/*.json)
@@ -165,7 +165,7 @@ while true; do
             remove_wallet
             ;;
         
-        8) # Exit the script
+        0) # Exit the script
              echo -e "\nExiting the script."
              exit 0
             ;;

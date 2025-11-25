@@ -17,8 +17,8 @@ display_all_stake_info() {
     echo -e "\n--- Current Stake Account Info for All Stake Wallets ---"
     
     # Printing the table headers
-    printf "%-17s %-18s %-20s %-15s\n" "Wallet Name" "Balance" "Unstaked Balance" "Active Stake"
-    echo "---------------------------------------------------------------"
+    printf "%-11s %-18s %-17s %-15s %-12s\n" "Wallet" "Balance" "Unstaked Bal." "Active Stake" "Status"
+    echo "--------------------------------------------------------------------------------"
 
     # List all stake wallet files in ~/.config/solana/
     stake_wallets=("$HOME/.config/solana/stake.json" "$HOME/.config/solana/stake1.json" "$HOME/.config/solana/stake2.json" "$HOME/.config/solana/stake3.json" "$HOME/.config/solana/stake4.json")
@@ -48,12 +48,23 @@ display_all_stake_info() {
                     unstaked_balance=$(echo "$balance - $active_stake" | bc)
                 fi
 
+                # Determine Status based on stake_info content
+                # Search for 'activating' and 'deactivating' (case-insensitive)
+                info_lower=$(echo "$stake_info" | tr 'A-Z' 'a-z')
+                if echo "$info_lower" | grep -q 'activating'; then
+                    status="Activating"
+                elif echo "$info_lower" | grep -q 'deactivating'; then
+                    status="Deactivating"
+                else
+                    status=""
+                fi
+
                 # Extract wallet name from file path and capitalize first letter
                 wallet_name=$(basename "$wallet" .json)
                 capitalized_name=$(echo "$wallet_name" | sed 's/^\(.\)/\U\1/')
 
                 # Printing the wallet information in formatted columns
-                printf "%-17s %-18s %-20s %-15s\n" "$capitalized_name" "$balance" "$unstaked_balance" "$active_stake"
+                printf "%-11s %-18s %-17s %-15s %-12s\n" "$capitalized_name" "$balance" "$unstaked_balance" "$active_stake" "$status"
                 
                 # Add the address to existing addresses
                 existing_addresses+=("$address")
@@ -77,7 +88,7 @@ display_all_stake_info() {
     jq --argjson existing_addresses "$(printf '%s\n' "${existing_addresses[@]}" | jq -R . | jq -s .)" \
     'map(select(.address as $addr | $existing_addresses | index($addr)))' allstakes.json > tmp.$$.json && mv tmp.$$.json allstakes.json
 
-    echo -e "------------------------------------\n"
+    echo -e "--------------------------------------------------------------------------------\n"
 }
 
 # Function to add a new stake account
@@ -131,13 +142,13 @@ add_new_stake_account() {
     stake_amount=""
     while true; do
         echo
-        read -rp "How much XNT would you like to stake in $capitalized_name (2 - 1000000): " stake_amount
+        read -rp "How much XNT would you like to stake in $capitalized_name (1 - 1000000): " stake_amount
 
         # Validate the input
-        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 2 ] && [ "$stake_amount" -le 1000000 ]; then
+        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 1 ] && [ "$stake_amount" -le 1000000 ]; then
             break
         else
-            echo "Invalid input. Please enter a number between 2 and 1,000,000."
+            echo "Invalid input. Please enter a number between 1 and 1,000,000."
         fi
     done
 
@@ -185,8 +196,8 @@ merge_stake() {
     merge_to_index=$((merge_to_choice - 1))
 
     # Validate user input
-    if [[ ! $merge_to_choice =~ ^[1-5]$ ]]; then
-        echo "Invalid selection. Please select a number between 1 and 5."
+    if [[ ! $merge_to_choice =~ ^[1-$((${#stake_accounts[@]}))]$ ]]; then
+        echo "Invalid selection. Please select a number between 1 and ${#stake_accounts[@]}."
         return
     fi
 
@@ -212,7 +223,7 @@ merge_stake() {
     merging_index=$((merging_choice - 1))
 
     # Validate user input
-    if [[ ! $merging_choice =~ ^[1-5]$ ]] || [[ $merging_index -eq $merge_to_index ]]; then
+    if [[ ! $merging_choice =~ ^[1-$((${#stake_accounts[@]}))]$ ]] || [[ $merging_index -eq $merge_to_index ]]; then
         echo "Invalid selection. You cannot select the same account to merge from."
         return
     fi
@@ -279,13 +290,13 @@ create_stake_account() {
     stake_amount=""
     while true; do
         echo
-        read -rp "How much XNT would you like to stake in the new account (2 - 1000000): " stake_amount
+        read -rp "How much XNT would you like to stake in the new account (1 - 1000000): " stake_amount
 
         # Validate the input
-        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 2 ] && [ "$stake_amount" -le 1000000 ]; then
+        if [[ "$stake_amount" =~ ^[0-9]+$ ]] && [ "$stake_amount" -ge 1 ] && [ "$stake_amount" -le 1000000 ]; then
             break
         else
-            echo "Invalid input. Please enter a number between 2 and 1,000,000."
+            echo "Invalid input. Please enter a number between 1 and 1,000,000."
         fi
     done
 
@@ -457,7 +468,7 @@ deactivate_stake() {
     fi
 }
 
-# Function to display the menu
+# Function to show menu
 show_menu() {
     node epoch_balances.js 2>/dev/null
     echo "Please select an option:"
@@ -473,21 +484,21 @@ show_menu() {
     echo "10. Exit"
 }
 
-# Function to pause and wait for user input
+# Function to pause
 pause() {
     read -rp "Press any button to continue... " -n1
     echo -e "\n"
 }
 
-# Function to execute commands based on user input
+# Function to execute options
 execute_option() {
     case $1 in
         1)
-            activate_stake  # Call the function for activating stake
+            activate_stake
             pause
             ;;
         2)
-            deactivate_stake  # Call the function for deactivating stake
+            deactivate_stake
             pause
             ;;
         3)
@@ -496,37 +507,37 @@ execute_option() {
             pause
             ;;
         4)
-            add_new_stake_account  # Call the function to add a new stake account
+            add_new_stake_account
             pause
             ;;
         5)
-            merge_stake  # Call the function to merge stake accounts
+            merge_stake
             pause
             ;;
         6)
-	        # Execute setautopilot.sh when chosen
-                #echo -e "\nExecuting Autopilot setup"
-                if [ -f "$HOME/x1console/splitstake.sh" ]; then
-                    bash "$HOME/x1console/splitstake.sh"
-                    if [ $? -eq 0 ]; then
-                        echo -e "\n \n"
-                    else
-                        echo -e "\nFailed to split stake.\n"
-                    fi
+            # Execute split stake script
+            if [ -f "$HOME/x1console/splitstake.sh" ]; then
+                bash "$HOME/x1console/splitstake.sh"
+                if [ $? -eq 0 ]; then
+                    echo -e "\n \n"
                 else
-                    echo -e "\nsplitstake.sh does not exist. Please create it in the x1console directory.\n"
+                    echo -e "\nFailed to split stake.\n"
                 fi
-                 ;;
+            else
+                echo -e "\nsplitstake.sh does not exist. Please create it in the x1console directory.\n"
+            fi
+            pause
+            ;;
         7)
-            create_stake_account  # Call the function to create a new stake account from available accounts
+            create_stake_account
             pause
             ;;
         8)
-           ./autostaker.sh
-           ;;
+            ./autostaker.sh
+            ;;
         9)
-           ./withdrawstake.sh
-           ;;
+            ./withdrawstake.sh
+            ;;
         10)
             echo -e "\nExiting.\n"
             exit 0
@@ -538,9 +549,9 @@ execute_option() {
     esac
 }
 
-# Main loop for the menu
+# Main loop
 while true; do
-    display_all_stake_info      # Display all stake account info at each loop
+    display_all_stake_info
     show_menu
     read -rp "Enter your choice [1-10]: " choice
     execute_option "$choice"

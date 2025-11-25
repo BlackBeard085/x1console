@@ -37,7 +37,7 @@ wallet_filename="$wallet_name"
 wallet_file="$WALLET_DIR/$wallet_name"
 
 # Run solana-keygen recover to recover the key and save it to the specified location
-solana-keygen recover -o "$wallet_file" --force
+solana-keygen recover ASK -o "$wallet_file" --force
 
 # Provide feedback to the user
 #echo "Wallet has been recovered and saved to $wallet_file."

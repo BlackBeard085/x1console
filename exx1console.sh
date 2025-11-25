@@ -418,8 +418,8 @@ ledger() {
     echo -e "1. Ledger Monitor"
     echo -e "2. Remove Ledger"
     echo -e "3. Backup Ledger"
-    echo -e "0. Exit"
-    read -p "Enter your choice [0-3]: " ledger_choice
+    echo -e "4. Exit"
+    read -p "Enter your choice [1-4]: " ledger_choice
     case $ledger_choice in
         1)
             ledger_monitor
@@ -430,7 +430,7 @@ ledger() {
         3)
             backup_ledger
             ;;
-        0)
+        4)
             break
             ;;
         *)
@@ -553,8 +553,8 @@ other_options() {
         echo -e "7. Server"
         echo -e "8. Network"
         echo -e "9. Set up Telegram Bot"
-        echo -e "0. Return to Main Menu"
-        read -p "Enter your choice [0-9]: " other_choice
+        echo -e "10. Return to Main Menu"
+        read -p "Enter your choice [1-10]: " other_choice
 
         case $other_choice in
             1)
@@ -709,7 +709,7 @@ other_options() {
                     echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-             0)
+            10)
                 break
                 ;;
             *)
@@ -725,8 +725,8 @@ transfers() {
         echo -e "\nChoose a subcommand for Transfers:"
         echo -e "1. Transfer"
         echo -e "2. Address Book"
-        echo -e "0. Return to Main Menu"
-        read -p "Enter your choice [0-2]: " transfer_choice
+        echo -e "3. Return to Main Menu"
+        read -p "Enter your choice [1-3]: " transfer_choice
 
         case $transfer_choice in
             1)
@@ -760,7 +760,7 @@ transfers() {
                 fi
                 pause
                 ;;
-            0)
+            3)
                 break
                 ;;
             *)
@@ -881,9 +881,9 @@ while true; do
     echo -e "8. Set Commission"
     echo -e "9. Publish Validator"
     echo -e "10. Other"
-    echo -e "0. Exit"
+    echo -e "11. Exit"
 
-    read -p "Enter your choice [0-10: " choice
+    read -p "Enter your choice [1-11]: " choice
 
     case $choice in
         1)
@@ -947,7 +947,7 @@ while true; do
             continue
             ;;
         
-        0)
+        11)
             exit_script
             ;;
         
