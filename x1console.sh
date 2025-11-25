@@ -883,7 +883,7 @@ while true; do
     echo -e "10. Other"
     echo -e "0. Exit"
 
-    read -p "Enter your choice [0-10: " choice
+    read -p "Enter your choice [0-10]: " choice
 
     case $choice in
         1)
