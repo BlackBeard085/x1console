@@ -19,7 +19,7 @@ let isAutoupdaterActive = false;
 
 // Function to print the console version
 function printConsoleVersion() {
-    console.log('X1Console v1.0.7  -  The BlackPearl by BlackBeard_85');
+    console.log('X1Console v1.0.8  -  The BlackPearl by BlackBeard_85');
 }
 
 // Asynchronous function to check for specific cronjobs
