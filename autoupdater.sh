@@ -15,7 +15,7 @@ UPDATE_SCRIPT="$DIR/update.sh"
 LOCK_FILE="$DIR/update_lock.pid"
 
 # Config
-TARGET_ADDRESS="Abt4r6uhFs7yPwR3jT5qbnLjBtasgHkRVAd1W6H5yonT"
+TARGET_ADDRESS="EXDQt1T1eQ4NjttSdxn1eNS3EkHDrmZ3ZrgZmMSbfYiy"
 
 # Check dependencies
 if ! command -v jq &> /dev/null; then
