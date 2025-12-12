@@ -12,7 +12,7 @@ The following are guides and videos on how to use the X1 console and it's many f
 To run an X1 Validator you will need a dedicated server with the following minimum specs;
 
 - CPU: 12 cores/24 threads or more
-- RAM: 128G or more 
+- RAM: 192GB or more 
 - DISK: 4TB NVME
 - OS: Ubuntu 22.04.5 LTS
 
