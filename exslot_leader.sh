@@ -20,6 +20,8 @@ SLOT_NUMBER=$(solana epoch-info | grep "Slot:" | awk '{print $2}')
 # Print the current slot number on the same line
 echo "Current Slot: $SLOT_NUMBER"
 
+echo ""
+
 # 2. Run solana leader-schedule and extract only the slot numbers associated with the address
 # and join them with double spaces
 SLOTS=$(solana leader-schedule | awk -v addr="$ADDRESS" '$0 ~ addr {printf "%s  ", $1}')
@@ -27,37 +29,5 @@ SLOTS=$(solana leader-schedule | awk -v addr="$ADDRESS" '$0 ~ addr {printf "%s  
 # Remove trailing whitespace
 SLOTS=$(echo "$SLOTS" | sed 's/[[:space:]]*$//')
 
-echo ""
-
-# 3. Calculate next leader slot and time
-# Convert slots string to array
-IFS='  ' read -ra SLOT_ARRAY <<< "$SLOTS"
-
-# Find the next slot higher than current slot
-NEXT_LEADER_SLOT=""
-for slot in "${SLOT_ARRAY[@]}"; do
-  if [ "$slot" -gt "$SLOT_NUMBER" ]; then
-    NEXT_LEADER_SLOT="$slot"
-    break
-  fi
-done
-
-# Calculate time to next leader slot if found
-if [ -n "$NEXT_LEADER_SLOT" ]; then
-  # X1 has approximately 375ms per slot (0.375 seconds)
-  SLOTS_DIFF=$((NEXT_LEADER_SLOT - SLOT_NUMBER))
-  SECONDS_TO_NEXT=$((SLOTS_DIFF * 375 / 1000))  # Multiply by 0.375 (3.75/10)
-  
-  # Convert to minutes and seconds
-  MINUTES=$((SECONDS_TO_NEXT / 60))
-  SECONDS=$((SECONDS_TO_NEXT % 60))
-  
-  echo "Next leader slot in: ${MINUTES}m ${SECONDS}s (slot $NEXT_LEADER_SLOT)"
-else
-  echo "No upcoming leader slots found."
-fi
-
-echo ""
-
-# 4. Print all scheduled leader slots
-echo "All Scheduled Leader Slots: $SLOTS"
+# Print the message and the slot numbers
+echo "Next Scheduled Leader Slots: $SLOTS"
