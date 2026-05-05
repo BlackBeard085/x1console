@@ -189,7 +189,7 @@ update_x1() {
 
         echo -e "\nCleaning up Cargo build..."
         git fetch
-        git checkout dyn_fees_v2.2
+        git checkout v3.0
         cargo clean
 
         echo -e "\nBuilding project in release mode..."
