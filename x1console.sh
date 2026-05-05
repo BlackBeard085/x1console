@@ -180,6 +180,10 @@ update_x1() {
 
         echo -e "\nUpdating Server"
         sudo apt update && sudo apt upgrade
+        sudo apt-get update
+        sudo apt-get install clang llvm-dev libclang-dev
+        echo 'export LIBCLANG_PATH=/usr/lib/x86_64-linux-gnu' >> ~/.bashrc
+        source ~/.bashrc
 
         echo -e "\nUpdating to most recent stable version of Solana CLI "
         sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || error_exit "Failed to download Solana CLI."
