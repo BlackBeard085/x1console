@@ -25,43 +25,53 @@ function loadWallets() {
 
 // Function to check validator health with shell command
 async function checkValidatorHealth(identityAddress) {
-    try {
-        const command = `solana validators | grep ${identityAddress}`; // Command to check validator info
-        const validatorInfo = await new Promise((resolve, reject) => {
-            exec(command, (error, stdout, stderr) => {
-                if (error) {
-                    resolve(''); // Resolve to an empty string instead, to handle this case gracefully.
-                    return;
-                }
-                resolve(stdout); // Resolve with standard output if successful
+    const MAX_RETRIES = 5;
+    
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            const command = `solana validators | grep ${identityAddress}`; // Command to check validator info
+            const validatorInfo = await new Promise((resolve, reject) => {
+                exec(command, (error, stdout, stderr) => {
+                    if (error) {
+                        resolve(''); // Resolve to an empty string instead, to handle this case gracefully.
+                        return;
+                    }
+                    resolve(stdout); // Resolve with standard output if successful
+                });
             });
-        });
 
-        // Output the raw validator information
-        if (validatorInfo) {
-            console.log(`Raw Validator Information:\n${validatorInfo}`);
+            // Output the raw validator information
+            if (validatorInfo) {
+                console.log(`Raw Validator Information:\n${validatorInfo}`);
 
-            // Determine if the validator is delinquent by looking for "⚠️"
-            const isDelinquent = validatorInfo.includes('⚠️');
-            const status = isDelinquent ? 'Delinquent'.red : 'Active'.green; // Use colors to color the status
+                // Determine if the validator is delinquent by looking for "⚠️"
+                const isDelinquent = validatorInfo.includes('⚠️');
+                const status = isDelinquent ? 'Delinquent'.red : 'Active'.green; // Use colors to color the status
 
-            // Output validator health report
-            console.log(`Validator Health Report for Identity: ${identityAddress}`);
-            console.log(`- Status: ${status}`);
+                // Output validator health report
+                console.log(`Validator Health Report for Identity: ${identityAddress}`);
+                console.log(`- Status: ${status}`);
 
-            if (isDelinquent) {
-                console.log(`${ORANGE}WARNING! Validator is delinquent. ACTION REQUIRED.${RESET}`); 
+                if (isDelinquent) {
+                    console.log(`${ORANGE}WARNING! Validator is delinquent. ACTION REQUIRED.${RESET}`); 
+                }
+            } else {
+                // If no information is returned for the validator
+                const delinquentStatus = 'Delinquent'.red;
+                console.log(`Validator Health Report for Identity: ${identityAddress}`);
+                console.log(`- Status: ${delinquentStatus}`);
+                console.log(`${ORANGE}WARNING! Identity address was not found on X1 validators.${RESET}`);
             }
-        } else {
-            // If no information is returned for the validator
-            const delinquentStatus = 'Delinquent'.red;
-            console.log(`Validator Health Report for Identity: ${identityAddress}`);
-            console.log(`- Status: ${delinquentStatus}`);
-            console.log(`${ORANGE}WARNING! Identity address was not found on X1 validators.${RESET}`);
+            console.log();
+            return; // Success, exit the function
+        } catch (error) {
+            console.error(`Attempt ${attempt}/${MAX_RETRIES} failed:`, error);
+            if (attempt === MAX_RETRIES) {
+                console.error('Error fetching validator information after 5 retries:', error);
+            } else {
+                console.log(`Retrying... (${attempt + 1}/${MAX_RETRIES})`);
+            }
         }
-        console.log();
-    } catch (error) {
-        console.error('Error fetching validator information:', error);
     }
 }
 

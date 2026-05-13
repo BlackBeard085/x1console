@@ -130,8 +130,8 @@ cd tachyon || error_exit "Failed to change into tachyon directory."
 
 # Confirm the current branch
 echo -e "\nConfirming the current branch..."
-git fetch
-git checkout v3.0
+#git fetch
+#git checkout v3.0
 
 git branch || error_exit "Failed to list branches."
 

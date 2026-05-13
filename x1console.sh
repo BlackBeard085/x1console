@@ -192,8 +192,8 @@ update_x1() {
         git stash && git pull
 
         echo -e "\nCleaning up Cargo build..."
-        git fetch
-        git checkout v3.0
+        #git fetch
+        #git checkout v3.0
         cargo clean
 
         echo -e "\nBuilding project in release mode..."
@@ -258,6 +258,63 @@ update_x1_console() {
 
     echo -e "\nX1 console updated.\n"
     
+    pause
+}
+
+# Function to change branch without building
+change_branch() {
+    TACHYON_DIR="$HOME/x1/tachyon"
+    
+    if [ ! -d "$TACHYON_DIR" ]; then
+        echo -e "\nDirectory $TACHYON_DIR does not exist. Cannot change branch.\n"
+        pause
+        return
+    fi
+    
+    cd "$TACHYON_DIR" || exit
+    
+    # Fetch latest remote branches FIRST (optional but good practice)
+    echo -e "\nFetching latest remote branches..."
+    git fetch --all --prune
+    
+    # Get current branch
+    CURRENT_BRANCH=$(git branch --show-current)
+    echo -e "\nCurrently on branch: $CURRENT_BRANCH"
+    
+    # Ask for branch name
+    echo -e "\nEnter the branch name you wish to switch to:"
+    read -p "Branch name: " TARGET_BRANCH
+    
+    if [ -z "$TARGET_BRANCH" ]; then
+        echo -e "\nNo branch entered. Operation cancelled.\n"
+        pause
+        return
+    fi
+    
+    # Check if branch exists locally
+    if git show-ref --verify --quiet "refs/heads/$TARGET_BRANCH"; then
+        echo -e "\nSwitching to existing local branch: $TARGET_BRANCH"
+        git checkout "$TARGET_BRANCH"
+    elif git ls-remote --heads origin "$TARGET_BRANCH" | grep -q "$TARGET_BRANCH"; then
+        echo -e "\nBranch '$TARGET_BRANCH' exists remotely. Checking out and tracking..."
+        git checkout -b "$TARGET_BRANCH" "origin/$TARGET_BRANCH"
+    else
+        echo -e "\nBranch '$TARGET_BRANCH' does not exist locally or remotely."
+        echo -e "Available branches:"
+        git branch -a
+        pause
+        return
+    fi
+    
+    if [ $? -eq 0 ]; then
+        NEW_BRANCH=$(git branch --show-current)
+        echo -e "\nSuccessfully switched to branch: $NEW_BRANCH"
+        echo -e "NOTE: No build was performed. To build, use Update X1 Validator option.\n"
+    else
+        echo -e "\nFailed to switch branch.\n"
+    fi
+    
+    cd ~/x1console
     pause
 }
 
@@ -582,23 +639,54 @@ other_options() {
             echo -e "Setup is complete.\n"
                 ;;
             2)
+                # Function to show current branch
+                 show_current_branch() {
+                     TACHYON_DIR="$HOME/x1/tachyon"
+                     if [ -d "$TACHYON_DIR" ]; then
+                         cd "$TACHYON_DIR" 2>/dev/null
+                        CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
+                         if [ -n "$CURRENT_BRANCH" ]; then
+                             echo -e "\n=== Current X1/Tachyon Branch: $CURRENT_BRANCH ==="
+                         else
+                            echo -e "\n=== Current X1/Tachyon Branch: Unable to detect ==="
+                         fi
+                        cd - >/dev/null 2>&1
+                     else
+                         echo -e "\n=== X1/Tachyon directory not found ==="
+                     fi
+                }
+              while true; do
+                show_current_branch
                 echo -e "\nChoose a subcommand:"
                 echo -e "1. Update X1 Validator"
                 echo -e "2. Update X1 Console"
-                read -p "Enter your choice [1-2]: " update_choice
+                echo -e "3. Change Branch "
+                echo -e "0. Return to Main Menu"
+                read -p "Enter your choice [0-3]: " update_choice
 
                 case $update_choice in
-                    1)
-                        update_x1
-                        ;;
-                    2)
-                        update_x1_console
-                        ;;
-                    *)
-                        echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
-                        ;;
-                esac
-                ;;
+        1)
+            update_x1
+            ;;
+        2)
+            update_x1_console
+            ;;
+        3)
+            change_branch
+            ;;
+        0)
+            echo -e ""
+            read -n 1 -s -r -p "Returning to other menu. Press any key to continue"
+            echo -e ""
+            break
+            ;;
+        *)
+            echo -e "\nInvalid input choice. Returning to update menu.\n"
+            read -n 1 -s -r -p "Press any key to continue..."
+    echo
+    esac
+done
+    ;;
             3)
 	        # Execute setautopilot.sh when chosen
                 echo -e "\nExecuting Autopilot setup"

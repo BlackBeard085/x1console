@@ -180,6 +180,10 @@ update_x1() {
 
         echo -e "\nUpdating Server"
         sudo apt update && sudo apt upgrade
+        sudo apt-get update
+        sudo apt-get install clang llvm-dev libclang-dev
+        echo 'export LIBCLANG_PATH=/usr/lib/x86_64-linux-gnu' >> ~/.bashrc
+        source ~/.bashrc
 
         echo -e "\nUpdating to most recent stable version of Solana CLI "
         sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || error_exit "Failed to download Solana CLI."
@@ -189,7 +193,7 @@ update_x1() {
 
         echo -e "\nCleaning up Cargo build..."
         git fetch
-        git checkout dyn_fees_v2.2
+        git checkout v3.0
         cargo clean
 
         echo -e "\nBuilding project in release mode..."
@@ -418,8 +422,8 @@ ledger() {
     echo -e "1. Ledger Monitor"
     echo -e "2. Remove Ledger"
     echo -e "3. Backup Ledger"
-    echo -e "4. Exit"
-    read -p "Enter your choice [1-4]: " ledger_choice
+    echo -e "0. Exit"
+    read -p "Enter your choice [0-3]: " ledger_choice
     case $ledger_choice in
         1)
             ledger_monitor
@@ -430,7 +434,7 @@ ledger() {
         3)
             backup_ledger
             ;;
-        4)
+        0)
             break
             ;;
         *)
@@ -553,8 +557,8 @@ other_options() {
         echo -e "7. Server"
         echo -e "8. Network"
         echo -e "9. Set up Telegram Bot"
-        echo -e "10. Return to Main Menu"
-        read -p "Enter your choice [1-10]: " other_choice
+        echo -e "0. Return to Main Menu"
+        read -p "Enter your choice [0-9]: " other_choice
 
         case $other_choice in
             1)
@@ -709,7 +713,7 @@ other_options() {
                     echo -e "\nauthoritymanager.sh does not exist. Please create it in the x1console directory.\n"
                 fi
                 ;;
-            10)
+             0)
                 break
                 ;;
             *)
@@ -725,8 +729,8 @@ transfers() {
         echo -e "\nChoose a subcommand for Transfers:"
         echo -e "1. Transfer"
         echo -e "2. Address Book"
-        echo -e "3. Return to Main Menu"
-        read -p "Enter your choice [1-3]: " transfer_choice
+        echo -e "0. Return to Main Menu"
+        read -p "Enter your choice [0-2]: " transfer_choice
 
         case $transfer_choice in
             1)
@@ -760,7 +764,7 @@ transfers() {
                 fi
                 pause
                 ;;
-            3)
+            0)
                 break
                 ;;
             *)
@@ -881,9 +885,9 @@ while true; do
     echo -e "8. Set Commission"
     echo -e "9. Publish Validator"
     echo -e "10. Other"
-    echo -e "11. Exit"
+    echo -e "0. Exit"
 
-    read -p "Enter your choice [1-11]: " choice
+    read -p "Enter your choice [0-10]: " choice
 
     case $choice in
         1)
@@ -947,7 +951,7 @@ while true; do
             continue
             ;;
         
-        11)
+        0)
             exit_script
             ;;
         

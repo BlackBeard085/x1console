@@ -117,64 +117,50 @@ function fetchBlockProduction(walletAddress, firstSlot, lastSlot) {
     });
 }
 
-// Main function to get current epoch skip rate with retry logic
-async function getCurrentEpochSkipRate(retryCount = 0) {
-    const maxRetries = 5;
-    
-    try {
-        const epochInfo = await fetchCurrentEpoch();
-        if (!epochInfo) {
-            throw new Error('Failed to fetch epoch info');
-        }
-
-        const currentSlot = epochInfo.absoluteSlot || 0;
-        const slotIndex = epochInfo.slotIndex || 0;
-        const currentEpoch = epochInfo.epoch || 'N/A';
-
-        // Calculate first and last slot of current epoch
-        const firstSlot = currentSlot - slotIndex;
-        const lastSlot = currentSlot - 1;
-
-        // Fetch block production data for current epoch
-        const blockProduction = await fetchBlockProduction(
-            identityAddress,
-            firstSlot,
-            lastSlot
-        );
-
-        if (!blockProduction || !blockProduction.value || !blockProduction.value.byIdentity) {
-            throw new Error('No block production data available');
-        }
-
-        const prodData = blockProduction.value.byIdentity[identityAddress];
-
-        let assignedSlots = 0;
-        let blocksProduced = 0;
-
-        if (prodData && Array.isArray(prodData)) {
-            assignedSlots = prodData[0] || 0;
-            blocksProduced = prodData[1] || 0;
-        }
-
-        const skippedSlots = assignedSlots - blocksProduced;
-        const skipRate = assignedSlots > 0 ? (skippedSlots / assignedSlots) * 100 : 0;
-
-        // Output in desired format: skipped slots / assigned slots then skip rate percentage
-        console.log(`${skippedSlots}/${assignedSlots} (${skipRate.toFixed(2)}%)`);
-        
-    } catch (error) {
-        if (retryCount < maxRetries) {
-            // Wait before retrying (exponential backoff: 1s, 2s, 4s, 8s, 16s)
-            const delay = Math.pow(2, retryCount) * 1000;
-            console.error(`Attempt ${retryCount + 1}/${maxRetries} failed: ${error.message}. Retrying in ${delay/1000}s...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-            return getCurrentEpochSkipRate(retryCount + 1);
-        } else {
-            console.error(`Failed after ${maxRetries} attempts: ${error.message}`);
-        }
+// Main function to get current epoch skip rate
+async function getCurrentEpochSkipRate() {
+    const epochInfo = await fetchCurrentEpoch();
+    if (!epochInfo) {
+        console.log('Failed to fetch epoch info.');
+        return;
     }
+
+    const currentSlot = epochInfo.absoluteSlot || 0;
+    const slotIndex = epochInfo.slotIndex || 0;
+    const currentEpoch = epochInfo.epoch || 'N/A';
+
+    // Calculate first and last slot of current epoch
+    const firstSlot = currentSlot - slotIndex;
+    const lastSlot = currentSlot - 1;
+
+    // Fetch block production data for current epoch
+    const blockProduction = await fetchBlockProduction(
+        identityAddress,
+        firstSlot,
+        lastSlot
+    );
+
+    if (!blockProduction || !blockProduction.value || !blockProduction.value.byIdentity) {
+        console.log('No block production data available.');
+        return;
+    }
+
+    const prodData = blockProduction.value.byIdentity[identityAddress];
+
+    let assignedSlots = 0;
+    let blocksProduced = 0;
+
+    if (prodData && Array.isArray(prodData)) {
+        assignedSlots = prodData[0] || 0;
+        blocksProduced = prodData[1] || 0;
+    }
+
+    const skippedSlots = assignedSlots - blocksProduced;
+    const skipRate = assignedSlots > 0 ? (skippedSlots / assignedSlots) * 100 : 0;
+
+    // Output in desired format: skipped slots / assigned slots then skip rate percentage
+    console.log(`${skippedSlots}/${assignedSlots} (${skipRate.toFixed(2)}%)`);
 }
 
 // Run the function
 getCurrentEpochSkipRate();
-
