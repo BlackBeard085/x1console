@@ -98,7 +98,7 @@ source $HOME/.cargo/env || error_exit "Failed to source Cargo environment."
 rustup component add rustfmt || error_exit "Failed to add rustfmt component."
 rustup update || error_exit "Failed to update Rust."
 sudo apt-get update || error_exit "Failed to update package index."
-sudo apt-get install -y libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang cmake make libprotobuf-dev protobuf-compiler || error_exit "Failed to install required development packages."
+sudo apt-get install -y libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang llvm-dev libclang-dev cmake make libprotobuf-dev protobuf-compiler || error_exit "Failed to install required development packages."
 rustup toolchain install 1.78.0-x86_64-unknown-linux-gnu
 
 echo -e "\nRust and Cargo installation completed successfully!"
