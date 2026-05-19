@@ -416,9 +416,10 @@ publish_validator() {
 # New function to manage pinger
 pinger() {
     echo -e "\nChoose a subcommand:"
-    echo -e "1. Restart Pinger"
+    echo -e "1. Start/Restart Pinger"
     echo -e "2. Ping Times"
-    read -p "Enter your choice [1-2]: " pinger_choice
+    echo -e "3. Turn Pinger Off"
+    read -p "Enter your choice [1-3]: " pinger_choice
 
     case $pinger_choice in
         1)
@@ -426,6 +427,21 @@ pinger() {
             ;;
         2)
             ping_times
+            ;;
+        3)
+          # Port to check
+            PORT=3334
+          # Get the PID of the process using the specified port
+            PID=$(lsof -t -i :$PORT)
+            if [ -z "$PID" ]; then
+            echo -e "\nNo process is using port $PORT. Pinger is already off\n"
+            pause
+          else
+            echo -e "\nKilling Pinger on port $PORT with PID(s): $PID \n"
+            kill -9 $PID
+            echo -e "Process(es) terminated.\n"
+            pause
+          fi
             ;;
         *)
             echo -e "\nInvalid subcommand choice. Returning to main menu.\n"
