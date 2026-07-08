@@ -21,11 +21,12 @@ fi
 nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --identity ~/.config/solana/identity.json \
     --vote-account "$VOTE_ACCOUNT" \
-    --known-validator 7ufaUVtQKzGu5tpFtii9Cg8kR4jcpjQSXwsF3oVPSMZA \
-    --known-validator 5Rzytnub9yGTFHqSmauFLsAbdXFbehMwPBLiuEgKajUN \
-    --known-validator 4V2QkkWce8bwTzvvwPiNRNQ4W433ZsGQi9aWU12Q8uBF \
-    --known-validator CkMwg4TM6jaSC5rJALQjvLc51XFY5pJ1H9f1Tmu5Qdxs \
-    --known-validator 7J5wJaH55ZYjCCmCMt7Gb3QL6FGFmjz5U8b6NcbzfoTy \
+    --known-validator 2skZy1HiefFby6a8raendfWGKGRmpcDiwvuPj1v7atch \
+    --known-validator 9zkHekQ7TS1JddcGMgMsZYDUc3xvGzUnXCAfKERvuwUR \
+    --known-validator ErccS37ii8NbPjsDdGso93vGj7rkF8WhuCV7GhoWmqsS \
+    --known-validator 8MUdMKKnod3zD1errE1jjeswLtuZ7jNiTvN2EC5cqbCG \
+    --known-validator 3ka4FFFTm3YgTJ17598ApHuzxELd7PcHnHQsY8uqbDsu \
+    --known-validator wwcXJz47MTnZacxJ4WSxbhtKuiZvHVqDrBbNCCpjVp1 \
     --accounts /run/accounts \
     --accounts-db-cache-limit-mb 10000 \
     --only-known-rpc \
