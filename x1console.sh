@@ -670,6 +670,13 @@ other_options() {
                      else
                          echo -e "\n=== X1/Tachyon directory not found ==="
                      fi
+
+                    DELINQUENT_STAKE=$(solana validators 2>/dev/null | grep "Delinquent Stake:")
+                    if [ -n "$DELINQUENT_STAKE" ]; then
+                        echo -e "=== $DELINQUENT_STAKE ==="
+                    else
+                        echo -e "=== Delinquent Stake: Unable to detect ==="
+                    fi
                 }
               while true; do
                 show_current_branch
