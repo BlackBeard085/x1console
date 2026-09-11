@@ -35,7 +35,7 @@ for vote in "${vote_addresses[@]}"; do
   total_credits=$((total_credits + credits))
 
   # Extract recent votes entries
-  recent_votes=$(echo "$output" | awk '/Recent Votes \(using 31\/31 entries\):/,0' | tail -n +2)
+  recent_votes=$(echo "$output" | awk '/Recent Tower votes \(using 31\/31 entries\):/,0' | tail -n +2)
 
   # Collect latencies
   while IFS= read -r line; do
