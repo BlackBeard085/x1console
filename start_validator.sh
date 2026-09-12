@@ -17,6 +17,18 @@ if [ -z "$VOTE_ACCOUNT" ]; then
     exit 1
 fi
 
+# Accounts-db path
+ACCOUNTS_DIR="/run/accounts"
+
+# Agave 4.0 defaults accounts-db snapshot unpacking to direct I/O (O_DIRECT),
+# which tmpfs/zfs/overlayfs filesystems don't support. Opt out when needed.
+DIRECT_IO_FLAG=""
+case "$(stat -f -c %T "$ACCOUNTS_DIR" 2>/dev/null)" in
+    tmpfs|zfs|overlayfs)
+        DIRECT_IO_FLAG="--no-accounts-db-snapshots-direct-io"
+        ;;
+esac
+
 # Start the validator
 nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --identity ~/.config/solana/identity.json \
@@ -27,8 +39,9 @@ nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --known-validator 8MUdMKKnod3zD1errE1jjeswLtuZ7jNiTvN2EC5cqbCG \
     --known-validator 3ka4FFFTm3YgTJ17598ApHuzxELd7PcHnHQsY8uqbDsu \
     --known-validator wwcXJz47MTnZacxJ4WSxbhtKuiZvHVqDrBbNCCpjVp1 \
-    --accounts /run/accounts \
+    --accounts "$ACCOUNTS_DIR" \
     --accounts-db-cache-limit-mb 10000 \
+    $DIRECT_IO_FLAG \
     --only-known-rpc \
     --log ~/x1/log.txt \
     --ledger ~/x1/ledger \
