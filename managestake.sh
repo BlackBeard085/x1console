@@ -49,14 +49,19 @@ display_all_stake_info() {
                 fi
 
                 # Determine Status based on stake_info content
-                # Search for 'activating' and 'deactivating' (case-insensitive)
+                # Search for 'deactivating' before 'activating': the string
+                # "deactivating" contains "activating" as a substring, so
+                # checking 'activating' first would misclassify deactivating
+                # stakes.
                 info_lower=$(echo "$stake_info" | tr 'A-Z' 'a-z')
-                if echo "$info_lower" | grep -q 'activating'; then
-                    status="Activating"
-                elif echo "$info_lower" | grep -q 'deactivating'; then
+                if echo "$info_lower" | grep -q 'deactivating'; then
                     status="Deactivating"
+                elif echo "$info_lower" | grep -q 'activating'; then
+                    status="Activating"
+                elif [[ "$active_stake" == "Stake Not Active" ]]; then
+                    status="Inactive"
                 else
-                    status=""
+                    status="Active"
                 fi
 
                 # Extract wallet name from file path and capitalize first letter
