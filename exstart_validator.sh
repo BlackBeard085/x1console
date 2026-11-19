@@ -32,7 +32,7 @@ nohup $HOME/.local/share/solana/install/active_release/bin/tachyon-validator \
     --minimal-snapshot-download-speed 5000000 \
     --rpc-port 8899 \
     --full-rpc-api \
-    --dynamic-port-range 8000-8020 \
+    --dynamic-port-range 8000-8030 \
     --entrypoint entrypoint1.testnet.x1.xyz:8001 \
     --entrypoint entrypoint2.testnet.x1.xyz:8000 \
     --entrypoint entrypoint3.testnet.x1.xyz:8000 \
